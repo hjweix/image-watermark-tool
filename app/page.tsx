@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState, useCallback, useRef, useEffect } from "react"
+import { useCallback, useRef, useEffect, useState } from "react"
 import { Upload, Download, Settings, Eye, Trash2, RotateCcw, ImageIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -15,392 +15,8 @@ import { Progress } from "@/components/ui/progress"
 import { Separator } from "@/components/ui/separator"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Textarea } from "@/components/ui/textarea"
-
-// Language configuration
-const languages = {
-  zh: {
-    name: "中文",
-    flag: "🇨🇳",
-    translations: {
-      // Header
-      brand: "PhotoStamper",
-      features: "功能特色",
-      help: "使用帮助",
-
-      // Hero section
-      heroTitle: "专业工作图片时间水印工具",
-      heroSubtitle: "智能提取，批量处理，提升工作效率",
-      heroDescription:
-        "专为工作场景设计，自动提取图片拍摄时间和地理位置信息，批量添加专业的时间日期地点水印，提升工作文档的规范性和可信度",
-
-      // Hero section - 添加缺失的翻译
-      heroMainTitle: "专业图片水印工具 - 免费在线时间地点水印制作",
-      heroMainSubtitle: "智能提取EXIF信息，批量处理，提升工作效率",
-      heroMainDescription:
-        "专为工程记录、打卡签到、旅行日志、宝贝成长等场景设计，自动提取图片拍摄时间和地理位置信息，批量添加专业的时间日期地点水印，提升工作文档的规范性和可信度。完全免费，无需下载安装，保护隐私安全。",
-
-      // Tool section
-      toolBadge: "在线工具 - 无需下载安装",
-      toolTitle: "开始制作您的专属水印",
-      toolDescription: "上传图片，自定义水印样式，一键批量处理 - 简单三步完成专业水印制作",
-
-      // Upload
-      uploadTitle: "图片上传",
-      uploadDrag: "拖拽图片到此处",
-      uploadClick: "或点击选择文件",
-      uploaded: "已上传",
-
-      // Actions
-      applyAll: "应用到所有图片",
-      processing: "处理中...",
-      downloadAll: "下载所有图片",
-      processingProgress: "处理进度",
-
-      // Preview
-      preview: "实时预览",
-      previewMode: "预览模式",
-      uploadFirst: "请先上传图片",
-      supportDrag: "支持拖拽上传或点击选择文件",
-      fileName: "文件名",
-      fileSize: "大小",
-      status: "状态",
-      processed: "已处理",
-      pending: "待处理",
-      watermark: "水印",
-
-      // Settings
-      settings: "水印设置",
-      templates: "模板选择",
-      style: "样式调整",
-      content: "内容设置",
-
-      // Templates
-      modern: "现代简约",
-      vintage: "复古胶片",
-      engineering: "工程记录",
-      travel: "旅行日志",
-      minimal: "极简风格",
-      digital: "数字时钟",
-      baby: "宝贝成长",
-      professional: "专业标记",
-      punch: "打卡记录",
-      frame: "相框风格",
-
-      // Common style settings
-      position: "位置",
-      fontSize: "字体大小",
-      font: "字体",
-      textColor: "文字颜色",
-      backgroundColor: "背景颜色",
-      backgroundOpacity: "背景透明度",
-      borderRadius: "圆角大小",
-      padding: "内边距",
-
-      // Position options
-      topLeft: "左上角",
-      topCenter: "顶部居中",
-      topRight: "右上角",
-      centerLeft: "左侧居中",
-      center: "居中",
-      centerRight: "右侧居中",
-      bottomLeft: "左下角",
-      bottomCenter: "底部居中",
-      bottomRight: "右下角",
-
-      // Template-specific fields
-      // Professional template
-      longitude: "经度",
-      latitude: "纬度",
-      altitude: "海拔",
-      accuracy: "精度",
-
-      // Baby template
-      babyName: "宝贝姓名",
-      birthDate: "出生日期",
-      daysSinceBirth: "出生天数",
-      milestone: "成长里程碑",
-
-      // Engineering template
-      projectName: "工程名称",
-      constructionArea: "施工区域",
-      constructionContent: "施工内容",
-      contractor: "施工单位",
-      supervisor: "监理单位",
-
-      // Punch template
-      punchType: "打卡类型",
-      workLocation: "工作地点",
-      department: "部门",
-      employeeId: "员工编号",
-
-      // Travel template
-      destination: "目的地",
-      weather: "天气",
-      temperature: "温度",
-      companion: "同行人",
-      mood: "心情",
-
-      // Digital template
-      timezone: "时区",
-      format24h: "24小时制",
-      showSeconds: "显示秒数",
-
-      // Common fields
-      customDate: "自定义日期",
-      customTime: "自定义时间",
-      customLocation: "自定义地点",
-      customText: "自定义文本",
-      notes: "备注",
-
-      // Placeholders
-      enterProjectName: "请输入工程名称",
-      enterBabyName: "请输入宝贝姓名",
-      enterLocation: "请输入地点信息",
-      enterNotes: "请输入备注信息",
-      selectPunchType: "选择打卡类型",
-
-      // Punch types
-      clockIn: "上班打卡",
-      clockOut: "下班打卡",
-      breakStart: "休息开始",
-      breakEnd: "休息结束",
-      overtime: "加班打卡",
-
-      // Reset
-      reset: "重置设置",
-
-      // Feature cards
-      batchProcessingTitle: "批量处理",
-      batchProcessingDesc: "一键处理多张图片",
-      completelyFreeTitle: "完全免费",
-      completelyFreeDesc: "无需注册付费",
-      privacySecureTitle: "隐私安全",
-      privacySecureDesc: "本地处理不上传",
-      professionalTemplatesTitle: "专业模板",
-      professionalTemplatesDesc: "多种行业模板",
-
-      // Footer
-      hotSearchTitle: "热门搜索",
-      keywords: [
-        "图片水印工具",
-        "时间水印",
-        "地点水印",
-        "批量水印",
-        "工程水印",
-        "打卡水印",
-        "在线水印",
-        "免费水印",
-        "图片处理工具",
-        "水印制作",
-      ],
-
-      // Footer
-      footerDescription:
-        "专业的工作图片时间水印工具，帮助工程师、项目经理、现场工作人员为工作图片添加准确的时间日期地点信息，提升工作文档的专业性和可信度。完全免费，无需注册。",
-      productFeatures: "产品功能",
-      batchProcessing: "批量水印处理",
-      customStyles: "自定义样式",
-      exifExtraction: "EXIF信息提取",
-      highResSupport: "高清图片支持",
-      helpSupport: "帮助支持",
-      tutorial: "使用教程",
-      faq: "常见问题",
-      contact: "联系我们",
-      feedback: "意见反馈",
-      copyright: "© 2024 PhotoStamper. 保留所有权利。",
-      privacy: "隐私政策",
-      terms: "服务条款",
-      cookies: "Cookie政策",
-    },
-  },
-  en: {
-    name: "English",
-    flag: "🇺🇸",
-    translations: {
-      // Header
-      brand: "PhotoStamper",
-      features: "Features",
-      help: "Help",
-
-      // Hero section
-      heroTitle: "Professional Work Image Timestamping Tool",
-      heroSubtitle: "Smart Extraction, Batch Processing, Boost Work Efficiency",
-      heroDescription:
-        "Designed for work scenarios, automatically extract shooting time and location information from images, batch add professional time, date and location watermarks to enhance the standardization and credibility of work documents",
-
-      // Hero section - 添加缺失的翻译
-      heroMainTitle: "Professional Image Watermark Tool - Free Online Time & Location Stamping",
-      heroMainSubtitle: "Smart EXIF Extraction, Batch Processing, Boost Work Efficiency",
-      heroMainDescription:
-        "Designed for engineering records, check-in, travel logs, baby growth and other scenarios. Automatically extract shooting time and location information from images, batch add professional time, date and location watermarks to enhance the standardization and credibility of work documents. Completely free, no download required, privacy protected.",
-
-      // Tool section
-      toolBadge: "Online Tool - No Download Required",
-      toolTitle: "Start Creating Your Custom Watermarks",
-      toolDescription:
-        "Upload images, customize watermark styles, batch process with one click - complete professional watermark creation in three simple steps",
-
-      // Upload
-      uploadTitle: "Image Upload",
-      uploadDrag: "Drag images here",
-      uploadClick: "or click to select files",
-      uploaded: "Uploaded",
-
-      // Actions
-      applyAll: "Apply to All Images",
-      processing: "Processing...",
-      downloadAll: "Download All Images",
-      processingProgress: "Processing Progress",
-
-      // Preview
-      preview: "Live Preview",
-      previewMode: "Preview Mode",
-      uploadFirst: "Please upload images first",
-      supportDrag: "Support drag & drop or click to select files",
-      fileName: "File Name",
-      fileSize: "Size",
-      status: "Status",
-      processed: "Processed",
-      pending: "Pending",
-      watermark: "Watermark",
-
-      // Settings
-      settings: "Watermark Settings",
-      templates: "Template Selection",
-      style: "Style Adjustment",
-      content: "Content Settings",
-
-      // Templates
-      modern: "Modern",
-      vintage: "Vintage",
-      engineering: "Engineering",
-      travel: "Travel",
-      minimal: "Minimal",
-      digital: "Digital Clock",
-      baby: "Baby Growth",
-      professional: "Professional Marking",
-      punch: "Punch Record",
-      frame: "Frame Style",
-
-      // Common style settings
-      position: "Position",
-      fontSize: "Font Size",
-      font: "Font",
-      textColor: "Text Color",
-      backgroundColor: "Background Color",
-      backgroundOpacity: "Background Opacity",
-      borderRadius: "Border Radius",
-      padding: "Padding",
-
-      // Position options
-      topLeft: "Top Left",
-      topCenter: "Top Center",
-      topRight: "Top Right",
-      centerLeft: "Center Left",
-      center: "Center",
-      centerRight: "Center Right",
-      bottomLeft: "Bottom Left",
-      bottomCenter: "Bottom Center",
-      bottomRight: "Bottom Right",
-
-      // Template-specific fields
-      longitude: "Longitude",
-      latitude: "Latitude",
-      altitude: "Altitude",
-      accuracy: "Accuracy",
-
-      babyName: "Baby Name",
-      birthDate: "Birth Date",
-      daysSinceBirth: "Days Since Birth",
-      milestone: "Milestone",
-
-      projectName: "Project Name",
-      constructionArea: "Construction Area",
-      constructionContent: "Construction Content",
-      contractor: "Contractor",
-      supervisor: "Supervisor",
-
-      punchType: "Punch Type",
-      workLocation: "Work Location",
-      department: "Department",
-      employeeId: "Employee ID",
-
-      destination: "Destination",
-      weather: "Weather",
-      temperature: "Temperature",
-      companion: "Companion",
-      mood: "Mood",
-
-      timezone: "Timezone",
-      format24h: "24-hour Format",
-      showSeconds: "Show Seconds",
-
-      customDate: "Custom Date",
-      customTime: "Custom Time",
-      customLocation: "Custom Location",
-      customText: "Custom Text",
-      notes: "Notes",
-
-      enterProjectName: "Enter project name",
-      enterBabyName: "Enter baby name",
-      enterLocation: "Enter location",
-      enterNotes: "Enter notes",
-      selectPunchType: "Select punch type",
-
-      clockIn: "Clock In",
-      clockOut: "Clock Out",
-      breakStart: "Break Start",
-      breakEnd: "Break End",
-      overtime: "Overtime",
-
-      reset: "Reset Settings",
-
-      // Feature cards
-      batchProcessingTitle: "Batch Processing",
-      batchProcessingDesc: "Process multiple images at once",
-      completelyFreeTitle: "Completely Free",
-      completelyFreeDesc: "No registration or payment required",
-      privacySecureTitle: "Privacy Secure",
-      privacySecureDesc: "Local processing, no upload",
-      professionalTemplatesTitle: "Professional Templates",
-      professionalTemplatesDesc: "Multiple industry templates",
-
-      // Footer
-      hotSearchTitle: "Popular Searches",
-      keywords: [
-        "Image Watermark Tool",
-        "Time Watermark",
-        "Location Watermark",
-        "Batch Watermark",
-        "Engineering Watermark",
-        "Check-in Watermark",
-        "Online Watermark",
-        "Free Watermark",
-        "Image Processing Tool",
-        "Watermark Creation",
-      ],
-
-      footerDescription:
-        "Professional work image time watermark tool, helping engineers, project managers, and field workers add accurate time, date and location information to work images, enhancing the professionalism and credibility of work documents. Completely free, no registration required.",
-      productFeatures: "Product Features",
-      batchProcessing: "Batch Watermark Processing",
-      customStyles: "Custom Styles",
-      exifExtraction: "EXIF Information Extraction",
-      highResSupport: "High Resolution Support",
-      helpSupport: "Help & Support",
-      tutorial: "Tutorial",
-      faq: "FAQ",
-      contact: "Contact Us",
-      feedback: "Feedback",
-      copyright: "© 2024 PhotoStamper. All rights reserved.",
-      privacy: "Privacy Policy",
-      terms: "Terms of Service",
-      cookies: "Cookie Policy",
-    },
-  },
-}
-
-type Language = keyof typeof languages
+import Header from "@/components/header"
+import { useLanguage } from "@/contexts/language-context"
 
 type ImageFile = {
   id: string
@@ -432,7 +48,28 @@ type TemplateConfig = {
 }
 
 // Define template-specific field configurations
-const templateConfigs = {
+type ContentField = {
+  key: string
+  type: "input" | "textarea" | "select" | "checkbox" | "date" | "time" | "datetime-local"
+  label: string
+  required?: boolean
+  placeholder?: string
+  inputType?: string
+  step?: number
+  suffix?: string
+  options?: { value: string; label: string }[]
+  default?: any
+}
+
+const templateConfigs: {
+  [key: string]: {
+    name: string
+    preview: string
+    styleFields: string[]
+    contentFields: ContentField[]
+    defaultStyle: Omit<TemplateConfig, "content">
+  }
+} = {
   modern: {
     name: "现代简约",
     preview: "11:30 | 2024-01-15\n📍 北京·三里屯",
@@ -727,9 +364,7 @@ export default function ImageWatermarkTool() {
     }
   }, [])
 
-  const [currentLanguage, setCurrentLanguage] = useState<Language>("zh")
-  const t = languages[currentLanguage].translations
-  
+  const { t } = useLanguage()
   const [images, setImages] = useState<ImageFile[]>([])
   
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
@@ -1380,61 +1015,7 @@ export default function ImageWatermarkTool() {
 
   return (
     <div className="bg-gradient-to-br from-gray-50 via-white to-blue-50 min-h-screen">
-      {/* Header Navigation */}
-      <header className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                  <ImageIcon className="w-5 h-5 text-white" />
-                </div>
-                <span className="text-xl font-bold text-gray-900">{t.brand}</span>
-              </div>
-            </div>
-            <div className="flex items-center space-x-8">
-              <nav className="hidden md:flex items-center space-x-8">
-                <a href="/features" className="text-gray-600 hover:text-gray-900 transition-colors">
-                  {t.features}
-                </a>
-                <a href="/help" className="text-gray-600 hover:text-gray-900 transition-colors">
-                  {t.help}
-                </a>
-              </nav>
-
-              <div className="md:hidden">
-                <Button variant="ghost" size="sm">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                  </svg>
-                </Button>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Select value={currentLanguage} onValueChange={(value: Language) => setCurrentLanguage(value)}>
-                  <SelectTrigger className="w-24 h-8 border-0 bg-transparent">
-                    <SelectValue>
-                      <div className="flex items-center space-x-1">
-                        <span>{languages[currentLanguage].flag}</span>
-                        <span className="text-sm">{languages[currentLanguage].name}</span>
-                      </div>
-                    </SelectValue>
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.entries(languages).map(([key, lang]) => (
-                      <SelectItem key={key} value={key}>
-                        <div className="flex items-center space-x-2">
-                          <span>{lang.flag}</span>
-                          <span>{lang.name}</span>
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       {/* Hero Section */}
       <section
