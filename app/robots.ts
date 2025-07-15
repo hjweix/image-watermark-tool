@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/api/", "/admin/"],
     },
-    sitemap: "https://watermarkpro.com/sitemap.xml",
+    sitemap: "https://watermarker.yuelabs.com/sitemap.xml",
   }
 }

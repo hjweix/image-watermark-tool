@@ -188,7 +188,7 @@ export const languages = {
       faq: "常见问题",
       contact: "联系我们",
       feedback: "意见反馈",
-      copyright: "© 2024 PhotoStamper. 保留所有权利。",
+      copyright: "© 2025 PhotoStamper. 保留所有权利。",
       privacy: "隐私政策",
       terms: "服务条款",
       cookies: "Cookie政策",

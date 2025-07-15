@@ -130,11 +130,11 @@ export default function HelpPage() {
               <p className="text-gray-600 mb-6">{t.moreHelpDesc}</p>
               <div className="flex justify-center space-x-4">
                 <Badge variant="outline" className="px-4 py-2">
-                  📧 support@PhotoStamper.com
+                  📧 hwacer63@gmail.com
                 </Badge>
-                <Badge variant="outline" className="px-4 py-2">
+                {/* <Badge variant="outline" className="px-4 py-2">
                   💬 {t.onlineService}
-                </Badge>
+                </Badge> */}
               </div>
             </CardContent>
           </Card>
