@@ -3,6 +3,8 @@ import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
 import { LanguageProvider } from "@/contexts/language-context"
+import { StagewiseToolbar } from "@stagewise/toolbar-next"
+import ReactPlugin from "@stagewise-plugins/react"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -132,6 +134,10 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <LanguageProvider>{children}</LanguageProvider>
+        
+        <StagewiseToolbar config={{
+          plugins: [ReactPlugin]
+        }} />
 
         {/* Google Analytics */}
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-GCPQ4VK871" />
