@@ -189,6 +189,30 @@ export default function ImageWatermarkTool() {
     })
   }
 
+  // Remove single image
+  const removeImage = (imageId: string) => {
+    const imageToRemove = images.find((img) => img.id === imageId)
+    if (!imageToRemove) return
+
+    // Revoke the object URL to free up memory
+    URL.revokeObjectURL(imageToRemove.url)
+    if (imageToRemove.watermarkedUrl) {
+      URL.revokeObjectURL(imageToRemove.watermarkedUrl)
+    }
+
+    const updatedImages = images.filter((img) => img.id !== imageId)
+    setImages(updatedImages)
+
+    if (selectedImage === imageId) {
+      if (updatedImages.length > 0) {
+        setSelectedImage(updatedImages[0].id)
+      } else {
+        setSelectedImage(null)
+        setPreviewUrl(null)
+      }
+    }
+  }
+
   // Apply template
   const applyTemplate = (templateKey: string) => {
     const template = templateConfigs[templateKey as keyof typeof templateConfigs]
@@ -257,6 +281,7 @@ export default function ImageWatermarkTool() {
               setPreviewUrl={setPreviewUrl}
               applyWatermarkToAll={applyWatermarkToAll}
               downloadAllAsZip={downloadAllAsZip}
+              removeImage={removeImage}
             />
 
             <PreviewSection

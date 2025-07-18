@@ -31,6 +31,7 @@ type UploadSectionProps = {
   setPreviewUrl: (url: string | null) => void
   applyWatermarkToAll: () => void
   downloadAllAsZip: () => void
+  removeImage: (id: string) => void
 }
 
 export default function UploadSection({
@@ -47,6 +48,7 @@ export default function UploadSection({
   setPreviewUrl,
   applyWatermarkToAll,
   downloadAllAsZip,
+  removeImage,
 }: UploadSectionProps) {
   const { t } = useLanguage()
 
@@ -123,11 +125,17 @@ export default function UploadSection({
                       <p className="text-xs font-medium truncate">{image.file.name}</p>
                       <p className="text-xs text-gray-500">{(image.file.size / 1024 / 1024).toFixed(1)} MB</p>
                     </div>
-                    {image.watermarkedUrl && (
-                      <Badge variant="secondary" className="text-xs">
-                        ✓
-                      </Badge>
-                    )}
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="w-6 h-6"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        removeImage(image.id)
+                      }}
+                    >
+                      <Trash2 className="w-3 h-3" />
+                    </Button>
                   </div>
                 ))}
               </div>
