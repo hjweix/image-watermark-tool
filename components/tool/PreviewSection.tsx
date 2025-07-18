@@ -91,7 +91,7 @@ export default function PreviewSection({
                     </div>
                     <div>
                       <span className="text-gray-500">{t.status}:</span>
-                      <p className="font-medium">
+                      <div className="font-medium">
                         {selectedImageFile.watermarkedUrl ? (
                           <Badge variant="secondary" className="text-xs">
                             {t.processed}
@@ -101,7 +101,7 @@ export default function PreviewSection({
                             {t.pending}
                           </Badge>
                         )}
-                      </p>
+                      </div>
                     </div>
                     <div>
                       <span className="text-gray-500">{t.watermark}:</span>
