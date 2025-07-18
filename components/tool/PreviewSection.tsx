@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { useLanguage } from "@/contexts/language-context"
+import ExifDataSection from "./ExifDataSection"
 
 type ImageFile = {
   id: string
@@ -110,6 +111,9 @@ export default function PreviewSection({
                   </div>
                 </div>
               )}
+
+              {/* EXIF Data Section */}
+              <ExifDataSection image={selectedImageFile} />
             </div>
           ) : (
             <div className="w-full aspect-video bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg flex flex-col items-center justify-center min-h-[400px]">

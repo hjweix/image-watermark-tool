@@ -48,6 +48,8 @@ export const languages = {
       processed: "已处理",
       pending: "待处理",
       watermark: "水印",
+      exifInfo: "EXIF 信息",
+      shootingDate: "拍摄日期",
 
       // Settings
       settings: "水印设置",
@@ -331,6 +333,8 @@ export const languages = {
       processed: "Processed",
       pending: "Pending",
       watermark: "Watermark",
+      exifInfo: "EXIF Information",
+      shootingDate: "Shooting Date",
 
       // Settings
       settings: "Watermark Settings",

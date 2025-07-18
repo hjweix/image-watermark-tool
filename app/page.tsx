@@ -2,6 +2,7 @@
 
 import type React from "react"
 import { useCallback, useRef, useEffect, useState } from "react"
+import exifr from "exifr"
 import Header from "@/components/header"
 import { useLanguage } from "@/contexts/language-context"
 import { templateConfigs, TemplateConfig } from "@/lib/templates"
@@ -70,26 +71,21 @@ export default function ImageWatermarkTool() {
 
   // Extract EXIF data from image
   const extractExifData = useCallback(async (file: File): Promise<any> => {
-    return new Promise((resolve) => {
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        const arrayBuffer = e.target?.result as ArrayBuffer
-        const dataView = new DataView(arrayBuffer)
+    try {
+      const exif = await exifr.parse(file)
+      if (!exif) return {}
 
-        // Simple EXIF extraction (in a real app, you'd use a library like exif-js)
-        // For demo purposes, we'll simulate EXIF data
-        const mockExifData = {
-          dateTime: new Date().toISOString().slice(0, 19).replace("T", " "),
-          gps: {
-            latitude: 39.9042 + (Math.random() - 0.5) * 0.1,
-            longitude: 116.4074 + (Math.random() - 0.5) * 0.1,
-            location: "",
-          },
-        }
-        resolve(mockExifData)
+      const gps = await exifr.gps(file)
+
+      return {
+        dateTime: exif.CreateDate ? exif.CreateDate.toISOString().slice(0, 19).replace("T", " ") : null,
+        gps: gps ? { latitude: gps.latitude, longitude: gps.longitude } : null,
+        ...exif,
       }
-      reader.readAsArrayBuffer(file)
-    })
+    } catch (error) {
+      console.error("Error extracting EXIF data:", error)
+      return {}
+    }
   }, [])
 
   const generateWatermark = useCallback(

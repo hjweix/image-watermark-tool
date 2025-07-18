@@ -51,6 +51,11 @@ export default function Footer() {
               </li>
               <li>
                 <a href="/features" className="hover:text-white transition-colors">
+                  {t.exifExtraction}
+                </a>
+              </li>
+              <li>
+                <a href="/features" className="hover:text-white transition-colors">
                   {t.highResSupport}
                 </a>
               </li>
