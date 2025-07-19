@@ -28,7 +28,6 @@ type UploadSectionProps = {
   handleFileUpload: (files: FileList) => void
   setSelectedImage: (id: string) => void
   setImages: (images: ImageFile[]) => void
-  setPreviewUrl: (url: string | null) => void
   applyWatermarkToAll: () => void
   downloadAllAsZip: () => void
   removeImage: (id: string) => void
@@ -45,7 +44,6 @@ export default function UploadSection({
   handleFileUpload,
   setSelectedImage,
   setImages,
-  setPreviewUrl,
   applyWatermarkToAll,
   downloadAllAsZip,
   removeImage,
@@ -98,7 +96,6 @@ export default function UploadSection({
                 onClick={() => {
                   setImages([])
                   setSelectedImage("")
-                  setPreviewUrl(null)
                 }}
               >
                 <Trash2 className="w-3 h-3" />

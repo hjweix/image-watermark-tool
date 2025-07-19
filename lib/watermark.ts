@@ -40,48 +40,53 @@ export const generateWatermark = async (
       const textHeight = lines.length * lineHeight
 
       // Calculate position
-      const bgWidth = maxWidth + config.padding * 2
-      const bgHeight = textHeight + config.padding * 2
+      const bgWidth = config.width ?? maxWidth + config.padding * 2
+      const bgHeight = config.height ?? textHeight + config.padding * 2
 
       let x, y
-      switch (config.position) {
-        case "top-left":
-          x = config.offsetX
-          y = config.offsetY
-          break
-        case "top-center":
-          x = (canvas.width - bgWidth) / 2 + config.offsetX
-          y = config.offsetY
-          break
-        case "top-right":
-          x = canvas.width - bgWidth - config.offsetX
-          y = config.offsetY
-          break
-        case "center-left":
-          x = config.offsetX
-          y = (canvas.height - bgHeight) / 2 + config.offsetY
-          break
-        case "center":
-          x = (canvas.width - bgWidth) / 2 + config.offsetX
-          y = (canvas.height - bgHeight) / 2 + config.offsetY
-          break
-        case "center-right":
-          x = canvas.width - bgWidth - config.offsetX
-          y = (canvas.height - bgHeight) / 2 + config.offsetY
-          break
-        case "bottom-left":
-          x = config.offsetX
-          y = canvas.height - bgHeight - config.offsetY
-          break
-        case "bottom-center":
-          x = (canvas.width - bgWidth) / 2 + config.offsetX
-          y = canvas.height - bgHeight - config.offsetY
-          break
-        case "bottom-right":
-        default:
-          x = canvas.width - bgWidth - config.offsetX
-          y = canvas.height - bgHeight - config.offsetY
-          break
+      if (config.position === "custom") {
+        x = config.offsetX
+        y = config.offsetY
+      } else {
+        switch (config.position) {
+          case "top-left":
+            x = config.offsetX
+            y = config.offsetY
+            break
+          case "top-center":
+            x = (canvas.width - bgWidth) / 2 + config.offsetX
+            y = config.offsetY
+            break
+          case "top-right":
+            x = canvas.width - bgWidth - config.offsetX
+            y = config.offsetY
+            break
+          case "center-left":
+            x = config.offsetX
+            y = (canvas.height - bgHeight) / 2 + config.offsetY
+            break
+          case "center":
+            x = (canvas.width - bgWidth) / 2 + config.offsetX
+            y = (canvas.height - bgHeight) / 2 + config.offsetY
+            break
+          case "center-right":
+            x = canvas.width - bgWidth - config.offsetX
+            y = (canvas.height - bgHeight) / 2 + config.offsetY
+            break
+          case "bottom-left":
+            x = config.offsetX
+            y = canvas.height - bgHeight - config.offsetY
+            break
+          case "bottom-center":
+            x = (canvas.width - bgWidth) / 2 + config.offsetX
+            y = canvas.height - bgHeight - config.offsetY
+            break
+          case "bottom-right":
+          default:
+            x = canvas.width - bgWidth - config.offsetX
+            y = canvas.height - bgHeight - config.offsetY
+            break
+        }
       }
 
       // Draw background
@@ -114,7 +119,7 @@ export const generateWatermark = async (
 }
 
 // Generate template-specific text
-const generateTemplateText = (template: string, content: Record<string, any>, exifData: any): string[] => {
+export const generateTemplateText = (template: string, content: Record<string, any>, exifData: any): string[] => {
   const lines: string[] = []
   const now = new Date()
   const currentDate = now.toISOString().slice(0, 10)

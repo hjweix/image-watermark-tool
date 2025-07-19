@@ -61,7 +61,6 @@ export default function ImageWatermarkTool() {
   })
   const [isProcessing, setIsProcessing] = useState(false)
   const [processingProgress, setProcessingProgress] = useState(0)
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
 
   const fileInputRef = useRef<HTMLInputElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -139,16 +138,6 @@ export default function ImageWatermarkTool() {
     e.preventDefault()
   }, [])
 
-  // Generate preview
-  useEffect(() => {
-    if (selectedImage) {
-      const image = images.find((img) => img.id === selectedImage)
-      if (image) {
-        generateWatermark(image, templateConfig).then(setPreviewUrl)
-      }
-    }
-  }, [selectedImage, templateConfig, images, generateWatermark])
-
   // Apply watermark to all images
   const applyWatermarkToAll = async () => {
     setIsProcessing(true)
@@ -164,13 +153,26 @@ export default function ImageWatermarkTool() {
   }
 
   // Download single image
-  const downloadImage = (imageId: string) => {
+  const downloadImage = async (imageId: string, scale: number = 1) => {
     const image = images.find((img) => img.id === imageId)
-    if (image?.watermarkedUrl) {
+    if (image) {
+      const scaledConfig: TemplateConfig = {
+        ...templateConfig,
+        fontSize: templateConfig.fontSize * scale,
+        padding: templateConfig.padding * scale,
+        borderRadius: templateConfig.borderRadius * scale,
+        offsetX: templateConfig.offsetX * scale,
+        offsetY: templateConfig.offsetY * scale,
+        width: templateConfig.width ? templateConfig.width * scale : undefined,
+        height: templateConfig.height ? templateConfig.height * scale : undefined,
+      }
+
+      const watermarkedUrl = await generateWatermark(image, scaledConfig)
       const link = document.createElement("a")
       link.download = `${image.file.name.split(".")[0]}-watermarked.jpg`
-      link.href = image.watermarkedUrl
+      link.href = watermarkedUrl
       link.click()
+      URL.revokeObjectURL(watermarkedUrl) // Clean up
     }
   }
 
@@ -204,7 +206,6 @@ export default function ImageWatermarkTool() {
         setSelectedImage(updatedImages[0].id)
       } else {
         setSelectedImage(null)
-        setPreviewUrl(null)
       }
     }
   }
@@ -274,7 +275,6 @@ export default function ImageWatermarkTool() {
               handleFileUpload={handleFileUpload}
               setSelectedImage={setSelectedImage}
               setImages={setImages}
-              setPreviewUrl={setPreviewUrl}
               applyWatermarkToAll={applyWatermarkToAll}
               downloadAllAsZip={downloadAllAsZip}
               removeImage={removeImage}
@@ -283,9 +283,9 @@ export default function ImageWatermarkTool() {
             <PreviewSection
               images={images}
               selectedImage={selectedImage}
-              previewUrl={previewUrl}
               downloadImage={downloadImage}
-              currentTemplateConfig={currentTemplateConfig}
+              currentTemplateConfig={currentTemplateConfig ? { ...currentTemplateConfig.defaultStyle, ...templateConfig } : null}
+              updateTemplateStyle={updateTemplateStyle}
             />
 
             <SettingsSection

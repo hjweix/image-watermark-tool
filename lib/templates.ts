@@ -1,7 +1,7 @@
 // Template-specific configuration types
 export type TemplateConfig = {
   // Common style properties
-  position: string
+  position: string | "custom"
   fontSize: number
   fontFamily: string
   fontWeight: "normal" | "bold"
@@ -14,6 +14,8 @@ export type TemplateConfig = {
   offsetX: number
   offsetY: number
   textOpacity: number
+  width?: number
+  height?: number
 
   // Template-specific content
   content: Record<string, any>
@@ -73,7 +75,7 @@ export const templateConfigs: {
     ],
     defaultStyle: {
       position: "bottom-right",
-      fontSize: 50,
+      fontSize: 24,
       fontFamily: "Arial",
       fontWeight: "normal" as const,
       fontStyle: "normal" as const,
@@ -85,6 +87,8 @@ export const templateConfigs: {
       offsetX: 10,
       offsetY: 10,
       textOpacity: 1,
+      width: 220,
+      height: 100,
     },
   },
 
@@ -109,7 +113,7 @@ export const templateConfigs: {
     ],
     defaultStyle: {
       position: "bottom-left",
-      fontSize: 32,
+      fontSize: 16,
       fontFamily: "monospace",
       fontWeight: "normal" as const,
       fontStyle: "normal" as const,
@@ -121,6 +125,8 @@ export const templateConfigs: {
       offsetX: 10,
       offsetY: 10,
       textOpacity: 1,
+      width: 250,
+      height: 120,
     },
   },
 
@@ -145,7 +151,7 @@ export const templateConfigs: {
     ],
     defaultStyle: {
       position: "bottom-right",
-      fontSize: 45,
+      fontSize: 22,
       fontFamily: "Arial",
       fontWeight: "bold" as const,
       fontStyle: "normal" as const,
@@ -157,6 +163,8 @@ export const templateConfigs: {
       offsetX: 10,
       offsetY: 10,
       textOpacity: 1,
+      width: 240,
+      height: 100,
     },
   },
 
@@ -180,7 +188,7 @@ export const templateConfigs: {
     ],
     defaultStyle: {
       position: "top-left",
-      fontSize: 38,
+      fontSize: 18,
       fontFamily: "Arial",
       fontWeight: "bold" as const,
       fontStyle: "normal" as const,
@@ -192,6 +200,8 @@ export const templateConfigs: {
       offsetX: 10,
       offsetY: 10,
       textOpacity: 1,
+      width: 280,
+      height: 150,
     },
   },
 
@@ -230,7 +240,7 @@ export const templateConfigs: {
     ],
     defaultStyle: {
       position: "bottom-center",
-      fontSize: 42,
+      fontSize: 20,
       fontFamily: "Arial",
       fontWeight: "bold" as const,
       fontStyle: "normal" as const,
@@ -242,6 +252,8 @@ export const templateConfigs: {
       offsetX: 0,
       offsetY: 10,
       textOpacity: 1,
+      width: 260,
+      height: 120,
     },
   },
 
@@ -290,7 +302,7 @@ export const templateConfigs: {
     ],
     defaultStyle: {
       position: "bottom-right",
-      fontSize: 40,
+      fontSize: 20,
       fontFamily: "Arial",
       fontWeight: "normal" as const,
       fontStyle: "normal" as const,
@@ -302,6 +314,8 @@ export const templateConfigs: {
       offsetX: 10,
       offsetY: 10,
       textOpacity: 1,
+      width: 240,
+      height: 140,
     },
   },
 }

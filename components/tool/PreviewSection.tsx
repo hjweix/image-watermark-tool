@@ -1,11 +1,15 @@
 "use client"
 
 import { Eye, Download, ImageIcon } from "lucide-react"
+import { useState, useEffect, useRef } from "react"
+import { Rnd } from "react-rnd"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { useLanguage } from "@/contexts/language-context"
 import ExifDataSection from "./ExifDataSection"
+import Watermark from "./Watermark"
+import { generateTemplateText } from "@/lib/watermark"
 
 type ImageFile = {
   id: string
@@ -18,20 +22,34 @@ type ImageFile = {
 type PreviewSectionProps = {
   images: ImageFile[]
   selectedImage: string | null
-  previewUrl: string | null
-  downloadImage: (id: string) => void
-  currentTemplateConfig: { name: string } | null
+  downloadImage: (id: string, scale?: number) => void
+  currentTemplateConfig: any | null
+  updateTemplateStyle: (key: string, value: any) => void
 }
 
 export default function PreviewSection({
   images,
   selectedImage,
-  previewUrl,
   downloadImage,
   currentTemplateConfig,
+  updateTemplateStyle,
 }: PreviewSectionProps) {
   const { t } = useLanguage()
   const selectedImageFile = images.find((img) => img.id === selectedImage)
+  const imageRef = useRef<HTMLImageElement>(null)
+
+  const handleDownload = () => {
+    if (selectedImage && imageRef.current) {
+      const previewImage = imageRef.current
+      const originalImage = new Image()
+      originalImage.src = selectedImageFile!.url
+
+      originalImage.onload = () => {
+        const scale = originalImage.naturalWidth / previewImage.clientWidth
+        downloadImage(selectedImage, scale)
+      }
+    }
+  }
 
   return (
     <div className="xl:col-span-2 order-first xl:order-none">
@@ -47,8 +65,8 @@ export default function PreviewSection({
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => downloadImage(selectedImage)}
-                  disabled={!selectedImageFile?.watermarkedUrl}
+                  onClick={handleDownload}
+                  disabled={!selectedImageFile}
                 >
                   <Download className="w-4 h-4" />
                 </Button>
@@ -57,23 +75,45 @@ export default function PreviewSection({
           </CardTitle>
         </CardHeader>
         <CardContent>
-          {previewUrl ? (
+          {selectedImageFile ? (
             <div className="space-y-4">
               {/* Large Preview Image */}
-              <div className="relative bg-gray-50 rounded-lg overflow-hidden">
+              <div className="relative bg-gray-50 rounded-lg overflow-hidden" style={{ minHeight: "400px" }}>
                 <img
-                  src={previewUrl || "/placeholder.svg"}
+                  ref={imageRef}
+                  src={selectedImageFile.url}
                   alt="Preview"
                   className="w-full h-auto max-h-[70vh] object-contain rounded-lg"
-                  style={{ minHeight: "400px" }}
                 />
-                {/* Preview Controls Overlay */}
-                <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-lg p-2 shadow-lg">
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
-                    <Eye className="w-4 h-4" />
-                    <span>{t.previewMode}</span>
-                  </div>
-                </div>
+                {currentTemplateConfig && (
+                  <Rnd
+                    size={{
+                      width: currentTemplateConfig.width,
+                      height: currentTemplateConfig.height,
+                    }}
+                    position={{ x: currentTemplateConfig.offsetX, y: currentTemplateConfig.offsetY }}
+                    onDragStop={(e, d) => {
+                      updateTemplateStyle("position", "custom")
+                      updateTemplateStyle("offsetX", d.x)
+                      updateTemplateStyle("offsetY", d.y)
+                    }}
+                    onResizeStop={(e, direction, ref, delta, position) => {
+                      updateTemplateStyle("width", parseInt(ref.style.width))
+                      updateTemplateStyle("height", parseInt(ref.style.height))
+                      updateTemplateStyle("position", "custom")
+                      updateTemplateStyle("offsetX", position.x)
+                      updateTemplateStyle("offsetY", position.y)
+                    }}
+                    bounds="parent"
+                    className="border-2 border-dashed border-blue-500"
+                  >
+                    <Watermark
+                      config={currentTemplateConfig}
+                      selectedTemplate={currentTemplateConfig.name}
+                      exifData={selectedImageFile.exifData}
+                    />
+                  </Rnd>
+                )}
               </div>
 
               {/* Preview Info */}
