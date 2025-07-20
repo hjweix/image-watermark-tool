@@ -27,12 +27,18 @@ export const generateWatermark = async (
       ctx.drawImage(img, 0, 0)
 
       // Generate template-specific watermark text
-      const lines = generateTemplateText(selectedTemplate, config.content, imageFile.exifData)
+      const initialLines = generateTemplateText(selectedTemplate, config.content, imageFile.exifData)
 
-      if (lines.length === 0) return resolve(canvas.toDataURL())
+      if (initialLines.length === 0) return resolve(canvas.toDataURL())
 
       // Set font
       ctx.font = `${config.fontStyle} ${config.fontWeight} ${config.fontSize}px ${config.fontFamily}`
+
+      // Wrap text if width is defined
+      const maxTextWidth = config.width ? config.width - config.padding * 2 : undefined
+      const lines = maxTextWidth
+        ? initialLines.flatMap((line) => wrapText(ctx, line, maxTextWidth))
+        : initialLines
 
       // Calculate text dimensions
       const lineHeight = config.fontSize * 1.2
@@ -116,6 +122,26 @@ export const generateWatermark = async (
 
     img.src = imageFile.url
   })
+}
+
+// Wrap text to fit a max width
+const wrapText = (context: CanvasRenderingContext2D, text: string, maxWidth: number): string[] => {
+  const words = text.split(" ")
+  const lines: string[] = []
+  let currentLine = words[0]
+
+  for (let i = 1; i < words.length; i++) {
+    const word = words[i]
+    const width = context.measureText(currentLine + " " + word).width
+    if (width < maxWidth) {
+      currentLine += " " + word
+    } else {
+      lines.push(currentLine)
+      currentLine = word
+    }
+  }
+  lines.push(currentLine)
+  return lines
 }
 
 // Generate template-specific text

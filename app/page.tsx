@@ -153,9 +153,24 @@ export default function ImageWatermarkTool() {
   }
 
   // Download single image
-  const downloadImage = async (imageId: string, scale: number = 1) => {
+  const downloadImage = async (imageId: string, previewWidth?: number, previewHeight?: number) => {
     const image = images.find((img) => img.id === imageId)
-    if (image) {
+    if (!image) return
+
+    const originalImage = new Image()
+    originalImage.src = image.url
+
+    originalImage.onload = async () => {
+      const originalWidth = originalImage.naturalWidth
+      const originalHeight = originalImage.naturalHeight
+
+      // If preview dimensions are not provided, we can't guarantee a perfect match.
+      // We'll use a default preview width for a reasonable approximation for batch downloads.
+      const pWidth = previewWidth || 800 // A reasonable default if none provided
+      const pHeight = previewHeight || (pWidth * originalHeight) / originalWidth
+
+      const scale = originalWidth / pWidth
+
       const scaledConfig: TemplateConfig = {
         ...templateConfig,
         fontSize: templateConfig.fontSize * scale,
@@ -163,6 +178,7 @@ export default function ImageWatermarkTool() {
         borderRadius: templateConfig.borderRadius * scale,
         offsetX: templateConfig.offsetX * scale,
         offsetY: templateConfig.offsetY * scale,
+        // Scale width and height as well to ensure wrapping consistency
         width: templateConfig.width ? templateConfig.width * scale : undefined,
         height: templateConfig.height ? templateConfig.height * scale : undefined,
       }
@@ -171,20 +187,28 @@ export default function ImageWatermarkTool() {
       const link = document.createElement("a")
       link.download = `${image.file.name.split(".")[0]}-watermarked.jpg`
       link.href = watermarkedUrl
+      document.body.appendChild(link)
       link.click()
+      document.body.removeChild(link)
       URL.revokeObjectURL(watermarkedUrl) // Clean up
     }
   }
 
   // Download all images as ZIP
   const downloadAllAsZip = async () => {
-    // In a real implementation, you'd use a library like JSZip
-    // For now, we'll download them individually
-    images.forEach((image) => {
-      if (image.watermarkedUrl) {
-        setTimeout(() => downloadImage(image.id), 100)
-      }
-    })
+    setIsProcessing(true)
+    setProcessingProgress(0)
+
+    for (let i = 0; i < images.length; i++) {
+      const image = images[i]
+      // We pass undefined for preview dimensions to use the default approximation
+      await downloadImage(image.id, undefined, undefined)
+      setProcessingProgress(((i + 1) / images.length) * 100)
+      // Add a small delay to prevent browser from blocking multiple downloads
+      await new Promise((resolve) => setTimeout(resolve, 200))
+    }
+
+    setIsProcessing(false)
   }
 
   // Remove single image

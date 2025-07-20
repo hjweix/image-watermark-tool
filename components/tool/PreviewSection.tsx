@@ -22,7 +22,7 @@ type ImageFile = {
 type PreviewSectionProps = {
   images: ImageFile[]
   selectedImage: string | null
-  downloadImage: (id: string, scale?: number) => void
+  downloadImage: (id: string, previewWidth?: number, previewHeight?: number) => void
   currentTemplateConfig: any | null
   updateTemplateStyle: (key: string, value: any) => void
 }
@@ -41,13 +41,7 @@ export default function PreviewSection({
   const handleDownload = () => {
     if (selectedImage && imageRef.current) {
       const previewImage = imageRef.current
-      const originalImage = new Image()
-      originalImage.src = selectedImageFile!.url
-
-      originalImage.onload = () => {
-        const scale = originalImage.naturalWidth / previewImage.clientWidth
-        downloadImage(selectedImage, scale)
-      }
+      downloadImage(selectedImage, previewImage.clientWidth, previewImage.clientHeight)
     }
   }
 
