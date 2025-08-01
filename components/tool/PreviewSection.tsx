@@ -24,7 +24,9 @@ type PreviewSectionProps = {
   selectedImage: string | null
   downloadImage: (id: string, previewWidth?: number, previewHeight?: number) => void
   currentTemplateConfig: any | null
+  selectedTemplate: string
   updateTemplateStyle: (key: string, value: any) => void
+  templateConfig: any
 }
 
 export default function PreviewSection({
@@ -32,7 +34,9 @@ export default function PreviewSection({
   selectedImage,
   downloadImage,
   currentTemplateConfig,
+  selectedTemplate,
   updateTemplateStyle,
+  templateConfig,
 }: PreviewSectionProps) {
   const { t } = useLanguage()
   const selectedImageFile = images.find((img) => img.id === selectedImage)
@@ -79,7 +83,7 @@ export default function PreviewSection({
                   alt="Preview"
                   className="w-full h-auto max-h-[70vh] object-contain rounded-lg"
                 />
-                {currentTemplateConfig && (
+                {currentTemplateConfig && selectedImageFile && (
                   <Rnd
                     size={{
                       width: currentTemplateConfig.width,
@@ -102,8 +106,8 @@ export default function PreviewSection({
                     className="border-2 border-dashed border-blue-500"
                   >
                     <Watermark
-                      config={currentTemplateConfig}
-                      selectedTemplate={currentTemplateConfig.name}
+                      config={{...currentTemplateConfig.defaultStyle, ...templateConfig}}
+                      selectedTemplate={selectedTemplate}
                       exifData={selectedImageFile.exifData}
                     />
                   </Rnd>

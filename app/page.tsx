@@ -308,8 +308,10 @@ export default function ImageWatermarkTool() {
               images={images}
               selectedImage={selectedImage}
               downloadImage={downloadImage}
-              currentTemplateConfig={currentTemplateConfig ? { ...currentTemplateConfig.defaultStyle, ...templateConfig } : null}
+              currentTemplateConfig={currentTemplateConfig}
+              selectedTemplate={selectedTemplate}
               updateTemplateStyle={updateTemplateStyle}
+              templateConfig={templateConfig}
             />
 
             <SettingsSection
