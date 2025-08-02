@@ -11,10 +11,11 @@
   </defs>
   <rect x="10" y="10" width="300" height="160" rx="12" ry="12" fill="url(#travel-gradient)" filter="url(#paper-texture)" />
   <text x="30" y="45" font-family="Brush Script MT, cursive" font-size="20" fill="#FFFFFF">
-    <tspan id="line1" x="30" dy="0">旅行日记</tspan>
-    <tspan id="line2" x="30" dy="30">上海·迪士尼乐园</tspan>
-    <tspan id="line3" x="30" dy="30">晴天 22°C</tspan>
-    <tspan id="line4" x="30" dy="30">心情愉快</tspan>
+    <tspan id="line1" x="30" dy="0">✈️ 旅行日记</tspan>
+    <tspan id="line2" x="30" dy="30">📍 上海·迪士尼乐园</tspan>
+    <tspan id="line3" x="30" dy="30">☀️ 晴天 22°C</tspan>
+    <tspan id="line4" x="30" dy="30">👥 家人</tspan>
+    <tspan id="line5" x="30" dy="30">😊 愉快</tspan>
   </text>
   <g transform="translate(260, 50)">
     <circle cx="0" cy="0" r="25" fill="#FFFFFF" fill-opacity="0.2" />

@@ -5,7 +5,7 @@ import { Settings, RotateCcw } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Slider } from "@/components/ui/slider"
+
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -19,7 +19,7 @@ type SettingsSectionProps = {
   selectedTemplate: string
   templateConfig: TemplateConfig
   applyTemplate: (templateKey: string) => void
-  updateTemplateStyle: (key: string, value: any) => void
+
   updateTemplateContent: (key: string, value: any) => void
   setTemplateConfig: (config: TemplateConfig) => void
   useSvg?: boolean
@@ -30,7 +30,7 @@ export default function SettingsSection({
   selectedTemplate,
   templateConfig,
   applyTemplate,
-  updateTemplateStyle,
+
   updateTemplateContent,
   setTemplateConfig,
   useSvg = false,
@@ -169,158 +169,7 @@ export default function SettingsSection({
     })
   }
 
-  // Render template-specific style fields
-  const renderStyleFields = () => {
-    if (!currentTemplateConfig) return null
 
-    return currentTemplateConfig.styleFields.map((fieldKey) => {
-      // Skip useSvg field as it's handled separately
-      if (fieldKey === "useSvg") return null;
-      
-      switch (fieldKey) {
-        case "position":
-          return (
-            <div key={fieldKey}>
-              <Label className="text-xs">{t.position}</Label>
-              <Select value={templateConfig.position} onValueChange={(value) => updateTemplateStyle("position", value)}>
-                <SelectTrigger className="h-8">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="top-left">{t.topLeft}</SelectItem>
-                  <SelectItem value="top-center">{t.topCenter}</SelectItem>
-                  <SelectItem value="top-right">{t.topRight}</SelectItem>
-                  <SelectItem value="center-left">{t.centerLeft}</SelectItem>
-                  <SelectItem value="center">{t.center}</SelectItem>
-                  <SelectItem value="center-right">{t.centerRight}</SelectItem>
-                  <SelectItem value="bottom-left">{t.bottomLeft}</SelectItem>
-                  <SelectItem value="bottom-center">{t.bottomCenter}</SelectItem>
-                  <SelectItem value="bottom-right">{t.bottomRight}</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          )
-
-        case "fontSize":
-          return (
-            <div key={fieldKey}>
-              <Label className="text-xs">
-                {t.fontSize}: {templateConfig.fontSize}px
-              </Label>
-              <Slider
-                value={[templateConfig.fontSize]}
-                onValueChange={([value]) => updateTemplateStyle("fontSize", value)}
-                min={8}
-                max={100}
-                step={1}
-                className="mt-2"
-              />
-            </div>
-          )
-
-        case "fontFamily":
-          return (
-            <div key={fieldKey}>
-              <Label className="text-xs">{t.font}</Label>
-              <Select
-                value={templateConfig.fontFamily}
-                onValueChange={(value) => updateTemplateStyle("fontFamily", value)}
-              >
-                <SelectTrigger className="h-8">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Arial">Arial</SelectItem>
-                  <SelectItem value="serif">Serif</SelectItem>
-                  <SelectItem value="monospace">Monospace</SelectItem>
-                  <SelectItem value="sans-serif">Sans-serif</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          )
-
-        case "textColor":
-          return (
-            <div key={fieldKey}>
-              <Label className="text-xs">{t.textColor}</Label>
-              <Input
-                type="color"
-                value={templateConfig.textColor}
-                onChange={(e) => updateTemplateStyle("textColor", e.target.value)}
-                className="h-8"
-              />
-            </div>
-          )
-
-        case "backgroundColor":
-          return (
-            <div key={fieldKey}>
-              <Label className="text-xs">{t.backgroundColor}</Label>
-              <Input
-                type="color"
-                value={templateConfig.backgroundColor}
-                onChange={(e) => updateTemplateStyle("backgroundColor", e.target.value)}
-                className="h-8"
-              />
-            </div>
-          )
-
-        case "backgroundOpacity":
-          return (
-            <div key={fieldKey}>
-              <Label className="text-xs">
-                {t.backgroundOpacity}: {Math.round(templateConfig.backgroundOpacity * 100)}%
-              </Label>
-              <Slider
-                value={[templateConfig.backgroundOpacity]}
-                onValueChange={([value]) => updateTemplateStyle("backgroundOpacity", value)}
-                min={0}
-                max={1}
-                step={0.1}
-                className="mt-2"
-              />
-            </div>
-          )
-
-        case "borderRadius":
-          return (
-            <div key={fieldKey}>
-              <Label className="text-xs">
-                {t.borderRadius}: {templateConfig.borderRadius}px
-              </Label>
-              <Slider
-                value={[templateConfig.borderRadius]}
-                onValueChange={([value]) => updateTemplateStyle("borderRadius", value)}
-                min={0}
-                max={20}
-                step={1}
-                className="mt-2"
-              />
-            </div>
-          )
-
-        case "padding":
-          return (
-            <div key={fieldKey}>
-              <Label className="text-xs">
-                {t.padding}: {templateConfig.padding}px
-              </Label>
-              <Slider
-                value={[templateConfig.padding]}
-                onValueChange={([value]) => updateTemplateStyle("padding", value)}
-                min={0}
-                max={30}
-                step={1}
-                className="mt-2"
-              />
-            </div>
-          )
-
-        default:
-          return null
-      }
-    })
-  }
 
   return (
     <div className="xl:col-span-1">
@@ -333,12 +182,9 @@ export default function SettingsSection({
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="templates" className="space-y-4">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="templates" className="text-xs">
                 {t.templates}
-              </TabsTrigger>
-              <TabsTrigger value="style" className="text-xs">
-                {t.style}
               </TabsTrigger>
               <TabsTrigger value="content" className="text-xs">
                 {t.content}
@@ -364,36 +210,29 @@ export default function SettingsSection({
                         {selectedTemplate === key && <div className="w-2 h-2 bg-blue-500 rounded-full"></div>}
                       </div>
 
-                      {/* Mock watermark preview */}
+                      {/* SVG template preview */}
                       <div
-                        className="relative bg-gray-100 rounded-md p-2 min-h-[60px] flex items-end"
+                        className="relative bg-gray-100 rounded-md p-2 min-h-[60px] flex items-center justify-center"
                         style={{
                           background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
                         }}
                       >
-                        <div
-                          className="text-xs leading-tight whitespace-pre-line rounded px-2 py-1"
-                          style={{
-                            backgroundColor: template.defaultStyle.backgroundColor,
-                            color: template.defaultStyle.textColor,
-                            opacity: template.defaultStyle.backgroundOpacity + 0.6,
-                            fontFamily: template.defaultStyle.fontFamily,
-                            borderRadius: `${template.defaultStyle.borderRadius}px`,
-                            fontSize: "10px",
-                          }}
-                        >
-                          {template.preview}
+                        <div className="w-full h-full flex items-center justify-center">
+                          <img
+                            src={template.svgPath}
+                            alt={`${template.name} preview`}
+                            className="max-w-full max-h-full object-contain"
+                            style={{
+                              width: "80px",
+                              height: "40px",
+                            }}
+                          />
                         </div>
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
-            </TabsContent>
-
-            <TabsContent value="style" className="space-y-4">
-              {/* SVG选择器已隐藏，因为所有模板默认使用SVG水印 */}
-              <div className="space-y-4">{renderStyleFields()}</div>
             </TabsContent>
 
             <TabsContent value="content" className="space-y-4">

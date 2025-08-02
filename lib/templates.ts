@@ -52,7 +52,7 @@ export const templateConfigs: {
 } = {
   modern: {
     name: "现代简约",
-    preview: "11:30 | 2024-01-15\n📍 北京·三里屯",
+    preview: "🕐 11:30\n📅 2024-01-15\n📍 北京·三里屯",
     styleFields: [
       "position",
       "fontSize",
@@ -104,7 +104,7 @@ export const templateConfigs: {
 
   professional: {
     name: "专业标记",
-    preview: "经度: 116.305315\n纬度: 39.930812\n时间: 2024-01-15 11:30:45",
+    preview: "经度: 116.305315\n纬度: 39.930812\n海拔: 50m\n精度: 5m\n时间: 2024-01-15 11:30:45",
     styleFields: ["position", "fontSize", "fontFamily", "textColor", "backgroundColor", "backgroundOpacity", "useSvg"],
     contentFields: [
       {
@@ -145,7 +145,7 @@ export const templateConfigs: {
 
   baby: {
     name: "宝贝成长",
-    preview: "👶 小宝贝·出生第101天\n2024.01.15",
+    preview: "👶 小宝贝·出生第101天\n🎉 第一次笑\n📅 2024.01.15",
     styleFields: [
       "position",
       "fontSize",
@@ -187,7 +187,7 @@ export const templateConfigs: {
 
   engineering: {
     name: "工程记录",
-    preview: "⚡ 北京地铁15号线\n📍 望京东站施工区域\n🔧 隧道开挖作业\n📅 2024-01-15 11:30",
+    preview: "⚡ 北京地铁15号线\n📍 望京东站施工区域\n🔧 隧道开挖作业\n🏗️ 中建集团\n👷 监理公司\n📅 2024-01-15 11:30",
     styleFields: ["position", "fontSize", "fontFamily", "textColor", "backgroundColor", "backgroundOpacity", "useSvg"],
     contentFields: [
       { key: "projectName", type: "input", label: "工程名称", placeholder: "请输入工程名称", required: true },
@@ -227,7 +227,7 @@ export const templateConfigs: {
 
   punch: {
     name: "打卡记录",
-    preview: "📍 上班打卡 09:00\n北京·三里屯SOHO\n2024.01.15 星期一",
+    preview: "📍 上班打卡 09:00\n北京·三里屯SOHO\n部门: 技术部\n工号: 001\n2024.01.15 星期一",
     styleFields: [
       "position",
       "fontSize",
@@ -283,7 +283,7 @@ export const templateConfigs: {
 
   travel: {
     name: "旅行日志",
-    preview: "✈️ 旅行日记\n📍 上海·迪士尼乐园\n🌤️ 晴天 22°C\n😊 心情愉快",
+    preview: "✈️ 旅行日记\n📍 上海·迪士尼乐园\n☀️ 晴天 22°C\n👥 家人\n😊 愉快",
     styleFields: [
       "position",
       "fontSize",

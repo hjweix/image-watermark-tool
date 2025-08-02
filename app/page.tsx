@@ -368,7 +368,6 @@ export default function ImageWatermarkTool() {
               selectedTemplate={selectedTemplate}
               templateConfig={templateConfig}
               applyTemplate={applyTemplate}
-              updateTemplateStyle={updateTemplateStyle}
               updateTemplateContent={updateTemplateContent}
               setTemplateConfig={setTemplateConfig}
               useSvg={useSvg}

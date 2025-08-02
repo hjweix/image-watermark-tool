@@ -42,29 +42,30 @@ export const generateWatermark = async (
             // 根据不同模板类型，将内容插入到SVG中
             switch (selectedTemplate) {
               case "modern":
-                // 收集时间和日期信息
+                // 收集时间、日期和位置信息
                 let timeInfo = "";
+                let dateInfo = "";
                 let locationInfo = "";
                 
                 for (let i = 0; i < templateLines.length; i++) {
                   const line = templateLines[i];
                   if (line.includes("🕐")) {
-                    timeInfo = line.replace("🕐 ", "");
+                    timeInfo = line;
                   } else if (line.includes("📅")) {
-                    // 如果有日期信息，将其添加到时间信息中
-                    if (timeInfo) {
-                      timeInfo = `${timeInfo} | ${line.replace("📅 ", "")}`;
-                    } else {
-                      timeInfo = line.replace("📅 ", "");
-                    }
+                    dateInfo = line;
                   } else if (line.includes("📍")) {
-                    locationInfo = line.replace("📍 ", "");
+                    locationInfo = line;
                   }
                 }
                 
                 // 替换时间信息
                 if (timeInfo && modifiedSvgContent.includes("id=\"time\"")) {
                   modifiedSvgContent = modifiedSvgContent.replace(/<tspan id="time"[^>]*>[^<]*<\/tspan>/, `<tspan id="time" x="30" dy="0">${timeInfo}</tspan>`);
+                }
+                
+                // 替换日期信息
+                if (dateInfo && modifiedSvgContent.includes("id=\"date\"")) {
+                  modifiedSvgContent = modifiedSvgContent.replace(/<tspan id="date"[^>]*>[^<]*<\/tspan>/, `<tspan id="date" x="30" dy="30">${dateInfo}</tspan>`);
                 }
                 
                 // 替换位置信息

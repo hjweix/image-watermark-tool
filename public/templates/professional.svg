@@ -9,7 +9,9 @@
   <text x="25" y="40" font-family="Consolas, monospace" font-size="14" fill="#ECF0F1">
     <tspan id="line1" x="25" dy="0">经度: 116.305315</tspan>
     <tspan id="line2" x="25" dy="25">纬度: 39.930812</tspan>
-    <tspan id="line3" x="25" dy="25">时间: 2024-01-15 11:30:45</tspan>
+    <tspan id="line3" x="25" dy="25">海拔: 50m</tspan>
+    <tspan id="line4" x="25" dy="25">精度: 5m</tspan>
+    <tspan id="line5" x="25" dy="25">时间: 2024-01-15 11:30:45</tspan>
   </text>
   <g transform="translate(260, 30)">
     <circle cx="0" cy="0" r="15" fill="#3498DB" />
