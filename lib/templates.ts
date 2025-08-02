@@ -16,6 +16,11 @@ export type TemplateConfig = {
   textOpacity: number
   width?: number
   height?: number
+  useSvg?: boolean
+  svgTemplate?: string
+  _forceUpdate?: number // 用于强制更新的时间戳
+  _previewWidth?: number // 预览图片宽度，用于计算水印相对位置
+  _previewHeight?: number // 预览图片高度，用于计算水印相对位置
 
   // Template-specific content
   content: Record<string, any>
@@ -42,6 +47,7 @@ export const templateConfigs: {
     styleFields: string[]
     contentFields: ContentField[]
     defaultStyle: Omit<TemplateConfig, "content">
+    svgPath?: string
   }
 } = {
   modern: {
@@ -55,6 +61,7 @@ export const templateConfigs: {
       "backgroundColor",
       "backgroundOpacity",
       "borderRadius",
+      "useSvg",
     ],
     contentFields: [
       { key: "showDate", type: "checkbox", label: "显示日期", default: true },
@@ -73,6 +80,7 @@ export const templateConfigs: {
         default: "YYYY-MM-DD",
       },
     ],
+    svgPath: "/templates/modern.svg",
     defaultStyle: {
       position: "bottom-right",
       fontSize: 24,
@@ -89,13 +97,15 @@ export const templateConfigs: {
       textOpacity: 1,
       width: undefined,
       height: undefined,
+      useSvg: true,
+      svgTemplate: "/templates/modern.svg",
     },
   },
 
   professional: {
     name: "专业标记",
     preview: "经度: 116.305315\n纬度: 39.930812\n时间: 2024-01-15 11:30:45",
-    styleFields: ["position", "fontSize", "fontFamily", "textColor", "backgroundColor", "backgroundOpacity"],
+    styleFields: ["position", "fontSize", "fontFamily", "textColor", "backgroundColor", "backgroundOpacity", "useSvg"],
     contentFields: [
       {
         key: "longitude",
@@ -111,6 +121,7 @@ export const templateConfigs: {
       { key: "showTime", type: "checkbox", label: "显示时间", default: true },
       { key: "customTime", type: "datetime-local", label: "自定义时间" },
     ],
+    svgPath: "/templates/professional.svg",
     defaultStyle: {
       position: "bottom-left",
       fontSize: 16,
@@ -127,6 +138,8 @@ export const templateConfigs: {
       textOpacity: 1,
       width: undefined,
       height: undefined,
+      useSvg: true,
+      svgTemplate: "/templates/professional.svg",
     },
   },
 
@@ -141,6 +154,7 @@ export const templateConfigs: {
       "backgroundColor",
       "backgroundOpacity",
       "borderRadius",
+      "useSvg",
     ],
     contentFields: [
       { key: "babyName", type: "input", label: "宝贝姓名", placeholder: "请输入宝贝姓名", required: true },
@@ -149,6 +163,7 @@ export const templateConfigs: {
       { key: "showDaysSince", type: "checkbox", label: "显示出生天数", default: true },
       { key: "showCurrentDate", type: "checkbox", label: "显示当前日期", default: true },
     ],
+    svgPath: "/templates/baby.svg",
     defaultStyle: {
       position: "bottom-right",
       fontSize: 22,
@@ -165,13 +180,15 @@ export const templateConfigs: {
       textOpacity: 1,
       width: undefined,
       height: undefined,
+      useSvg: true,
+      svgTemplate: "/templates/baby.svg",
     },
   },
 
   engineering: {
     name: "工程记录",
     preview: "⚡ 北京地铁15号线\n📍 望京东站施工区域\n🔧 隧道开挖作业\n📅 2024-01-15 11:30",
-    styleFields: ["position", "fontSize", "fontFamily", "textColor", "backgroundColor", "backgroundOpacity"],
+    styleFields: ["position", "fontSize", "fontFamily", "textColor", "backgroundColor", "backgroundOpacity", "useSvg"],
     contentFields: [
       { key: "projectName", type: "input", label: "工程名称", placeholder: "请输入工程名称", required: true },
       { key: "constructionArea", type: "input", label: "施工区域", placeholder: "请输入施工区域", required: true },
@@ -186,6 +203,7 @@ export const templateConfigs: {
       { key: "supervisor", type: "input", label: "监理单位", placeholder: "请输入监理单位" },
       { key: "showDateTime", type: "checkbox", label: "显示拍摄时间", default: true },
     ],
+    svgPath: "/templates/engineering.svg",
     defaultStyle: {
       position: "top-left",
       fontSize: 18,
@@ -202,6 +220,8 @@ export const templateConfigs: {
       textOpacity: 1,
       width: undefined,
       height: undefined,
+      useSvg: true,
+      svgTemplate: "/templates/engineering.svg",
     },
   },
 
@@ -216,6 +236,7 @@ export const templateConfigs: {
       "backgroundColor",
       "backgroundOpacity",
       "borderRadius",
+      "useSvg",
     ],
     contentFields: [
       {
@@ -238,6 +259,7 @@ export const templateConfigs: {
       { key: "showWeekday", type: "checkbox", label: "显示星期", default: true },
       { key: "customTime", type: "time", label: "自定义打卡时间" },
     ],
+    svgPath: "/templates/punch.svg",
     defaultStyle: {
       position: "bottom-center",
       fontSize: 20,
@@ -254,6 +276,8 @@ export const templateConfigs: {
       textOpacity: 1,
       width: undefined,
       height: undefined,
+      useSvg: true,
+      svgTemplate: "/templates/punch.svg",
     },
   },
 
@@ -268,6 +292,7 @@ export const templateConfigs: {
       "backgroundColor",
       "backgroundOpacity",
       "borderRadius",
+      "useSvg",
     ],
     contentFields: [
       { key: "destination", type: "input", label: "目的地", placeholder: "请输入旅行目的地", required: true },
@@ -300,6 +325,7 @@ export const templateConfigs: {
         default: "😊 愉快",
       },
     ],
+    svgPath: "/templates/travel.svg",
     defaultStyle: {
       position: "bottom-right",
       fontSize: 20,
@@ -316,6 +342,8 @@ export const templateConfigs: {
       textOpacity: 1,
       width: undefined,
       height: undefined,
+      useSvg: true,
+      svgTemplate: "/templates/travel.svg",
     },
   },
 }

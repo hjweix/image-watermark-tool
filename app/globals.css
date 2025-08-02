@@ -2,6 +2,45 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 水印拖动容器样式 */
+.watermark-container {
+  touch-action: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.watermark-container:hover {
+  border-color: #2563eb !important;
+  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.2);
+}
+
+.watermark-container:active {
+  border-color: #1d4ed8 !important;
+  box-shadow: 0 0 0 2px rgba(29, 78, 216, 0.3);
+}
+
+/* 确保调整大小手柄可见且可交互 */
+.react-resizable-handle {
+  z-index: 11 !important;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+.react-resizable-handle:hover {
+  opacity: 1;
+}
+
+/* 防止图片被选中或拖动 */
+img {
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+}
+
 body {
   font-family: Arial, Helvetica, sans-serif;
 }

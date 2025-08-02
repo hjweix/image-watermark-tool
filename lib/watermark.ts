@@ -1,4 +1,5 @@
 import type { TemplateConfig } from "./templates"
+import { templateConfigs } from "./templates"
 
 type ImageFile = {
   id: string
@@ -26,6 +27,164 @@ export const generateWatermark = async (
       // Draw original image
       ctx.drawImage(img, 0, 0)
 
+      // Check if using SVG template
+      if (config.useSvg && config.svgTemplate) {
+        // Fetch SVG content and convert to image
+        fetch(config.svgTemplate)
+          .then(response => response.text())
+          .then(svgContent => {
+            // 获取模板文本内容
+            const templateLines = generateTemplateText(selectedTemplate, config.content, imageFile.exifData);
+            
+            // 将模板内容应用到SVG中
+            let modifiedSvgContent = svgContent;
+            
+            // 根据不同模板类型，将内容插入到SVG中
+            switch (selectedTemplate) {
+              case "modern":
+                // 收集时间和日期信息
+                let timeInfo = "";
+                let locationInfo = "";
+                
+                for (let i = 0; i < templateLines.length; i++) {
+                  const line = templateLines[i];
+                  if (line.includes("🕐")) {
+                    timeInfo = line.replace("🕐 ", "");
+                  } else if (line.includes("📅")) {
+                    // 如果有日期信息，将其添加到时间信息中
+                    if (timeInfo) {
+                      timeInfo = `${timeInfo} | ${line.replace("📅 ", "")}`;
+                    } else {
+                      timeInfo = line.replace("📅 ", "");
+                    }
+                  } else if (line.includes("📍")) {
+                    locationInfo = line.replace("📍 ", "");
+                  }
+                }
+                
+                // 替换时间信息
+                if (timeInfo && modifiedSvgContent.includes("id=\"time\"")) {
+                  modifiedSvgContent = modifiedSvgContent.replace(/<tspan id="time"[^>]*>[^<]*<\/tspan>/, `<tspan id="time" x="30" dy="0">${timeInfo}</tspan>`);
+                }
+                
+                // 替换位置信息
+                if (locationInfo && modifiedSvgContent.includes("id=\"location\"")) {
+                  modifiedSvgContent = modifiedSvgContent.replace(/<tspan id="location"[^>]*>[^<]*<\/tspan>/, `<tspan id="location" x="30" dy="30">${locationInfo}</tspan>`);
+                }
+                break;
+                
+              case "professional":
+              case "engineering":
+              case "baby":
+              case "punch":
+              case "travel":
+                // 为其他模板类型，尝试查找通用的内容占位符
+                if (templateLines.length > 0) {
+                  // 查找SVG中的文本元素并替换内容
+                  for (let i = 0; i < templateLines.length; i++) {
+                    const lineId = `line${i+1}`;
+                    if (modifiedSvgContent.includes(`id=\"${lineId}\"`)) {
+                      const line = templateLines[i];
+                      // 移除表情符号前缀
+                      const cleanLine = line.replace(/^[^\w\s]*\s*/, "");
+                      modifiedSvgContent = modifiedSvgContent.replace(new RegExp(`<tspan id="${lineId}"[^>]*>[^<]*<\/tspan>`, 'g'), `<tspan id="${lineId}" x="25" dy="${i === 0 ? '0' : '25'}">${cleanLine}</tspan>`);
+                    }
+                  }
+                }
+                break;
+                
+              default:
+                // 默认情况下不修改SVG内容
+                break;
+            }
+            
+            // Create SVG blob and object URL
+            const svgBlob = new Blob([modifiedSvgContent], { type: 'image/svg+xml' })
+            const svgUrl = URL.createObjectURL(svgBlob)
+            
+            // Create image from SVG
+            const svgImg = new Image()
+            svgImg.onload = () => {
+              // Calculate position
+      let x, y
+      const svgWidth = svgImg.width || 300
+      const svgHeight = svgImg.height || 150
+      
+      if (config.position === "custom") {
+        // 使用相对位置计算，确保在不同尺寸的图片上保持相同的相对位置
+        const previewWidth = config._previewWidth || canvas.width
+        const previewHeight = config._previewHeight || canvas.height
+        
+        // 计算预览中水印位置相对于预览图片的比例
+        const relativeX = config.offsetX / previewWidth
+        const relativeY = config.offsetY / previewHeight
+        
+        // 根据实际图片尺寸计算水印位置
+        x = relativeX * canvas.width
+        y = relativeY * canvas.height
+      } else {
+                switch (config.position) {
+                  case "top-left":
+                    x = config.offsetX
+                    y = config.offsetY
+                    break
+                  case "top-center":
+                    x = (canvas.width - svgWidth) / 2 + config.offsetX
+                    y = config.offsetY
+                    break
+                  case "top-right":
+                    x = canvas.width - svgWidth - config.offsetX
+                    y = config.offsetY
+                    break
+                  case "center-left":
+                    x = config.offsetX
+                    y = (canvas.height - svgHeight) / 2 + config.offsetY
+                    break
+                  case "center":
+                    x = (canvas.width - svgWidth) / 2 + config.offsetX
+                    y = (canvas.height - svgHeight) / 2 + config.offsetY
+                    break
+                  case "center-right":
+                    x = canvas.width - svgWidth - config.offsetX
+                    y = (canvas.height - svgHeight) / 2 + config.offsetY
+                    break
+                  case "bottom-left":
+                    x = config.offsetX
+                    y = canvas.height - svgHeight - config.offsetY
+                    break
+                  case "bottom-center":
+                    x = (canvas.width - svgWidth) / 2 + config.offsetX
+                    y = canvas.height - svgHeight - config.offsetY
+                    break
+                  case "bottom-right":
+                  default:
+                    x = canvas.width - svgWidth - config.offsetX
+                    y = canvas.height - svgHeight - config.offsetY
+                    break
+                }
+              }
+              
+              // Draw SVG watermark
+              ctx.drawImage(svgImg, x, y)
+              ctx.globalAlpha = 1
+              
+              // Clean up object URL
+              URL.revokeObjectURL(svgUrl)
+              
+              resolve(canvas.toDataURL())
+            }
+            
+            // Load SVG image
+            svgImg.src = svgUrl
+          })
+          .catch(error => {
+            console.error("Error loading SVG template:", error)
+            // Fallback to original image if SVG loading fails
+            resolve(canvas.toDataURL())
+          })
+        return
+      }
+
       // Generate template-specific watermark text
       const initialLines = generateTemplateText(selectedTemplate, config.content, imageFile.exifData)
 
@@ -51,8 +210,17 @@ export const generateWatermark = async (
 
       let x, y
       if (config.position === "custom") {
-        x = config.offsetX
-        y = config.offsetY
+        // 使用相对位置计算，确保在不同尺寸的图片上保持相同的相对位置
+        const previewWidth = config._previewWidth || canvas.width
+        const previewHeight = config._previewHeight || canvas.height
+        
+        // 计算预览中水印位置相对于预览图片的比例
+        const relativeX = config.offsetX / previewWidth
+        const relativeY = config.offsetY / previewHeight
+        
+        // 根据实际图片尺寸计算水印位置
+        x = relativeX * canvas.width
+        y = relativeY * canvas.height
       } else {
         switch (config.position) {
           case "top-left":

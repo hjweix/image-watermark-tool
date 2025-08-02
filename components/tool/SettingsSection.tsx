@@ -13,6 +13,7 @@ import { Separator } from "@/components/ui/separator"
 import { Textarea } from "@/components/ui/textarea"
 import { useLanguage } from "@/contexts/language-context"
 import { templateConfigs, TemplateConfig } from "@/lib/templates"
+import { SvgTemplateSelector } from "./SvgTemplateSelector"
 
 type SettingsSectionProps = {
   selectedTemplate: string
@@ -21,6 +22,8 @@ type SettingsSectionProps = {
   updateTemplateStyle: (key: string, value: any) => void
   updateTemplateContent: (key: string, value: any) => void
   setTemplateConfig: (config: TemplateConfig) => void
+  useSvg?: boolean
+  onUseSvgChange?: (value: boolean) => void
 }
 
 export default function SettingsSection({
@@ -30,6 +33,8 @@ export default function SettingsSection({
   updateTemplateStyle,
   updateTemplateContent,
   setTemplateConfig,
+  useSvg = false,
+  onUseSvgChange,
 }: SettingsSectionProps) {
   const { t } = useLanguage()
   const currentTemplateConfig = templateConfigs[selectedTemplate as keyof typeof templateConfigs]
@@ -169,6 +174,9 @@ export default function SettingsSection({
     if (!currentTemplateConfig) return null
 
     return currentTemplateConfig.styleFields.map((fieldKey) => {
+      // Skip useSvg field as it's handled separately
+      if (fieldKey === "useSvg") return null;
+      
       switch (fieldKey) {
         case "position":
           return (
@@ -384,6 +392,7 @@ export default function SettingsSection({
             </TabsContent>
 
             <TabsContent value="style" className="space-y-4">
+              {/* SVG选择器已隐藏，因为所有模板默认使用SVG水印 */}
               <div className="space-y-4">{renderStyleFields()}</div>
             </TabsContent>
 
@@ -395,6 +404,20 @@ export default function SettingsSection({
           <Separator className="my-4" />
 
           <div className="space-y-2">
+            <Button
+              onClick={() => {
+                // 强制更新模板配置，触发水印重新渲染
+                setTemplateConfig({
+                  ...templateConfig,
+                  _forceUpdate: Date.now(), // 添加一个时间戳强制更新
+                })
+              }}
+              variant="default"
+              size="sm"
+              className="w-full mb-2"
+            >
+              应用设置
+            </Button>
             <Button
               onClick={() => {
                 const template = templateConfigs[selectedTemplate as keyof typeof templateConfigs]

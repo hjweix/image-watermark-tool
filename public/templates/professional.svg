@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="150" viewBox="0 0 320 150">
+  <defs>
+    <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2C3E50;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#1A252F;stop-opacity:0.9" />
+    </linearGradient>
+  </defs>
+  <rect x="10" y="10" width="300" height="130" rx="5" ry="5" fill="url(#bg-gradient)" />
+  <text x="25" y="40" font-family="Consolas, monospace" font-size="14" fill="#ECF0F1">
+    <tspan id="line1" x="25" dy="0">经度: 116.305315</tspan>
+    <tspan id="line2" x="25" dy="25">纬度: 39.930812</tspan>
+    <tspan id="line3" x="25" dy="25">时间: 2024-01-15 11:30:45</tspan>
+  </text>
+  <g transform="translate(260, 30)">
+    <circle cx="0" cy="0" r="15" fill="#3498DB" />
+    <path d="M-5,-5 L5,5 M-5,5 L5,-5" stroke="#ECF0F1" stroke-width="2" />
+  </g>
+</svg>

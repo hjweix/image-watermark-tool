@@ -1,7 +1,7 @@
 "use client"
 
 import { Eye, Download, ImageIcon } from "lucide-react"
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import { Rnd } from "react-rnd"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -41,6 +41,27 @@ export default function PreviewSection({
   const { t } = useLanguage()
   const selectedImageFile = images.find((img) => img.id === selectedImage)
   const imageRef = useRef<HTMLImageElement>(null)
+
+  // 当图片加载完成或选中的图片改变时，保存预览图片的尺寸信息
+  useEffect(() => {
+    if (selectedImageFile && imageRef.current && imageRef.current.complete) {
+      updateTemplateStyle("_previewWidth", imageRef.current.clientWidth)
+      updateTemplateStyle("_previewHeight", imageRef.current.clientHeight)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedImage]) // 移除updateTemplateStyle依赖，避免无限循环
+
+  // 图片加载完成时保存尺寸信息
+  const handleImageLoad = useCallback(() => {
+    if (imageRef.current) {
+      // 使用setTimeout避免在渲染周期内更新状态
+      setTimeout(() => {
+        updateTemplateStyle("_previewWidth", imageRef.current?.clientWidth || 0)
+        updateTemplateStyle("_previewHeight", imageRef.current?.clientHeight || 0)
+      }, 0)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []) // 不依赖updateTemplateStyle，避免重新创建函数
 
   const handleDownload = () => {
     if (selectedImage && imageRef.current) {
@@ -82,34 +103,134 @@ export default function PreviewSection({
                   src={selectedImageFile.url}
                   alt="Preview"
                   className="w-full h-auto max-h-[70vh] object-contain rounded-lg"
+                  onLoad={handleImageLoad}
                 />
                 {currentTemplateConfig && selectedImageFile && (
                   <Rnd
+                    key={`watermark-${selectedImage}-${templateConfig.width}-${templateConfig.height}`}
                     size={{
-                      width: currentTemplateConfig.width,
-                      height: currentTemplateConfig.height,
+                      width: templateConfig.width || 200,
+                      height: templateConfig.height || 100,
                     }}
-                    position={{ x: currentTemplateConfig.offsetX, y: currentTemplateConfig.offsetY }}
+                    position={{ 
+                      x: templateConfig.offsetX || 50, 
+                      y: templateConfig.offsetY || 50 
+                    }}
                     onDragStop={(e, d) => {
                       updateTemplateStyle("position", "custom")
                       updateTemplateStyle("offsetX", d.x)
                       updateTemplateStyle("offsetY", d.y)
+                      
+                      if (imageRef.current) {
+                        updateTemplateStyle("_previewWidth", imageRef.current.clientWidth)
+                        updateTemplateStyle("_previewHeight", imageRef.current.clientHeight)
+                      }
                     }}
                     onResizeStop={(e, direction, ref, delta, position) => {
-                      updateTemplateStyle("width", parseInt(ref.style.width))
-                      updateTemplateStyle("height", parseInt(ref.style.height))
+                      updateTemplateStyle("width", parseInt(ref.style.width) || 200)
+                      updateTemplateStyle("height", parseInt(ref.style.height) || 100)
                       updateTemplateStyle("position", "custom")
                       updateTemplateStyle("offsetX", position.x)
                       updateTemplateStyle("offsetY", position.y)
+                      
+                      if (imageRef.current) {
+                        updateTemplateStyle("_previewWidth", imageRef.current.clientWidth)
+                        updateTemplateStyle("_previewHeight", imageRef.current.clientHeight)
+                      }
                     }}
                     bounds="parent"
-                    className="border-2 border-dashed border-blue-500"
+                    className="watermark-container"
+                    style={{ 
+                      position: 'absolute',
+                      zIndex: 10,
+                      border: '2px dashed #3b82f6',
+                      borderRadius: '4px',
+                      cursor: 'move',
+                      userSelect: 'none'
+                    }}
+                    enableResizing={{
+                      top: true,
+                      right: true,
+                      bottom: true,
+                      left: true,
+                      topRight: true,
+                      bottomRight: true,
+                      bottomLeft: true,
+                      topLeft: true
+                    }}
+                    resizeHandleStyles={{
+                      top: { 
+                        background: '#3b82f6', 
+                        height: '6px', 
+                        top: '-3px',
+                        cursor: 'n-resize'
+                      },
+                      right: { 
+                        background: '#3b82f6', 
+                        width: '6px', 
+                        right: '-3px',
+                        cursor: 'e-resize'
+                      },
+                      bottom: { 
+                        background: '#3b82f6', 
+                        height: '6px', 
+                        bottom: '-3px',
+                        cursor: 's-resize'
+                      },
+                      left: { 
+                        background: '#3b82f6', 
+                        width: '6px', 
+                        left: '-3px',
+                        cursor: 'w-resize'
+                      },
+                      topRight: { 
+                        background: '#3b82f6', 
+                        width: '10px', 
+                        height: '10px', 
+                        right: '-5px', 
+                        top: '-5px',
+                        cursor: 'ne-resize'
+                      },
+                      bottomRight: { 
+                        background: '#3b82f6', 
+                        width: '10px', 
+                        height: '10px', 
+                        right: '-5px', 
+                        bottom: '-5px',
+                        cursor: 'se-resize'
+                      },
+                      bottomLeft: { 
+                        background: '#3b82f6', 
+                        width: '10px', 
+                        height: '10px', 
+                        left: '-5px', 
+                        bottom: '-5px',
+                        cursor: 'sw-resize'
+                      },
+                      topLeft: { 
+                        background: '#3b82f6', 
+                        width: '10px', 
+                        height: '10px', 
+                        left: '-5px', 
+                        top: '-5px',
+                        cursor: 'nw-resize'
+                      }
+                    }}
                   >
-                    <Watermark
-                      config={{...currentTemplateConfig.defaultStyle, ...templateConfig}}
-                      selectedTemplate={selectedTemplate}
-                      exifData={selectedImageFile.exifData}
-                    />
+                    <div 
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        pointerEvents: 'none',
+                        overflow: 'hidden'
+                      }}
+                    >
+                      <Watermark
+                        config={templateConfig}
+                        selectedTemplate={selectedTemplate}
+                        exifData={selectedImageFile.exifData}
+                      />
+                    </div>
                   </Rnd>
                 )}
               </div>

@@ -59,6 +59,7 @@ export default function ImageWatermarkTool() {
     ...templateConfigs.modern.defaultStyle,
     content: {},
   })
+  const [useSvg, setUseSvg] = useState(true)
   const [isProcessing, setIsProcessing] = useState(false)
   const [processingProgress, setProcessingProgress] = useState(0)
 
@@ -144,9 +145,43 @@ export default function ImageWatermarkTool() {
     setProcessingProgress(0)
 
     for (let i = 0; i < images.length; i++) {
-      const watermarkedUrl = await generateWatermark(images[i], templateConfig)
-      setImages((prev) => prev.map((img) => (img.id === images[i].id ? { ...img, watermarkedUrl } : img)))
-      setProcessingProgress(((i + 1) / images.length) * 100)
+      const image = images[i]
+      
+      // 为每张图片创建适当的配置
+      const tempImg = new Image()
+      tempImg.src = image.url
+      
+      await new Promise<void>((resolve) => {
+        tempImg.onload = async () => {
+          const originalWidth = tempImg.naturalWidth
+          const originalHeight = tempImg.naturalHeight
+          
+          // 使用预览尺寸或默认尺寸计算缩放比例
+          const pWidth = templateConfig._previewWidth || 800
+          const pHeight = templateConfig._previewHeight || (pWidth * originalHeight) / originalWidth
+          const scale = originalWidth / pWidth
+          
+          const scaledConfig: TemplateConfig = {
+            ...templateConfig,
+            fontSize: templateConfig.fontSize * scale,
+            padding: templateConfig.padding * scale,
+            borderRadius: templateConfig.borderRadius * scale,
+            // 对于custom位置，保持原始的offsetX和offsetY，因为generateWatermark会使用相对比例计算
+            // 对于其他位置，需要按比例缩放
+            offsetX: templateConfig.position === 'custom' ? templateConfig.offsetX : templateConfig.offsetX * scale,
+            offsetY: templateConfig.position === 'custom' ? templateConfig.offsetY : templateConfig.offsetY * scale,
+            width: templateConfig.width ? templateConfig.width * scale : undefined,
+            height: templateConfig.height ? templateConfig.height * scale : undefined,
+            _previewWidth: pWidth,
+            _previewHeight: pHeight,
+          }
+          
+          const watermarkedUrl = await generateWatermarkUtil(image, scaledConfig, selectedTemplate, canvasRef.current!)
+          setImages((prev) => prev.map((img) => (img.id === image.id ? { ...img, watermarkedUrl } : img)))
+          setProcessingProgress(((i + 1) / images.length) * 100)
+          resolve()
+        }
+      })
     }
 
     setIsProcessing(false)
@@ -176,14 +211,19 @@ export default function ImageWatermarkTool() {
         fontSize: templateConfig.fontSize * scale,
         padding: templateConfig.padding * scale,
         borderRadius: templateConfig.borderRadius * scale,
-        offsetX: templateConfig.offsetX * scale,
-        offsetY: templateConfig.offsetY * scale,
+        // 对于custom位置，保持原始的offsetX和offsetY，因为generateWatermark会使用相对比例计算
+        // 对于其他位置，需要按比例缩放
+        offsetX: templateConfig.position === 'custom' ? templateConfig.offsetX : templateConfig.offsetX * scale,
+        offsetY: templateConfig.position === 'custom' ? templateConfig.offsetY : templateConfig.offsetY * scale,
         // Scale width and height as well to ensure wrapping consistency
         width: templateConfig.width ? templateConfig.width * scale : undefined,
         height: templateConfig.height ? templateConfig.height * scale : undefined,
+        // 保存预览图片的尺寸信息，用于计算水印的相对位置
+        _previewWidth: pWidth,
+        _previewHeight: pHeight,
       }
 
-      const watermarkedUrl = await generateWatermark(image, scaledConfig)
+      const watermarkedUrl = await generateWatermarkUtil(image, scaledConfig, selectedTemplate, canvasRef.current!)
       const link = document.createElement("a")
       link.download = `${image.file.name.split(".")[0]}-watermarked.jpg`
       link.href = watermarkedUrl
@@ -239,6 +279,11 @@ export default function ImageWatermarkTool() {
     const template = templateConfigs[templateKey as keyof typeof templateConfigs]
     if (template) {
       setSelectedTemplate(templateKey)
+      // 检查模板是否有useSvg属性，并相应更新状态
+      const hasUseSvg = 'useSvg' in template.defaultStyle
+      if (hasUseSvg) {
+        setUseSvg(!!template.defaultStyle.useSvg)
+      }
       setTemplateConfig({
         ...template.defaultStyle,
         content: {},
@@ -259,9 +304,14 @@ export default function ImageWatermarkTool() {
 
   // Update template style
   const updateTemplateStyle = (key: string, value: any) => {
+    if (key === "useSvg") {
+      setUseSvg(value)
+    }
     setTemplateConfig((prev) => ({
       ...prev,
       [key]: value,
+      // 确保useSvg状态同步到templateConfig中
+      ...(key === "useSvg" ? { useSvg: value } : {}),
     }))
   }
 
@@ -321,6 +371,8 @@ export default function ImageWatermarkTool() {
               updateTemplateStyle={updateTemplateStyle}
               updateTemplateContent={updateTemplateContent}
               setTemplateConfig={setTemplateConfig}
+              useSvg={useSvg}
+              onUseSvgChange={setUseSvg}
             />
           </div>
 
