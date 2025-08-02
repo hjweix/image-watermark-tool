@@ -191,8 +191,8 @@ export default function SettingsSection({
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="templates" className="space-y-3">
-              <div className="grid grid-cols-1 gap-3">
+            <TabsContent value="templates" className="space-y-4">
+              <div className="grid grid-cols-1 gap-4">
                 {Object.entries(templateConfigs).map(([key, template]) => (
                   <div
                     key={key}
@@ -204,9 +204,9 @@ export default function SettingsSection({
                     onClick={() => applyTemplate(key)}
                   >
                     {/* Template Preview */}
-                    <div className="p-3">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs font-medium text-gray-700">{template.name}</span>
+                    <div className="p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-sm font-medium text-gray-700">{template.name}</span>
                         {selectedTemplate === key && <div className="w-2 h-2 bg-blue-500 rounded-full"></div>}
                       </div>
 
@@ -223,8 +223,8 @@ export default function SettingsSection({
                             alt={`${template.name} preview`}
                             className="max-w-full max-h-full object-contain"
                             style={{
-                              width: "80px",
-                              height: "40px",
+                              width: "220px",
+                              height: "110px",
                             }}
                           />
                         </div>
@@ -237,44 +237,45 @@ export default function SettingsSection({
 
             <TabsContent value="content" className="space-y-4">
               <div className="space-y-4">{renderContentFields()}</div>
+              
+              <Separator className="my-4" />
+              
+              <div className="space-y-2">
+                <Button
+                  onClick={() => {
+                    // 强制更新模板配置，触发水印重新渲染
+                    setTemplateConfig({
+                      ...templateConfig,
+                      _forceUpdate: Date.now(), // 添加一个时间戳强制更新
+                    })
+                  }}
+                  variant="default"
+                  size="sm"
+                  className="w-full mb-2"
+                >
+                  应用设置
+                </Button>
+                <Button
+                  onClick={() => {
+                    const template = templateConfigs[selectedTemplate as keyof typeof templateConfigs]
+                    if (template) {
+                      setTemplateConfig({
+                        ...template.defaultStyle,
+                        content: {},
+                      })
+                    }
+                  }}
+                  variant="outline"
+                  size="sm"
+                  className="w-full"
+                >
+                  <RotateCcw className="w-3 h-3 mr-2" />
+                  {t.reset}
+                </Button>
+              </div>
             </TabsContent>
           </Tabs>
 
-          <Separator className="my-4" />
-
-          <div className="space-y-2">
-            <Button
-              onClick={() => {
-                // 强制更新模板配置，触发水印重新渲染
-                setTemplateConfig({
-                  ...templateConfig,
-                  _forceUpdate: Date.now(), // 添加一个时间戳强制更新
-                })
-              }}
-              variant="default"
-              size="sm"
-              className="w-full mb-2"
-            >
-              应用设置
-            </Button>
-            <Button
-              onClick={() => {
-                const template = templateConfigs[selectedTemplate as keyof typeof templateConfigs]
-                if (template) {
-                  setTemplateConfig({
-                    ...template.defaultStyle,
-                    content: {},
-                  })
-                }
-              }}
-              variant="outline"
-              size="sm"
-              className="w-full"
-            >
-              <RotateCcw className="w-3 h-3 mr-2" />
-              {t.reset}
-            </Button>
-          </div>
         </CardContent>
       </Card>
     </div>

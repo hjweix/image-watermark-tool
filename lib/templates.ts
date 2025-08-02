@@ -80,7 +80,7 @@ export const templateConfigs: {
         default: "YYYY-MM-DD",
       },
     ],
-    svgPath: "/templates/modern.svg",
+    svgPath: "/templates/preview/modern.svg",
     defaultStyle: {
       position: "bottom-right",
       fontSize: 24,
@@ -98,7 +98,7 @@ export const templateConfigs: {
       width: undefined,
       height: undefined,
       useSvg: true,
-      svgTemplate: "/templates/modern.svg",
+      svgTemplate: "/templates/preview/modern.svg",
     },
   },
 
@@ -121,7 +121,7 @@ export const templateConfigs: {
       { key: "showTime", type: "checkbox", label: "显示时间", default: true },
       { key: "customTime", type: "datetime-local", label: "自定义时间" },
     ],
-    svgPath: "/templates/professional.svg",
+    svgPath: "/templates/preview/professional.svg",
     defaultStyle: {
       position: "bottom-left",
       fontSize: 16,
@@ -139,7 +139,7 @@ export const templateConfigs: {
       width: undefined,
       height: undefined,
       useSvg: true,
-      svgTemplate: "/templates/professional.svg",
+      svgTemplate: "/templates/preview/professional.svg",
     },
   },
 
@@ -163,7 +163,7 @@ export const templateConfigs: {
       { key: "showDaysSince", type: "checkbox", label: "显示出生天数", default: true },
       { key: "showCurrentDate", type: "checkbox", label: "显示当前日期", default: true },
     ],
-    svgPath: "/templates/baby.svg",
+    svgPath: "/templates/preview/baby.svg",
     defaultStyle: {
       position: "bottom-right",
       fontSize: 22,
@@ -181,7 +181,7 @@ export const templateConfigs: {
       width: undefined,
       height: undefined,
       useSvg: true,
-      svgTemplate: "/templates/baby.svg",
+      svgTemplate: "/templates/preview/baby.svg",
     },
   },
 
@@ -203,7 +203,7 @@ export const templateConfigs: {
       { key: "supervisor", type: "input", label: "监理单位", placeholder: "请输入监理单位" },
       { key: "showDateTime", type: "checkbox", label: "显示拍摄时间", default: true },
     ],
-    svgPath: "/templates/engineering.svg",
+    svgPath: "/templates/preview/engineering.svg",
     defaultStyle: {
       position: "top-left",
       fontSize: 18,
@@ -221,7 +221,7 @@ export const templateConfigs: {
       width: undefined,
       height: undefined,
       useSvg: true,
-      svgTemplate: "/templates/engineering.svg",
+      svgTemplate: "/templates/preview/engineering.svg",
     },
   },
 
@@ -259,7 +259,7 @@ export const templateConfigs: {
       { key: "showWeekday", type: "checkbox", label: "显示星期", default: true },
       { key: "customTime", type: "time", label: "自定义打卡时间" },
     ],
-    svgPath: "/templates/punch.svg",
+    svgPath: "/templates/preview/punch.svg",
     defaultStyle: {
       position: "bottom-center",
       fontSize: 20,
@@ -277,7 +277,7 @@ export const templateConfigs: {
       width: undefined,
       height: undefined,
       useSvg: true,
-      svgTemplate: "/templates/punch.svg",
+      svgTemplate: "/templates/preview/punch.svg",
     },
   },
 
@@ -325,7 +325,7 @@ export const templateConfigs: {
         default: "😊 愉快",
       },
     ],
-    svgPath: "/templates/travel.svg",
+    svgPath: "/templates/preview/travel.svg",
     defaultStyle: {
       position: "bottom-right",
       fontSize: 20,
@@ -343,7 +343,7 @@ export const templateConfigs: {
       width: undefined,
       height: undefined,
       useSvg: true,
-      svgTemplate: "/templates/travel.svg",
+      svgTemplate: "/templates/preview/travel.svg",
     },
   },
 }

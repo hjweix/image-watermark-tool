@@ -9,6 +9,147 @@ type ImageFile = {
   watermarkedUrl?: string
 }
 
+// 变量模板映射
+const TEMPLATE_VARIABLES = {
+  modern: {
+    TIME_CONTENT: (config: any) => {
+      if (config.showTime === false) return null
+      const now = new Date()
+      return `🕐 ${now.toTimeString().slice(0, 8)}`
+    },
+    DATE_CONTENT: (config: any) => {
+      if (config.showDate === false) return null
+      const now = new Date()
+      const dateFormat = config.dateFormat || "YYYY-MM-DD"
+      const year = now.getFullYear()
+      const month = String(now.getMonth() + 1).padStart(2, "0")
+      const day = String(now.getDate()).padStart(2, "0")
+      const formattedDate = dateFormat.replace("YYYY", year.toString()).replace("MM", month).replace("DD", day)
+      return `📅 ${formattedDate}`
+    },
+    LOCATION_CONTENT: (config: any) => {
+      if (config.showLocation === false) return null
+      return config.customLocation ? `📍 ${config.customLocation}` : `📍 位置信息`
+    }
+  },
+  professional: {
+    LONGITUDE_CONTENT: (config: any) => config.longitude ? `经度: ${config.longitude}` : `经度: 116.4074`,
+    LATITUDE_CONTENT: (config: any) => config.latitude ? `纬度: ${config.latitude}` : `纬度: 39.9042`,
+    ALTITUDE_CONTENT: (config: any) => config.altitude ? `海拔: ${config.altitude}m` : `海拔: 43m`,
+    ACCURACY_CONTENT: (config: any) => config.accuracy ? `精度: ${config.accuracy}m` : `精度: 5m`,
+    TIME_CONTENT: (config: any) => {
+      if (config.showTime === false) return null
+      const now = new Date()
+      const currentDate = now.toISOString().slice(0, 10)
+      const currentTime = config.customTime || now.toTimeString().slice(0, 8)
+      return `时间: ${currentDate} ${currentTime}`
+    }
+  },
+  baby: {
+    BABY_NAME_CONTENT: (config: any) => {
+      const babyName = config.babyName || "宝宝"
+      let text = `👶 ${babyName}`
+      if (config.showDaysSince !== false && config.birthDate) {
+        const birthDate = new Date(config.birthDate)
+        const now = new Date()
+        const daysSince = Math.floor((now.getTime() - birthDate.getTime()) / (1000 * 60 * 60 * 24))
+        text += `·出生第${daysSince}天`
+      }
+      return text
+    },
+    MILESTONE_CONTENT: (config: any) => config.milestone ? `🎉 ${config.milestone}` : `🎉 成长记录`,
+    DATE_CONTENT: (config: any) => {
+      if (config.showCurrentDate === false) return null
+      const now = new Date()
+      return `📅 ${now.toISOString().slice(0, 10)}`
+    }
+  },
+  engineering: {
+    PROJECT_NAME_CONTENT: (config: any) => config.projectName ? `⚡ ${config.projectName}` : `⚡ 工程项目`,
+    CONSTRUCTION_AREA_CONTENT: (config: any) => config.constructionArea ? `📍 ${config.constructionArea}` : `📍 施工区域`,
+    CONSTRUCTION_CONTENT: (config: any) => config.constructionContent ? `🔧 ${config.constructionContent}` : `🔧 施工内容`,
+    CONTRACTOR_CONTENT: (config: any) => config.contractor ? `🏗️ ${config.contractor}` : `🏗️ 施工单位`,
+    SUPERVISOR_CONTENT: (config: any) => config.supervisor ? `👷 ${config.supervisor}` : `👷 监理单位`,
+    DATETIME_CONTENT: (config: any) => {
+      if (config.showDateTime === false) return null
+      const now = new Date()
+      const currentDate = now.toISOString().slice(0, 10)
+      const currentTime = now.toTimeString().slice(0, 5)
+      return `📅 ${currentDate} ${currentTime}`
+    }
+  },
+  punch: {
+    PUNCH_TYPE_CONTENT: (config: any) => {
+      const punchTypeLabels = {
+        clockIn: "上班打卡",
+        clockOut: "下班打卡",
+        breakStart: "休息开始",
+        breakEnd: "休息结束",
+        overtime: "加班打卡",
+      }
+      const punchType = punchTypeLabels[config.punchType as keyof typeof punchTypeLabels] || "上班打卡"
+      const now = new Date()
+      const punchTime = config.customTime || now.toTimeString().slice(0, 5)
+      return `📍 ${punchType} ${punchTime}`
+    },
+    WORK_LOCATION_CONTENT: (config: any) => config.workLocation || `📍 办公地点`,
+    DEPARTMENT_CONTENT: (config: any) => config.department ? `部门: ${config.department}` : `部门: 技术部`,
+    EMPLOYEE_ID_CONTENT: (config: any) => config.employeeId ? `工号: ${config.employeeId}` : `工号: 001`,
+    DATE_WEEKDAY_CONTENT: (config: any) => {
+      const now = new Date()
+      const currentDate = now.toISOString().slice(0, 10)
+      let dateText = currentDate
+      if (config.showWeekday !== false) {
+        const weekdays = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"]
+        dateText += ` ${weekdays[now.getDay()]}`
+      }
+      return dateText
+    }
+  },
+  travel: {
+    TRAVEL_TITLE_CONTENT: () => "✈️ 旅行日记",
+    DESTINATION_CONTENT: (config: any) => config.destination ? `📍 ${config.destination}` : `📍 目的地`,
+    WEATHER_TEMPERATURE_CONTENT: (config: any) => {
+      if (config.weather && config.temperature) {
+        return `${config.weather} ${config.temperature}°C`
+      } else if (config.weather) {
+        return config.weather
+      }
+      return `☀️ 晴天 22°C`
+    },
+    COMPANION_CONTENT: (config: any) => config.companion ? `👥 ${config.companion}` : `👥  同行伙伴`,
+    MOOD_CONTENT: (config: any) => config.mood || `😊 心情愉快`
+  }
+}
+
+// 处理变量模板，替换占位符并隐藏空元素
+export const processVariableTemplate = (svgContent: string, templateType: string, config: any): string => {
+  let processedContent = svgContent
+  const variables = TEMPLATE_VARIABLES[templateType as keyof typeof TEMPLATE_VARIABLES]
+  
+  if (!variables) return processedContent
+  
+  Object.entries(variables).forEach(([variableName, generator]) => {
+    const content = generator(config)
+    const placeholder = `{{${variableName}}}`
+    
+    if (content === null) {
+      // 如果内容为null，隐藏对应的tspan元素
+      const regex = new RegExp(`<tspan[^>]*>\\s*${placeholder.replace(/[{}]/g, '\\$&')}\\s*</tspan>`, 'g')
+      processedContent = processedContent.replace(regex, (match) => {
+        return match.replace('<tspan', '<tspan style="display:none"')
+      })
+      // 同时替换占位符为空字符串
+      processedContent = processedContent.replace(new RegExp(placeholder.replace(/[{}]/g, '\\$&'), 'g'), "")
+    } else {
+      // 替换占位符为实际内容
+      processedContent = processedContent.replace(new RegExp(placeholder.replace(/[{}]/g, '\\$&'), 'g'), content)
+    }
+  })
+  
+  return processedContent
+}
+
 // Generate watermark based on template
 export const generateWatermark = async (
   imageFile: ImageFile,
@@ -29,101 +170,39 @@ export const generateWatermark = async (
 
       // Check if using SVG template
       if (config.useSvg && config.svgTemplate) {
-        // Fetch SVG content and convert to image
-        fetch(config.svgTemplate)
+        // Fetch variable template SVG content
+        const variableTemplatePath = config.svgTemplate.replace('/preview/', '/variables/')
+        fetch(variableTemplatePath)
           .then(response => response.text())
           .then(svgContent => {
-            // 获取模板文本内容
-            const templateLines = generateTemplateText(selectedTemplate, config.content, imageFile.exifData);
-            
-            // 将模板内容应用到SVG中
-            let modifiedSvgContent = svgContent;
-            
-            // 根据不同模板类型，将内容插入到SVG中
-            switch (selectedTemplate) {
-              case "modern":
-                // 收集时间、日期和位置信息
-                let timeInfo = "";
-                let dateInfo = "";
-                let locationInfo = "";
-                
-                for (let i = 0; i < templateLines.length; i++) {
-                  const line = templateLines[i];
-                  if (line.includes("🕐")) {
-                    timeInfo = line;
-                  } else if (line.includes("📅")) {
-                    dateInfo = line;
-                  } else if (line.includes("📍")) {
-                    locationInfo = line;
-                  }
-                }
-                
-                // 替换时间信息
-                if (timeInfo && modifiedSvgContent.includes("id=\"time\"")) {
-                  modifiedSvgContent = modifiedSvgContent.replace(/<tspan id="time"[^>]*>[^<]*<\/tspan>/, `<tspan id="time" x="30" dy="0">${timeInfo}</tspan>`);
-                }
-                
-                // 替换日期信息
-                if (dateInfo && modifiedSvgContent.includes("id=\"date\"")) {
-                  modifiedSvgContent = modifiedSvgContent.replace(/<tspan id="date"[^>]*>[^<]*<\/tspan>/, `<tspan id="date" x="30" dy="30">${dateInfo}</tspan>`);
-                }
-                
-                // 替换位置信息
-                if (locationInfo && modifiedSvgContent.includes("id=\"location\"")) {
-                  modifiedSvgContent = modifiedSvgContent.replace(/<tspan id="location"[^>]*>[^<]*<\/tspan>/, `<tspan id="location" x="30" dy="30">${locationInfo}</tspan>`);
-                }
-                break;
-                
-              case "professional":
-              case "engineering":
-              case "baby":
-              case "punch":
-              case "travel":
-                // 为其他模板类型，尝试查找通用的内容占位符
-                if (templateLines.length > 0) {
-                  // 查找SVG中的文本元素并替换内容
-                  for (let i = 0; i < templateLines.length; i++) {
-                    const lineId = `line${i+1}`;
-                    if (modifiedSvgContent.includes(`id=\"${lineId}\"`)) {
-                      const line = templateLines[i];
-                      // 移除表情符号前缀
-                      const cleanLine = line.replace(/^[^\w\s]*\s*/, "");
-                      modifiedSvgContent = modifiedSvgContent.replace(new RegExp(`<tspan id="${lineId}"[^>]*>[^<]*<\/tspan>`, 'g'), `<tspan id="${lineId}" x="25" dy="${i === 0 ? '0' : '25'}">${cleanLine}</tspan>`);
-                    }
-                  }
-                }
-                break;
-                
-              default:
-                // 默认情况下不修改SVG内容
-                break;
-            }
+            // 处理变量模板替换
+            const processedSvgContent = processVariableTemplate(svgContent, selectedTemplate, config.content)
             
             // Create SVG blob and object URL
-            const svgBlob = new Blob([modifiedSvgContent], { type: 'image/svg+xml' })
+            const svgBlob = new Blob([processedSvgContent], { type: 'image/svg+xml' })
             const svgUrl = URL.createObjectURL(svgBlob)
             
             // Create image from SVG
             const svgImg = new Image()
             svgImg.onload = () => {
               // Calculate position
-      let x, y
-      const svgWidth = svgImg.width || 300
-      const svgHeight = svgImg.height || 150
-      
-      if (config.position === "custom") {
-        // 使用相对位置计算，确保在不同尺寸的图片上保持相同的相对位置
-        const previewWidth = config._previewWidth || canvas.width
-        const previewHeight = config._previewHeight || canvas.height
-        
-        // 计算预览中水印位置相对于预览图片的比例
-        const relativeX = config.offsetX / previewWidth
-        const relativeY = config.offsetY / previewHeight
-        
-        // 根据实际图片尺寸计算水印位置
-        x = relativeX * canvas.width
-        y = relativeY * canvas.height
-      } else {
+              let x, y
+              const svgWidth = svgImg.width || 300
+              const svgHeight = svgImg.height || 150
+              
+              if (config.position === "custom") {
+                // 使用相对位置计算，确保在不同尺寸的图片上保持相同的相对位置
+                const previewWidth = config._previewWidth || canvas.width
+                const previewHeight = config._previewHeight || canvas.height
+                
+                // 计算预览中水印位置相对于预览图片的比例
+                const relativeX = config.offsetX / previewWidth
+                const relativeY = config.offsetY / previewHeight
+                
+                // 根据实际图片尺寸计算水印位置
+                x = relativeX * canvas.width
+                y = relativeY * canvas.height
+              } else {
                 switch (config.position) {
                   case "top-left":
                     x = config.offsetX
@@ -186,7 +265,7 @@ export const generateWatermark = async (
         return
       }
 
-      // Generate template-specific watermark text
+      // Generate template-specific watermark text (fallback for non-SVG templates)
       const initialLines = generateTemplateText(selectedTemplate, config.content, imageFile.exifData)
 
       if (initialLines.length === 0) return resolve(canvas.toDataURL())
@@ -293,7 +372,6 @@ export const generateWatermark = async (
   })
 }
 
-// Wrap text to fit a max width
 const wrapText = (context: CanvasRenderingContext2D, text: string, maxWidth: number): string[] => {
   const words = text.split(" ")
   const lines: string[] = []
@@ -313,18 +391,26 @@ const wrapText = (context: CanvasRenderingContext2D, text: string, maxWidth: num
   return lines
 }
 
-// Generate template-specific text
 export const generateTemplateText = (template: string, content: Record<string, any>, exifData: any): string[] => {
   const lines: string[] = []
   const now = new Date()
-  const currentDate = now.toISOString().slice(0, 10)
-  const currentTime = now.toTimeString().slice(0, 8)
 
   switch (template) {
     case "modern":
-      if (content.showTime !== false) lines.push(`🕐 ${currentTime}`)
-      if (content.showDate !== false) lines.push(`📅 ${formatDate(currentDate, content.dateFormat || "YYYY-MM-DD")}`)
-      if (content.showLocation !== false && content.customLocation) lines.push(`📍 ${content.customLocation}`)
+      if (content.showTime !== false) {
+        lines.push(`🕐 ${now.toTimeString().slice(0, 8)}`)
+      }
+      if (content.showDate !== false) {
+        const dateFormat = content.dateFormat || "YYYY-MM-DD"
+        const year = now.getFullYear()
+        const month = String(now.getMonth() + 1).padStart(2, "0")
+        const day = String(now.getDate()).padStart(2, "0")
+        const formattedDate = dateFormat.replace("YYYY", year.toString()).replace("MM", month).replace("DD", day)
+        lines.push(`📅 ${formattedDate}`)
+      }
+      if (content.showLocation !== false && content.customLocation) {
+        lines.push(`📍 ${content.customLocation}`)
+      }
       break
 
     case "professional":
@@ -332,22 +418,27 @@ export const generateTemplateText = (template: string, content: Record<string, a
       if (content.latitude) lines.push(`纬度: ${content.latitude}`)
       if (content.altitude) lines.push(`海拔: ${content.altitude}m`)
       if (content.accuracy) lines.push(`精度: ${content.accuracy}m`)
-      if (content.showTime !== false) lines.push(`时间: ${currentDate} ${content.customTime || currentTime}`)
+      if (content.showTime !== false) {
+        const currentDate = now.toISOString().slice(0, 10)
+        const currentTime = content.customTime || now.toTimeString().slice(0, 8)
+        lines.push(`时间: ${currentDate} ${currentTime}`)
+      }
       break
 
     case "baby":
       if (content.babyName) {
-        const babyText = `👶 ${content.babyName}`
+        let babyText = `👶 ${content.babyName}`
         if (content.showDaysSince !== false && content.birthDate) {
           const birthDate = new Date(content.birthDate)
           const daysSince = Math.floor((now.getTime() - birthDate.getTime()) / (1000 * 60 * 60 * 24))
-          lines.push(`${babyText}·出生第${daysSince}天`)
-        } else {
-          lines.push(babyText)
+          babyText += `·出生第${daysSince}天`
         }
+        lines.push(babyText)
       }
       if (content.milestone) lines.push(`🎉 ${content.milestone}`)
-      if (content.showCurrentDate !== false) lines.push(`📅 ${currentDate}`)
+      if (content.showCurrentDate !== false) {
+        lines.push(`📅 ${now.toISOString().slice(0, 10)}`)
+      }
       break
 
     case "engineering":
@@ -356,53 +447,59 @@ export const generateTemplateText = (template: string, content: Record<string, a
       if (content.constructionContent) lines.push(`🔧 ${content.constructionContent}`)
       if (content.contractor) lines.push(`🏗️ ${content.contractor}`)
       if (content.supervisor) lines.push(`👷 ${content.supervisor}`)
-      if (content.showDateTime !== false) lines.push(`📅 ${currentDate} ${currentTime}`)
+      if (content.showDateTime !== false) {
+        const currentDate = now.toISOString().slice(0, 10)
+        const currentTime = now.toTimeString().slice(0, 5)
+        lines.push(`📅 ${currentDate} ${currentTime}`)
+      }
       break
 
     case "punch":
-      const punchTypeLabels = {
-        clockIn: "上班打卡",
-        clockOut: "下班打卡",
-        breakStart: "休息开始",
-        breakEnd: "休息结束",
-        overtime: "加班打卡",
+      if (content.punchType) {
+        const punchTypeLabels = {
+          clockIn: "上班打卡",
+          clockOut: "下班打卡",
+          breakStart: "休息开始",
+          breakEnd: "休息结束",
+          overtime: "加班打卡",
+        }
+        const punchType = punchTypeLabels[content.punchType as keyof typeof punchTypeLabels] || "打卡"
+        const punchTime = content.customTime || now.toTimeString().slice(0, 5)
+        lines.push(`📍 ${punchType} ${punchTime}`)
       }
-      const punchType = punchTypeLabels[content.punchType as keyof typeof punchTypeLabels] || "打卡"
-      const punchTime = content.customTime || currentTime
-      lines.push(`📍 ${punchType} ${punchTime}`)
-      if (content.workLocation) lines.push(`${content.workLocation}`)
+      if (content.workLocation) lines.push(content.workLocation)
       if (content.department) lines.push(`部门: ${content.department}`)
       if (content.employeeId) lines.push(`工号: ${content.employeeId}`)
-      const weekdays = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"]
+      const currentDate = now.toISOString().slice(0, 10)
+      let dateText = currentDate
       if (content.showWeekday !== false) {
-        lines.push(`${currentDate} ${weekdays[now.getDay()]}`)
+        const weekdays = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"]
+        dateText += ` ${weekdays[now.getDay()]}`
       }
+      lines.push(dateText)
       break
 
     case "travel":
-      lines.push(`✈️ 旅行日记`)
+      lines.push("✈️ 旅行日记")
       if (content.destination) lines.push(`📍 ${content.destination}`)
       if (content.weather && content.temperature) {
         lines.push(`${content.weather} ${content.temperature}°C`)
       } else if (content.weather) {
-        lines.push(`${content.weather}`)
+        lines.push(content.weather)
       }
       if (content.companion) lines.push(`👥 ${content.companion}`)
-      if (content.mood) lines.push(`${content.mood}`)
+      if (content.mood) lines.push(content.mood)
       break
 
     default:
-      lines.push(`📅 ${currentDate}`)
-      lines.push(`🕐 ${currentTime}`)
+      lines.push("水印文本")
       break
   }
 
   return lines
 }
 
-// Format date
 const formatDate = (dateStr: string, format: string): string => {
-  if (!format) return dateStr
   const date = new Date(dateStr)
   if (isNaN(date.getTime())) return dateStr
 

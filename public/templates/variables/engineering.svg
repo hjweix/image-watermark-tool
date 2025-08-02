@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="180" viewBox="0 0 320 180">
+  <defs>
+    <pattern id="diagonalHatch" patternUnits="userSpaceOnUse" width="10" height="10">
+      <path d="M-2,2 l4,-4 M0,10 l10,-10 M8,12 l4,-4" stroke="#000000" stroke-width="1" stroke-opacity="0.2"/>
+    </pattern>
+  </defs>
+  <rect x="10" y="10" width="300" height="160" rx="3" ry="3" fill="#FFD700" fill-opacity="0.9" />
+  <rect x="10" y="10" width="300" height="160" rx="3" ry="3" fill="url(#diagonalHatch)" />
+  <text x="25" y="40" font-family="Arial, sans-serif" font-weight="bold" font-size="16" fill="#000000">
+    <tspan id="line1" x="25" dy="0">{{PROJECT_NAME_CONTENT}}</tspan>
+    <tspan id="line2" x="25" dy="30">{{CONSTRUCTION_AREA_CONTENT}}</tspan>
+    <tspan id="line3" x="25" dy="30">{{CONSTRUCTION_CONTENT}}</tspan>
+    <tspan id="line4" x="25" dy="30">{{CONTRACTOR_CONTENT}}</tspan>
+    <tspan id="line5" x="25" dy="30">{{SUPERVISOR_CONTENT}}</tspan>
+    <tspan id="line6" x="25" dy="30">{{DATETIME_CONTENT}}</tspan>
+  </text>
+  <g transform="translate(270, 40)">
+    <rect x="-15" y="-15" width="30" height="30" fill="#FF0000" />
+    <text x="0" y="7" font-family="Arial, sans-serif" font-weight="bold" font-size="20" fill="#FFFFFF" text-anchor="middle">!</text>
+  </g>
+</svg>

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { generateTemplateText } from "@/lib/watermark"
+import { generateTemplateText, processVariableTemplate } from "@/lib/watermark";
 import type { TemplateConfig } from "@/lib/templates"
 
 type WatermarkProps = {
@@ -24,81 +24,19 @@ export default function Watermark({ config, selectedTemplate, exifData }: Waterm
         setSvgUrl("");
       }
       
-      fetch(config.svgTemplate)
+      // 将预览模板路径转换为变量模板路径
+      const variableTemplatePath = config.svgTemplate.replace('/preview/', '/variables/');
+      
+      fetch(variableTemplatePath)
         .then(response => response.text())
         .then(data => {
-          // 获取模板文本内容
-          const templateLines = generateTemplateText(selectedTemplate, config.content, exifData);
+          // 使用新的变量替换系统处理SVG内容
+          const processedSvgContent = processVariableTemplate(data, selectedTemplate, config.content);
           
-          // 将模板内容应用到SVG中
-          let modifiedSvgContent = data;
-          
-          // 根据不同模板类型，将内容插入到SVG中
-          switch (selectedTemplate) {
-            case "modern":
-              // 替换日期、时间和位置
-              if (templateLines.length > 0) {
-                // 收集时间和日期信息
-                let timeInfo = "";
-                let locationInfo = "";
-                
-                for (let i = 0; i < templateLines.length; i++) {
-                  const line = templateLines[i];
-                  if (line.includes("🕐")) {
-                    timeInfo = line.replace("🕐 ", "");
-                  } else if (line.includes("📅")) {
-                    // 如果有日期信息，将其添加到时间信息中
-                    if (timeInfo) {
-                      timeInfo = `${timeInfo} | ${line.replace("📅 ", "")}`;
-                    } else {
-                      timeInfo = line.replace("📅 ", "");
-                    }
-                  } else if (line.includes("📍")) {
-                    locationInfo = line.replace("📍 ", "");
-                  }
-                }
-                
-                // 替换时间信息
-                if (timeInfo && modifiedSvgContent.includes("id=\"time\"")) {
-                  modifiedSvgContent = modifiedSvgContent.replace(/<tspan id="time"[^>]*>[^<]*<\/tspan>/, `<tspan id="time" x="30" dy="0">${timeInfo}</tspan>`);
-                }
-                
-                // 替换位置信息
-                if (locationInfo && modifiedSvgContent.includes("id=\"location\"")) {
-                  modifiedSvgContent = modifiedSvgContent.replace(/<tspan id="location"[^>]*>[^<]*<\/tspan>/, `<tspan id="location" x="30" dy="30">${locationInfo}</tspan>`);
-                }
-              }
-              break;
-              
-            case "professional":
-            case "engineering":
-            case "baby":
-            case "punch":
-            case "travel":
-              // 为其他模板类型，尝试查找通用的内容占位符
-              if (templateLines.length > 0) {
-                // 查找SVG中的文本元素并替换内容
-                for (let i = 0; i < templateLines.length; i++) {
-                  const lineId = `line${i+1}`;
-                  if (modifiedSvgContent.includes(`id=\"${lineId}\"`)) {
-                    const line = templateLines[i];
-                    // 移除表情符号前缀
-                    const cleanLine = line.replace(/^[^\w\s]*\s*/, "");
-                    modifiedSvgContent = modifiedSvgContent.replace(new RegExp(`<tspan id="${lineId}"[^>]*>[^<]*<\/tspan>`, 'g'), `<tspan id="${lineId}" x="25" dy="${i === 0 ? '0' : '25'}">${cleanLine}</tspan>`);
-                  }
-                }
-              }
-              break;
-              
-            default:
-              // 默认情况下不修改SVG内容
-              break;
-          }
-          
-          setSvgContent(modifiedSvgContent);
+          setSvgContent(processedSvgContent);
           
           // 创建一个包含修改后SVG内容的对象URL
-          const svgBlob = new Blob([modifiedSvgContent], { type: 'image/svg+xml' });
+          const svgBlob = new Blob([processedSvgContent], { type: 'image/svg+xml' });
           const url = URL.createObjectURL(svgBlob);
           setSvgUrl(url);
         })
@@ -113,9 +51,8 @@ export default function Watermark({ config, selectedTemplate, exifData }: Waterm
         URL.revokeObjectURL(svgUrl);
       }
     };
-  // 只在初始加载、模板变更、SVG配置变更或强制更新时重新渲染SVG
-  // 移除 config.content 依赖，使其不会在内容更新时重新渲染
-  }, [config.useSvg, config.svgTemplate, selectedTemplate, exifData, config._forceUpdate]);
+  // 依赖项包含config.content，确保内容变化时重新渲染
+  }, [config.useSvg, config.svgTemplate, selectedTemplate, exifData, config.content, config._forceUpdate]);
 
   if (lines.length === 0) {
     return null

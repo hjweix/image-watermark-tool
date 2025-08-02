@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="140" viewBox="0 0 300 140">
+  <defs>
+    <filter id="soft-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="5" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+  <rect x="10" y="10" width="280" height="120" rx="20" ry="20" fill="#FFB6C1" fill-opacity="0.9" />
+  <text x="30" y="50" font-family="Comic Sans MS, cursive" font-size="20" fill="#FFFFFF" filter="url(#soft-glow)">
+    <tspan id="line1" x="30" dy="0">{{BABY_NAME_CONTENT}}</tspan>
+    <tspan id="line2" x="30" dy="35">{{MILESTONE_CONTENT}}</tspan>
+    <tspan id="line3" x="30" dy="35">{{DATE_CONTENT}}</tspan>
+  </text>
+  <g transform="translate(240, 40)">
+    <circle cx="0" cy="0" r="25" fill="#FFC0CB" stroke="#FFFFFF" stroke-width="2" />
+    <circle cx="-8" cy="-5" r="3" fill="#000000" />
+    <circle cx="8" cy="-5" r="3" fill="#000000" />
+    <path d="M-10,10 Q0,20 10,10" stroke="#000000" stroke-width="2" fill="none" />
+  </g>
+</svg>
