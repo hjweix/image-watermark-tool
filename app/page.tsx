@@ -174,6 +174,9 @@ export default function ImageWatermarkTool() {
             height: templateConfig.height ? templateConfig.height * scale : undefined,
             _previewWidth: pWidth,
             _previewHeight: pHeight,
+            // 传递相对位置比例信息
+            _relativeX: templateConfig._relativeX,
+            _relativeY: templateConfig._relativeY,
           }
           
           const watermarkedUrl = await generateWatermarkUtil(image, scaledConfig, selectedTemplate, canvasRef.current!)
@@ -221,6 +224,9 @@ export default function ImageWatermarkTool() {
         // 保存预览图片的尺寸信息，用于计算水印的相对位置
         _previewWidth: pWidth,
         _previewHeight: pHeight,
+        // 传递相对位置比例信息
+        _relativeX: templateConfig._relativeX,
+        _relativeY: templateConfig._relativeY,
       }
 
       const watermarkedUrl = await generateWatermarkUtil(image, scaledConfig, selectedTemplate, canvasRef.current!)

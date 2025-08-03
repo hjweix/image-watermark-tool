@@ -21,6 +21,8 @@ export type TemplateConfig = {
   _forceUpdate?: number // 用于强制更新的时间戳
   _previewWidth?: number // 预览图片宽度，用于计算水印相对位置
   _previewHeight?: number // 预览图片高度，用于计算水印相对位置
+  _relativeX?: number // 水印相对于预览图片的X位置比例
+  _relativeY?: number // 水印相对于预览图片的Y位置比例
 
   // Template-specific content
   content: Record<string, any>

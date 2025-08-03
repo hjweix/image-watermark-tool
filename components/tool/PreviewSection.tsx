@@ -96,6 +96,16 @@ export default function PreviewSection({
                       const defaultY = imageRef.current ? imageRef.current.clientHeight - (templateConfig.height || 100) - 20 : 300
                       
                       if (templateConfig.position === "custom") {
+                        // 优先使用保存的相对位置比例
+                        if (templateConfig._relativeX !== undefined && templateConfig._relativeY !== undefined && imageRef.current) {
+                          const previewWidth = imageRef.current.clientWidth
+                          const previewHeight = imageRef.current.clientHeight
+                          return {
+                            x: templateConfig._relativeX * previewWidth,
+                            y: templateConfig._relativeY * previewHeight
+                          }
+                        }
+                        // 兼容旧版本：使用绝对像素值
                         return {
                           x: templateConfig.offsetX || defaultX,
                           y: templateConfig.offsetY || defaultY
@@ -134,24 +144,42 @@ export default function PreviewSection({
                     })()}
                     onDragStop={(e, d) => {
                       updateTemplateStyle("position", "custom")
-                      updateTemplateStyle("offsetX", d.x)
-                      updateTemplateStyle("offsetY", d.y)
                       
                       if (imageRef.current) {
-                        updateTemplateStyle("_previewWidth", imageRef.current.clientWidth)
-                        updateTemplateStyle("_previewHeight", imageRef.current.clientHeight)
+                        const previewWidth = imageRef.current.clientWidth
+                        const previewHeight = imageRef.current.clientHeight
+                        
+                        // 保存相对位置比例，而不是绝对像素值
+                        const relativeX = d.x / previewWidth
+                        const relativeY = d.y / previewHeight
+                        
+                        updateTemplateStyle("offsetX", d.x)
+                        updateTemplateStyle("offsetY", d.y)
+                        updateTemplateStyle("_relativeX", relativeX)
+                        updateTemplateStyle("_relativeY", relativeY)
+                        updateTemplateStyle("_previewWidth", previewWidth)
+                        updateTemplateStyle("_previewHeight", previewHeight)
                       }
                     }}
                     onResizeStop={(e, direction, ref, delta, position) => {
                       updateTemplateStyle("width", parseInt(ref.style.width) || 200)
                       updateTemplateStyle("height", parseInt(ref.style.height) || 100)
                       updateTemplateStyle("position", "custom")
-                      updateTemplateStyle("offsetX", position.x)
-                      updateTemplateStyle("offsetY", position.y)
                       
                       if (imageRef.current) {
-                        updateTemplateStyle("_previewWidth", imageRef.current.clientWidth)
-                        updateTemplateStyle("_previewHeight", imageRef.current.clientHeight)
+                        const previewWidth = imageRef.current.clientWidth
+                        const previewHeight = imageRef.current.clientHeight
+                        
+                        // 保存相对位置比例，而不是绝对像素值
+                        const relativeX = position.x / previewWidth
+                        const relativeY = position.y / previewHeight
+                        
+                        updateTemplateStyle("offsetX", position.x)
+                        updateTemplateStyle("offsetY", position.y)
+                        updateTemplateStyle("_relativeX", relativeX)
+                        updateTemplateStyle("_relativeY", relativeY)
+                        updateTemplateStyle("_previewWidth", previewWidth)
+                        updateTemplateStyle("_previewHeight", previewHeight)
                       }
                     }}
                     bounds="parent"
@@ -159,8 +187,6 @@ export default function PreviewSection({
                     style={{ 
                       position: 'absolute',
                       zIndex: 10,
-                      border: '1px dashed #3b82f6',
-                      borderRadius: '4px',
                       cursor: 'move',
                       userSelect: 'none'
                     }}
@@ -176,60 +202,80 @@ export default function PreviewSection({
                     }}
                     resizeHandleStyles={{
                       top: { 
-                        background: '#3b82f6', 
-                        height: '3px', 
-                        top: '-1.5px',
-                        cursor: 'n-resize'
+                        backgroundColor: '#3b82f6', 
+                        height: '8px',
+                        width: '8px',
+                        left: '50%',
+                        top: '-4px',
+                        marginLeft: '-4px',
+                        cursor: 'n-resize',
+                        borderRadius: '50%'
                       },
                       right: { 
-                        background: '#3b82f6', 
-                        width: '3px', 
-                        right: '-1.5px',
-                        cursor: 'e-resize'
+                        backgroundColor: '#3b82f6', 
+                        width: '8px',
+                        height: '8px',
+                        right: '-4px',
+                        top: '50%',
+                        marginTop: '-4px',
+                        cursor: 'e-resize',
+                        borderRadius: '50%'
                       },
                       bottom: { 
-                        background: '#3b82f6', 
-                        height: '3px', 
-                        bottom: '-1.5px',
-                        cursor: 's-resize'
+                        backgroundColor: '#3b82f6', 
+                        height: '8px',
+                        width: '8px',
+                        left: '50%',
+                        bottom: '-4px',
+                        marginLeft: '-4px',
+                        cursor: 's-resize',
+                        borderRadius: '50%'
                       },
                       left: { 
-                        background: '#3b82f6', 
-                        width: '3px', 
-                        left: '-1.5px',
-                        cursor: 'w-resize'
+                        backgroundColor: '#3b82f6', 
+                        width: '8px',
+                        height: '8px',
+                        left: '-4px',
+                        top: '50%',
+                        marginTop: '-4px',
+                        cursor: 'w-resize',
+                        borderRadius: '50%'
                       },
                       topRight: { 
-                        background: '#3b82f6', 
-                        width: '6px', 
-                        height: '6px', 
-                        right: '-3px', 
-                        top: '-3px',
-                        cursor: 'ne-resize'
+                        backgroundColor: '#3b82f6', 
+                        width: '8px', 
+                        height: '8px',
+                        right: '-4px',
+                        top: '-4px',
+                        cursor: 'ne-resize',
+                        borderRadius: '50%'
                       },
                       bottomRight: { 
-                        background: '#3b82f6', 
-                        width: '6px', 
-                        height: '6px', 
-                        right: '-3px', 
-                        bottom: '-3px',
-                        cursor: 'se-resize'
+                        backgroundColor: '#3b82f6', 
+                        width: '8px', 
+                        height: '8px',
+                        right: '-4px',
+                        bottom: '-4px',
+                        cursor: 'se-resize',
+                        borderRadius: '50%'
                       },
                       bottomLeft: { 
-                        background: '#3b82f6', 
-                        width: '6px', 
-                        height: '6px', 
-                        left: '-3px', 
-                        bottom: '-3px',
-                        cursor: 'sw-resize'
+                        backgroundColor: '#3b82f6', 
+                        width: '8px', 
+                        height: '8px',
+                        left: '-4px',
+                        bottom: '-4px',
+                        cursor: 'sw-resize',
+                        borderRadius: '50%'
                       },
                       topLeft: { 
-                        background: '#3b82f6', 
-                        width: '6px', 
-                        height: '6px', 
-                        left: '-3px', 
-                        top: '-3px',
-                        cursor: 'nw-resize'
+                        backgroundColor: '#3b82f6', 
+                        width: '8px', 
+                        height: '8px',
+                        left: '-4px',
+                        top: '-4px',
+                        cursor: 'nw-resize',
+                        borderRadius: '50%'
                       }
                     }}
                   >

@@ -67,10 +67,9 @@ export default function Watermark({ config, selectedTemplate, exifData }: Waterm
           height: "100%",
           display: "flex",
           justifyContent: "center",
-          alignItems: "center",
-          overflow: "hidden",
           pointerEvents: "none",
-          userSelect: "none"
+          userSelect: "none",
+          overflow: "hidden"
         }}
       >
         <img 

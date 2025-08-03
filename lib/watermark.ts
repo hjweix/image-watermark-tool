@@ -185,23 +185,30 @@ export const generateWatermark = async (
             // Create image from SVG
             const svgImg = new Image()
             svgImg.onload = () => {
-              // Calculate position
+              // Calculate position and size
               let x, y
-              const svgWidth = svgImg.width || 300
-              const svgHeight = svgImg.height || 150
+              // 使用配置中的尺寸，如果没有配置则使用SVG原始尺寸
+              const svgWidth = config.width || svgImg.width || 300
+              const svgHeight = config.height || svgImg.height || 150
               
               if (config.position === "custom") {
-                // 使用相对位置计算，确保在不同尺寸的图片上保持相同的相对位置
-                const previewWidth = config._previewWidth || canvas.width
-                const previewHeight = config._previewHeight || canvas.height
-                
-                // 计算预览中水印位置相对于预览图片的比例
-                const relativeX = config.offsetX / previewWidth
-                const relativeY = config.offsetY / previewHeight
-                
-                // 根据实际图片尺寸计算水印位置
-                x = relativeX * canvas.width
-                y = relativeY * canvas.height
+                // 优先使用保存的相对位置比例
+                if (config._relativeX !== undefined && config._relativeY !== undefined) {
+                  x = config._relativeX * canvas.width
+                  y = config._relativeY * canvas.height
+                } else {
+                  // 兼容旧版本：使用相对位置计算，确保在不同尺寸的图片上保持相同的相对位置
+                  const previewWidth = config._previewWidth || canvas.width
+                  const previewHeight = config._previewHeight || canvas.height
+                  
+                  // 计算预览中水印位置相对于预览图片的比例
+                  const relativeX = config.offsetX / previewWidth
+                  const relativeY = config.offsetY / previewHeight
+                  
+                  // 根据实际图片尺寸计算水印位置
+                  x = relativeX * canvas.width
+                  y = relativeY * canvas.height
+                }
               } else {
                 switch (config.position) {
                   case "top-left":
@@ -244,8 +251,8 @@ export const generateWatermark = async (
                 }
               }
               
-              // Draw SVG watermark
-              ctx.drawImage(svgImg, x, y)
+              // Draw SVG watermark with specified dimensions
+              ctx.drawImage(svgImg, x, y, svgWidth, svgHeight)
               ctx.globalAlpha = 1
               
               // Clean up object URL
@@ -290,17 +297,23 @@ export const generateWatermark = async (
 
       let x, y
       if (config.position === "custom") {
-        // 使用相对位置计算，确保在不同尺寸的图片上保持相同的相对位置
-        const previewWidth = config._previewWidth || canvas.width
-        const previewHeight = config._previewHeight || canvas.height
-        
-        // 计算预览中水印位置相对于预览图片的比例
-        const relativeX = config.offsetX / previewWidth
-        const relativeY = config.offsetY / previewHeight
-        
-        // 根据实际图片尺寸计算水印位置
-        x = relativeX * canvas.width
-        y = relativeY * canvas.height
+        // 优先使用保存的相对位置比例
+        if (config._relativeX !== undefined && config._relativeY !== undefined) {
+          x = config._relativeX * canvas.width
+          y = config._relativeY * canvas.height
+        } else {
+          // 兼容旧版本：使用相对位置计算，确保在不同尺寸的图片上保持相同的相对位置
+          const previewWidth = config._previewWidth || canvas.width
+          const previewHeight = config._previewHeight || canvas.height
+          
+          // 计算预览中水印位置相对于预览图片的比例
+          const relativeX = config.offsetX / previewWidth
+          const relativeY = config.offsetY / previewHeight
+          
+          // 根据实际图片尺寸计算水印位置
+          x = relativeX * canvas.width
+          y = relativeY * canvas.height
+        }
       } else {
         switch (config.position) {
           case "top-left":
