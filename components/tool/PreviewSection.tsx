@@ -1,6 +1,6 @@
 "use client"
 
-import { Eye, Download, ImageIcon } from "lucide-react"
+import { Eye, ImageIcon } from "lucide-react"
 import { useState, useEffect, useRef, useCallback } from "react"
 import { Rnd } from "react-rnd"
 import { Button } from "@/components/ui/button"
@@ -22,7 +22,6 @@ type ImageFile = {
 type PreviewSectionProps = {
   images: ImageFile[]
   selectedImage: string | null
-  downloadImage: (id: string, previewWidth?: number, previewHeight?: number) => void
   currentTemplateConfig: any | null
   selectedTemplate: string
   updateTemplateStyle: (key: string, value: any) => void
@@ -32,7 +31,6 @@ type PreviewSectionProps = {
 export default function PreviewSection({
   images,
   selectedImage,
-  downloadImage,
   currentTemplateConfig,
   selectedTemplate,
   updateTemplateStyle,
@@ -63,34 +61,15 @@ export default function PreviewSection({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []) // 不依赖updateTemplateStyle，避免重新创建函数
 
-  const handleDownload = () => {
-    if (selectedImage && imageRef.current) {
-      const previewImage = imageRef.current
-      downloadImage(selectedImage, previewImage.clientWidth, previewImage.clientHeight)
-    }
-  }
+
 
   return (
     <div className="xl:col-span-2 order-first xl:order-none">
       <Card className="h-fit">
         <CardHeader>
-          <CardTitle className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Eye className="w-5 h-5" />
-              {t.preview}
-            </div>
-            {selectedImage && (
-              <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleDownload}
-                  disabled={!selectedImageFile}
-                >
-                  <Download className="w-4 h-4" />
-                </Button>
-              </div>
-            )}
+          <CardTitle className="flex items-center gap-2">
+            <Eye className="w-5 h-5" />
+            {t.preview}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -112,10 +91,47 @@ export default function PreviewSection({
                       width: templateConfig.width || 200,
                       height: templateConfig.height || 100,
                     }}
-                    position={{ 
-                      x: templateConfig.offsetX || 50, 
-                      y: templateConfig.offsetY || 50 
-                    }}
+                    position={(() => {
+                      const defaultX = 20
+                      const defaultY = imageRef.current ? imageRef.current.clientHeight - (templateConfig.height || 100) - 20 : 300
+                      
+                      if (templateConfig.position === "custom") {
+                        return {
+                          x: templateConfig.offsetX || defaultX,
+                          y: templateConfig.offsetY || defaultY
+                        }
+                      }
+                      
+                      // 根据position配置计算位置
+                      const imageWidth = imageRef.current?.clientWidth || 800
+                      const imageHeight = imageRef.current?.clientHeight || 600
+                      const watermarkWidth = templateConfig.width || 200
+                      const watermarkHeight = templateConfig.height || 100
+                      const offsetX = templateConfig.offsetX || 20
+                      const offsetY = templateConfig.offsetY || 20
+                      
+                      switch (templateConfig.position) {
+                        case "top-left":
+                          return { x: offsetX, y: offsetY }
+                        case "top-center":
+                          return { x: (imageWidth - watermarkWidth) / 2 + offsetX, y: offsetY }
+                        case "top-right":
+                          return { x: imageWidth - watermarkWidth - offsetX, y: offsetY }
+                        case "center-left":
+                          return { x: offsetX, y: (imageHeight - watermarkHeight) / 2 + offsetY }
+                        case "center":
+                          return { x: (imageWidth - watermarkWidth) / 2 + offsetX, y: (imageHeight - watermarkHeight) / 2 + offsetY }
+                        case "center-right":
+                          return { x: imageWidth - watermarkWidth - offsetX, y: (imageHeight - watermarkHeight) / 2 + offsetY }
+                        case "bottom-left":
+                          return { x: offsetX, y: imageHeight - watermarkHeight - offsetY }
+                        case "bottom-center":
+                          return { x: (imageWidth - watermarkWidth) / 2 + offsetX, y: imageHeight - watermarkHeight - offsetY }
+                        case "bottom-right":
+                        default:
+                          return { x: imageWidth - watermarkWidth - offsetX, y: imageHeight - watermarkHeight - offsetY }
+                      }
+                    })()}
                     onDragStop={(e, d) => {
                       updateTemplateStyle("position", "custom")
                       updateTemplateStyle("offsetX", d.x)
@@ -143,7 +159,7 @@ export default function PreviewSection({
                     style={{ 
                       position: 'absolute',
                       zIndex: 10,
-                      border: '2px dashed #3b82f6',
+                      border: '1px dashed #3b82f6',
                       borderRadius: '4px',
                       cursor: 'move',
                       userSelect: 'none'
@@ -161,58 +177,58 @@ export default function PreviewSection({
                     resizeHandleStyles={{
                       top: { 
                         background: '#3b82f6', 
-                        height: '6px', 
-                        top: '-3px',
+                        height: '3px', 
+                        top: '-1.5px',
                         cursor: 'n-resize'
                       },
                       right: { 
                         background: '#3b82f6', 
-                        width: '6px', 
-                        right: '-3px',
+                        width: '3px', 
+                        right: '-1.5px',
                         cursor: 'e-resize'
                       },
                       bottom: { 
                         background: '#3b82f6', 
-                        height: '6px', 
-                        bottom: '-3px',
+                        height: '3px', 
+                        bottom: '-1.5px',
                         cursor: 's-resize'
                       },
                       left: { 
                         background: '#3b82f6', 
-                        width: '6px', 
-                        left: '-3px',
+                        width: '3px', 
+                        left: '-1.5px',
                         cursor: 'w-resize'
                       },
                       topRight: { 
                         background: '#3b82f6', 
-                        width: '10px', 
-                        height: '10px', 
-                        right: '-5px', 
-                        top: '-5px',
+                        width: '6px', 
+                        height: '6px', 
+                        right: '-3px', 
+                        top: '-3px',
                         cursor: 'ne-resize'
                       },
                       bottomRight: { 
                         background: '#3b82f6', 
-                        width: '10px', 
-                        height: '10px', 
-                        right: '-5px', 
-                        bottom: '-5px',
+                        width: '6px', 
+                        height: '6px', 
+                        right: '-3px', 
+                        bottom: '-3px',
                         cursor: 'se-resize'
                       },
                       bottomLeft: { 
                         background: '#3b82f6', 
-                        width: '10px', 
-                        height: '10px', 
-                        left: '-5px', 
-                        bottom: '-5px',
+                        width: '6px', 
+                        height: '6px', 
+                        left: '-3px', 
+                        bottom: '-3px',
                         cursor: 'sw-resize'
                       },
                       topLeft: { 
                         background: '#3b82f6', 
-                        width: '10px', 
-                        height: '10px', 
-                        left: '-5px', 
-                        top: '-5px',
+                        width: '6px', 
+                        height: '6px', 
+                        left: '-3px', 
+                        top: '-3px',
                         cursor: 'nw-resize'
                       }
                     }}

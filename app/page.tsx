@@ -357,7 +357,6 @@ export default function ImageWatermarkTool() {
             <PreviewSection
               images={images}
               selectedImage={selectedImage}
-              downloadImage={downloadImage}
               currentTemplateConfig={currentTemplateConfig}
               selectedTemplate={selectedTemplate}
               updateTemplateStyle={updateTemplateStyle}
