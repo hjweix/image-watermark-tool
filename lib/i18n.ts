@@ -131,6 +131,36 @@ export const languages = {
       customLocation: "自定义地点",
       customText: "自定义文本",
       notes: "备注",
+      
+      // Additional template fields that need i18n
+      "显示日期": "显示日期",
+      "显示时间": "显示时间",
+      "自定义拍摄时间": "自定义拍摄时间",
+      "显示位置": "显示位置",
+      "自定义位置": "自定义位置",
+      "日期格式": "日期格式",
+      "经度": "经度",
+      "纬度": "纬度",
+      "海拔(米)": "海拔(米)",
+      "精度(米)": "精度(米)",
+      "自定义时间": "自定义时间",
+      "宝贝姓名": "宝贝姓名",
+      "出生日期": "出生日期",
+      "成长里程碑": "成长里程碑",
+      "显示出生天数": "显示出生天数",
+      "显示当前日期": "显示当前日期",
+      "工程名称": "工程名称",
+      "施工区域": "施工区域",
+      "施工内容": "施工内容",
+      "显示拍摄时间": "显示拍摄时间",
+      "打卡类型": "打卡类型",
+      "工作地点": "工作地点",
+      "显示星期": "显示星期",
+      "目的地": "目的地",
+      "天气": "天气",
+      "温度": "温度",
+      "同行人": "同行人",
+      "心情": "心情",
 
       // Placeholders
       enterProjectName: "请输入工程名称",
@@ -147,6 +177,7 @@ export const languages = {
       overtime: "加班打卡",
 
       // Reset
+      applySettings: "应用设置",
       reset: "重置设置",
 
       // Feature cards
@@ -406,6 +437,36 @@ export const languages = {
       customLocation: "Custom Location",
       customText: "Custom Text",
       notes: "Notes",
+      
+      // Additional template fields that need i18n
+      "显示日期": "Show Date",
+      "显示时间": "Show Time",
+      "自定义拍摄时间": "Custom Shooting Time",
+      "显示位置": "Show Location",
+      "自定义位置": "Custom Location",
+      "日期格式": "Date Format",
+      "经度": "Longitude",
+      "纬度": "Latitude",
+      "海拔(米)": "Altitude (m)",
+      "精度(米)": "Accuracy (m)",
+      "自定义时间": "Custom Time",
+      "宝贝姓名": "Baby Name",
+      "出生日期": "Birth Date",
+      "成长里程碑": "Milestone",
+      "显示出生天数": "Show Days Since Birth",
+      "显示当前日期": "Show Current Date",
+      "工程名称": "Project Name",
+      "施工区域": "Construction Area",
+      "施工内容": "Construction Content",
+      "显示拍摄时间": "Show Shooting Time",
+      "打卡类型": "Punch Type",
+      "工作地点": "Work Location",
+      "显示星期": "Show Weekday",
+      "目的地": "Destination",
+      "天气": "Weather",
+      "温度": "Temperature",
+      "同行人": "Companion",
+      "心情": "Mood",
 
       enterProjectName: "Enter project name",
       enterBabyName: "Enter baby name",
@@ -419,6 +480,7 @@ export const languages = {
       breakEnd: "Break End",
       overtime: "Overtime",
 
+      applySettings: "Apply Settings",
       reset: "Reset Settings",
 
       // Feature cards

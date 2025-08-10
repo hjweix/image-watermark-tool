@@ -255,7 +255,7 @@ export default function SettingsSection({
                   size="sm"
                   className="w-full mb-2"
                 >
-                  应用设置
+                  {t.applySettings}
                 </Button>
                 <Button
                   onClick={() => {
