@@ -45,13 +45,15 @@ export default function SettingsSection({
 
     return currentTemplateConfig.contentFields.map((field) => {
       const value = templateConfig.content[field.key] ?? field.default
+      // 检查是否是i18n key，如果是则使用翻译，否则使用原始标签
+      const displayLabel = (t as any)[field.label] || field.label
 
       switch (field.type) {
         case "input":
           return (
             <div key={field.key}>
               <Label className="text-xs">
-                {field.label} {field.required && <span className="text-red-500">*</span>}
+                {displayLabel} {field.required && <span className="text-red-500">*</span>}
               </Label>
               <Input
                 type={field.inputType || "text"}
@@ -70,7 +72,7 @@ export default function SettingsSection({
           return (
             <div key={field.key}>
               <Label className="text-xs">
-                {field.label} {field.required && <span className="text-red-500">*</span>}
+                {displayLabel} {field.required && <span className="text-red-500">*</span>}
               </Label>
               <Textarea
                 placeholder={field.placeholder}
@@ -86,7 +88,7 @@ export default function SettingsSection({
           return (
             <div key={field.key}>
               <Label className="text-xs">
-                {field.label} {field.required && <span className="text-red-500">*</span>}
+                {displayLabel} {field.required && <span className="text-red-500">*</span>}
               </Label>
               <Select value={value || field.default} onValueChange={(val) => updateTemplateContent(field.key, val)}>
                 <SelectTrigger className="h-8">
@@ -114,7 +116,7 @@ export default function SettingsSection({
                 className="w-4 h-4"
               />
               <Label htmlFor={field.key} className="text-xs">
-                {field.label}
+                {displayLabel}
               </Label>
             </div>
           )
@@ -123,7 +125,7 @@ export default function SettingsSection({
           return (
             <div key={field.key}>
               <Label className="text-xs">
-                {field.label} {field.required && <span className="text-red-500">*</span>}
+                {displayLabel} {field.required && <span className="text-red-500">*</span>}
               </Label>
               <Input
                 type="date"
@@ -138,7 +140,7 @@ export default function SettingsSection({
         case "time":
           return (
             <div key={field.key}>
-              <Label className="text-xs">{field.label}</Label>
+              <Label className="text-xs">{displayLabel}</Label>
               <Input
                 type="time"
                 step="1"
@@ -152,7 +154,7 @@ export default function SettingsSection({
         case "datetime-local":
           return (
             <div key={field.key}>
-              <Label className="text-xs">{field.label}</Label>
+              <Label className="text-xs">{displayLabel}</Label>
               <Input
                 type="datetime-local"
                 step="1"

@@ -68,6 +68,7 @@ export const templateConfigs: {
     contentFields: [
       { key: "showDate", type: "checkbox", label: "显示日期", default: true },
       { key: "showTime", type: "checkbox", label: "显示时间", default: true },
+      { key: "customDateTime", type: "datetime-local", label: "自定义拍摄时间" },
       { key: "showLocation", type: "checkbox", label: "显示位置", default: true },
       { key: "customLocation", type: "input", label: "自定义位置", placeholder: "输入位置信息" },
       {
@@ -121,7 +122,7 @@ export const templateConfigs: {
       { key: "altitude", type: "input", label: "海拔(米)", placeholder: "50", inputType: "number" },
       { key: "accuracy", type: "input", label: "精度(米)", placeholder: "5", inputType: "number" },
       { key: "showTime", type: "checkbox", label: "显示时间", default: true },
-      { key: "customTime", type: "datetime-local", label: "自定义时间" },
+      { key: "customDateTime", type: "datetime-local", label: "自定义时间" },
     ],
     svgPath: "/templates/preview/professional.svg",
     defaultStyle: {
@@ -164,6 +165,7 @@ export const templateConfigs: {
       { key: "milestone", type: "input", label: "成长里程碑", placeholder: "第一次笑、第一次翻身等" },
       { key: "showDaysSince", type: "checkbox", label: "显示出生天数", default: true },
       { key: "showCurrentDate", type: "checkbox", label: "显示当前日期", default: true },
+      { key: "customDateTime", type: "datetime-local", label: "自定义拍摄时间" },
     ],
     svgPath: "/templates/preview/baby.svg",
     defaultStyle: {
@@ -189,7 +191,7 @@ export const templateConfigs: {
 
   engineering: {
     name: "工程记录",
-    preview: "⚡ 北京地铁15号线\n📍 望京东站施工区域\n🔧 隧道开挖作业\n🏗️ 中建集团\n👷 监理公司\n📅 2024-01-15 11:30",
+    preview: "⚡ 北京地铁15号线\n📍 望京东站施工区域\n🔧 隧道开挖作业\n⏰ 09:30\n📅 2024-01-15 11:30",
     styleFields: ["position", "fontSize", "fontFamily", "textColor", "backgroundColor", "backgroundOpacity", "useSvg"],
     contentFields: [
       { key: "projectName", type: "input", label: "工程名称", placeholder: "请输入工程名称", required: true },
@@ -201,8 +203,7 @@ export const templateConfigs: {
         placeholder: "请输入施工内容描述",
         required: true,
       },
-      { key: "contractor", type: "input", label: "施工单位", placeholder: "请输入施工单位" },
-      { key: "supervisor", type: "input", label: "监理单位", placeholder: "请输入监理单位" },
+      { key: "customDateTime", type: "datetime-local", label: "自定义拍摄时间" },
       { key: "showDateTime", type: "checkbox", label: "显示拍摄时间", default: true },
     ],
     svgPath: "/templates/preview/engineering.svg",
@@ -229,7 +230,7 @@ export const templateConfigs: {
 
   punch: {
     name: "打卡记录",
-    preview: "📍 上班打卡 09:00\n北京·三里屯SOHO\n部门: 技术部\n工号: 001\n2024.01.15 星期一",
+    preview: "📍 上班打卡 09:00\n北京·三里屯SOHO\n2024.01.15 星期一",
     styleFields: [
       "position",
       "fontSize",
@@ -256,10 +257,8 @@ export const templateConfigs: {
         required: true,
       },
       { key: "workLocation", type: "input", label: "工作地点", placeholder: "请输入工作地点", required: true },
-      { key: "department", type: "input", label: "部门", placeholder: "请输入部门名称" },
-      { key: "employeeId", type: "input", label: "员工编号", placeholder: "请输入员工编号" },
       { key: "showWeekday", type: "checkbox", label: "显示星期", default: true },
-      { key: "customTime", type: "time", label: "自定义打卡时间" },
+      { key: "customDateTime", type: "datetime-local", label: "自定义拍摄时间" },
     ],
     svgPath: "/templates/preview/punch.svg",
     defaultStyle: {

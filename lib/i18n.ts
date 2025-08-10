@@ -107,14 +107,10 @@ export const languages = {
       projectName: "工程名称",
       constructionArea: "施工区域",
       constructionContent: "施工内容",
-      contractor: "施工单位",
-      supervisor: "监理单位",
 
       // Punch template
       punchType: "打卡类型",
       workLocation: "工作地点",
-      department: "部门",
-      employeeId: "员工编号",
 
       // Travel template
       destination: "目的地",
@@ -131,6 +127,7 @@ export const languages = {
       // Common fields
       customDate: "自定义日期",
       customTime: "自定义时间",
+      customDateTime: "自定义拍摄时间",
       customLocation: "自定义地点",
       customText: "自定义文本",
       notes: "备注",
@@ -389,13 +386,9 @@ export const languages = {
       projectName: "Project Name",
       constructionArea: "Construction Area",
       constructionContent: "Construction Content",
-      contractor: "Contractor",
-      supervisor: "Supervisor",
 
       punchType: "Punch Type",
       workLocation: "Work Location",
-      department: "Department",
-      employeeId: "Employee ID",
 
       destination: "Destination",
       weather: "Weather",
@@ -409,6 +402,7 @@ export const languages = {
 
       customDate: "Custom Date",
       customTime: "Custom Time",
+      customDateTime: "Custom Shooting Time",
       customLocation: "Custom Location",
       customText: "Custom Text",
       notes: "Notes",

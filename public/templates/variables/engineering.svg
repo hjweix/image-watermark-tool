@@ -9,6 +9,6 @@
     <tspan id="line1" x="25" dy="0">{{PROJECT_NAME_CONTENT}}</tspan>
     <tspan id="line2" x="25" dy="30">{{CONSTRUCTION_AREA_CONTENT}}</tspan>
     <tspan id="line3" x="25" dy="30">{{CONSTRUCTION_CONTENT}}</tspan>
-    <tspan id="line6" x="25" dy="30">{{DATETIME_CONTENT}}</tspan>
+    <tspan id="line4" x="25" dy="30">{{DATETIME_CONTENT}}</tspan>
   </text>
 </svg>

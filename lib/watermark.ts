@@ -14,16 +14,22 @@ const TEMPLATE_VARIABLES = {
   modern: {
     TIME_CONTENT: (config: any) => {
       if (config.showTime === false) return null
-      const now = new Date()
-      return `🕐 ${now.toTimeString().slice(0, 8)}`
+      let displayDate = new Date()
+      if (config.customDateTime) {
+        displayDate = new Date(config.customDateTime)
+      }
+      return `🕐 ${displayDate.toTimeString().slice(0, 8)}`
     },
     DATE_CONTENT: (config: any) => {
       if (config.showDate === false) return null
-      const now = new Date()
+      let displayDate = new Date()
+      if (config.customDateTime) {
+        displayDate = new Date(config.customDateTime)
+      }
       const dateFormat = config.dateFormat || "YYYY-MM-DD"
-      const year = now.getFullYear()
-      const month = String(now.getMonth() + 1).padStart(2, "0")
-      const day = String(now.getDate()).padStart(2, "0")
+      const year = displayDate.getFullYear()
+      const month = String(displayDate.getMonth() + 1).padStart(2, "0")
+      const day = String(displayDate.getDate()).padStart(2, "0")
       const formattedDate = dateFormat.replace("YYYY", year.toString()).replace("MM", month).replace("DD", day)
       return `📅 ${formattedDate}`
     },
@@ -39,9 +45,21 @@ const TEMPLATE_VARIABLES = {
     ACCURACY_CONTENT: (config: any) => config.accuracy ? `精度: ${config.accuracy}m` : `精度: 5m`,
     TIME_CONTENT: (config: any) => {
       if (config.showTime === false) return null
-      const now = new Date()
-      const currentDate = now.toISOString().slice(0, 10)
-      const currentTime = config.customTime || now.toTimeString().slice(0, 8)
+      
+      let currentDate, currentTime
+      
+      if (config.customDateTime) {
+        // 解析自定义时间（datetime-local格式："2025-08-05T23:40:43"）
+        const customDateTime = new Date(config.customDateTime)
+        currentDate = customDateTime.toISOString().slice(0, 10)
+        currentTime = customDateTime.toTimeString().slice(0, 8)
+      } else {
+        // 使用当前时间
+        const now = new Date()
+        currentDate = now.toISOString().slice(0, 10)
+        currentTime = now.toTimeString().slice(0, 8)
+      }
+      
       return `时间: ${currentDate} ${currentTime}`
     }
   },
@@ -51,31 +69,42 @@ const TEMPLATE_VARIABLES = {
       let text = `👶 ${babyName}`
       if (config.showDaysSince !== false && config.birthDate) {
         const birthDate = new Date(config.birthDate)
-        const now = new Date()
-        const daysSince = Math.floor((now.getTime() - birthDate.getTime()) / (1000 * 60 * 60 * 24))
+        let currentDisplayDate = new Date()
+        if (config.customDateTime) {
+          currentDisplayDate = new Date(config.customDateTime)
+        }
+        const daysSince = Math.floor((currentDisplayDate.getTime() - birthDate.getTime()) / (1000 * 60 * 60 * 24))
         text += `·出生第${daysSince}天`
       }
       return text
     },
-    MILESTONE_CONTENT: (config: any) => config.milestone ? `🎉 ${config.milestone}` : `🎉 成长记录`,
+    MILESTONE_CONTENT: (config: any) => config.milestone ? `🎉 ${config.milestone}` : null,
     DATE_CONTENT: (config: any) => {
       if (config.showCurrentDate === false) return null
-      const now = new Date()
-      return `📅 ${now.toISOString().slice(0, 10)}`
+      let currentDisplayDate = new Date()
+      if (config.customDateTime) {
+        currentDisplayDate = new Date(config.customDateTime)
+      }
+      return `📅 ${currentDisplayDate.toISOString().slice(0, 10)}`
     }
   },
   engineering: {
     PROJECT_NAME_CONTENT: (config: any) => config.projectName ? `⚡ ${config.projectName}` : `⚡ 工程项目`,
     CONSTRUCTION_AREA_CONTENT: (config: any) => config.constructionArea ? `📍 ${config.constructionArea}` : `📍 施工区域`,
     CONSTRUCTION_CONTENT: (config: any) => config.constructionContent ? `🔧 ${config.constructionContent}` : `🔧 施工内容`,
-    CONTRACTOR_CONTENT: (config: any) => config.contractor ? `🏗️ ${config.contractor}` : `🏗️ 施工单位`,
-    SUPERVISOR_CONTENT: (config: any) => config.supervisor ? `👷 ${config.supervisor}` : `👷 监理单位`,
     DATETIME_CONTENT: (config: any) => {
       if (config.showDateTime === false) return null
-      const now = new Date()
-      const currentDate = now.toISOString().slice(0, 10)
-      const currentTime = now.toTimeString().slice(0, 5)
-      return `📅 ${currentDate} ${currentTime}`
+      if (config.customDateTime) {
+        const customDateTime = new Date(config.customDateTime)
+        const currentDate = customDateTime.toISOString().slice(0, 10)
+        const currentTime = customDateTime.toTimeString().slice(0, 5)
+        return `📅 ${currentDate} ${currentTime}`
+      } else {
+        const now = new Date()
+        const currentDate = now.toISOString().slice(0, 10)
+        const currentTime = now.toTimeString().slice(0, 5)
+        return `📅 ${currentDate} ${currentTime}`
+      }
     }
   },
   punch: {
@@ -88,20 +117,29 @@ const TEMPLATE_VARIABLES = {
         overtime: "加班打卡",
       }
       const punchType = punchTypeLabels[config.punchType as keyof typeof punchTypeLabels] || "上班打卡"
-      const now = new Date()
-      const punchTime = config.customTime || now.toTimeString().slice(0, 5)
-      return `📍 ${punchType} ${punchTime}`
+      let displayTime
+      if (config.customDateTime) {
+        const customDateTime = new Date(config.customDateTime)
+        displayTime = customDateTime.toTimeString().slice(0, 5)
+      } else {
+        const now = new Date()
+        displayTime = now.toTimeString().slice(0, 5)
+      }
+      return `📍 ${punchType} ${displayTime}`
     },
     WORK_LOCATION_CONTENT: (config: any) => config.workLocation || `📍 办公地点`,
-    DEPARTMENT_CONTENT: (config: any) => config.department ? `部门: ${config.department}` : `部门: 技术部`,
-    EMPLOYEE_ID_CONTENT: (config: any) => config.employeeId ? `工号: ${config.employeeId}` : `工号: 001`,
     DATE_WEEKDAY_CONTENT: (config: any) => {
-      const now = new Date()
-      const currentDate = now.toISOString().slice(0, 10)
+      let displayDate
+      if (config.customDateTime) {
+        displayDate = new Date(config.customDateTime)
+      } else {
+        displayDate = new Date()
+      }
+      const currentDate = displayDate.toISOString().slice(0, 10)
       let dateText = currentDate
       if (config.showWeekday !== false) {
         const weekdays = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"]
-        dateText += ` ${weekdays[now.getDay()]}`
+        dateText += ` ${weekdays[displayDate.getDay()]}`
       }
       return dateText
     }
@@ -410,14 +448,19 @@ export const generateTemplateText = (template: string, content: Record<string, a
 
   switch (template) {
     case "modern":
+      let displayDate = now
+      if (content.customDateTime) {
+        displayDate = new Date(content.customDateTime)
+      }
+      
       if (content.showTime !== false) {
-        lines.push(`🕐 ${now.toTimeString().slice(0, 8)}`)
+        lines.push(`🕐 ${displayDate.toTimeString().slice(0, 8)}`)
       }
       if (content.showDate !== false) {
         const dateFormat = content.dateFormat || "YYYY-MM-DD"
-        const year = now.getFullYear()
-        const month = String(now.getMonth() + 1).padStart(2, "0")
-        const day = String(now.getDate()).padStart(2, "0")
+        const year = displayDate.getFullYear()
+        const month = String(displayDate.getMonth() + 1).padStart(2, "0")
+        const day = String(displayDate.getDate()).padStart(2, "0")
         const formattedDate = dateFormat.replace("YYYY", year.toString()).replace("MM", month).replace("DD", day)
         lines.push(`📅 ${formattedDate}`)
       }
@@ -432,25 +475,41 @@ export const generateTemplateText = (template: string, content: Record<string, a
       if (content.altitude) lines.push(`海拔: ${content.altitude}m`)
       if (content.accuracy) lines.push(`精度: ${content.accuracy}m`)
       if (content.showTime !== false) {
-        const currentDate = now.toISOString().slice(0, 10)
-        const currentTime = content.customTime || now.toTimeString().slice(0, 8)
+        let currentDate, currentTime
+        
+        if (content.customDateTime) {
+        // 解析自定义时间（datetime-local格式："2025-08-05T23:40:43"）
+        const customDateTime = new Date(content.customDateTime)
+        currentDate = customDateTime.toISOString().slice(0, 10)
+        currentTime = customDateTime.toTimeString().slice(0, 8)
+      } else {
+        // 使用当前时间
+        currentDate = now.toISOString().slice(0, 10)
+        currentTime = now.toTimeString().slice(0, 8)
+      }
+        
         lines.push(`时间: ${currentDate} ${currentTime}`)
       }
       break
 
     case "baby":
-      if (content.babyName) {
-        let babyText = `👶 ${content.babyName}`
-        if (content.showDaysSince !== false && content.birthDate) {
-          const birthDate = new Date(content.birthDate)
-          const daysSince = Math.floor((now.getTime() - birthDate.getTime()) / (1000 * 60 * 60 * 24))
-          babyText += `·出生第${daysSince}天`
-        }
-        lines.push(babyText)
+      const babyName = content.babyName || "宝宝"
+      let babyText = `👶 ${babyName}`
+      
+      let currentDisplayDate = now
+      if (content.customDateTime) {
+        currentDisplayDate = new Date(content.customDateTime)
       }
+      
+      if (content.showDaysSince !== false && content.birthDate) {
+        const birthDate = new Date(content.birthDate)
+        const daysSince = Math.floor((currentDisplayDate.getTime() - birthDate.getTime()) / (1000 * 60 * 60 * 24))
+        babyText += `·出生第${daysSince}天`
+      }
+      lines.push(babyText)
       if (content.milestone) lines.push(`🎉 ${content.milestone}`)
       if (content.showCurrentDate !== false) {
-        lines.push(`📅 ${now.toISOString().slice(0, 10)}`)
+        lines.push(`📅 ${currentDisplayDate.toISOString().slice(0, 10)}`)
       }
       break
 
@@ -458,16 +517,24 @@ export const generateTemplateText = (template: string, content: Record<string, a
       if (content.projectName) lines.push(`⚡ ${content.projectName}`)
       if (content.constructionArea) lines.push(`📍 ${content.constructionArea}`)
       if (content.constructionContent) lines.push(`🔧 ${content.constructionContent}`)
-      if (content.contractor) lines.push(`🏗️ ${content.contractor}`)
-      if (content.supervisor) lines.push(`👷 ${content.supervisor}`)
+      
       if (content.showDateTime !== false) {
-        const currentDate = now.toISOString().slice(0, 10)
-        const currentTime = now.toTimeString().slice(0, 5)
+        let engineeringDisplayDate = now
+        if (content.customDateTime) {
+          engineeringDisplayDate = new Date(content.customDateTime)
+        }
+        const currentDate = engineeringDisplayDate.toISOString().slice(0, 10)
+        const currentTime = engineeringDisplayDate.toTimeString().slice(0, 5)
         lines.push(`📅 ${currentDate} ${currentTime}`)
       }
       break
 
     case "punch":
+      let punchDisplayDate = now
+      if (content.customDateTime) {
+        punchDisplayDate = new Date(content.customDateTime)
+      }
+      
       if (content.punchType) {
         const punchTypeLabels = {
           clockIn: "上班打卡",
@@ -477,17 +544,15 @@ export const generateTemplateText = (template: string, content: Record<string, a
           overtime: "加班打卡",
         }
         const punchType = punchTypeLabels[content.punchType as keyof typeof punchTypeLabels] || "打卡"
-        const punchTime = content.customTime || now.toTimeString().slice(0, 5)
+        const punchTime = punchDisplayDate.toTimeString().slice(0, 5)
         lines.push(`📍 ${punchType} ${punchTime}`)
       }
       if (content.workLocation) lines.push(content.workLocation)
-      if (content.department) lines.push(`部门: ${content.department}`)
-      if (content.employeeId) lines.push(`工号: ${content.employeeId}`)
-      const currentDate = now.toISOString().slice(0, 10)
+      const currentDate = punchDisplayDate.toISOString().slice(0, 10)
       let dateText = currentDate
       if (content.showWeekday !== false) {
         const weekdays = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"]
-        dateText += ` ${weekdays[now.getDay()]}`
+        dateText += ` ${weekdays[punchDisplayDate.getDay()]}`
       }
       lines.push(dateText)
       break
@@ -502,11 +567,18 @@ export const generateTemplateText = (template: string, content: Record<string, a
       }
       if (content.companion) lines.push(`👥 ${content.companion}`)
       if (content.mood) lines.push(content.mood)
+      // 添加日期显示
+      lines.push(`📅 ${now.toISOString().slice(0, 10)}`)
       break
 
     default:
       lines.push("水印文本")
       break
+  }
+
+  // 如果没有任何内容，添加默认水印文本
+  if (lines.length === 0) {
+    lines.push("水印文本")
   }
 
   return lines
