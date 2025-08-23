@@ -127,7 +127,7 @@ const TEMPLATE_VARIABLES = {
       }
       return `📍 ${punchType} ${displayTime}`
     },
-    WORK_LOCATION_CONTENT: (config: any) => config.workLocation || `📍 办公地点`,
+    WORK_LOCATION_CONTENT: (config: any) => config.workLocation ? `📍 ${config.workLocation}` : `📍 办公地点`,
     DATE_WEEKDAY_CONTENT: (config: any) => {
       let displayDate
       if (config.customDateTime) {
@@ -139,7 +139,7 @@ const TEMPLATE_VARIABLES = {
       let dateText = currentDate
       if (config.showWeekday !== false) {
         const weekdays = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"]
-        dateText += ` ${weekdays[displayDate.getDay()]}`
+        dateText += `📅 ${weekdays[displayDate.getDay()]}`
       }
       return dateText
     }

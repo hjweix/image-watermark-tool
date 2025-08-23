@@ -7,9 +7,9 @@
     </filter>
   </defs>
   <rect x="10" y="10" width="200" height="110" rx="8" ry="8" fill="#000000" fill-opacity="0.4" />
-  <text x="100" y="45" font-family="Arial, sans-serif" font-weight="bold" font-size="18" fill="#FFFFFF" text-anchor="middle" filter="url(#inner-shadow)">
-    <tspan id="line1" x="100" dy="0">📍 上班打卡 09:00</tspan>
-    <tspan id="line2" x="100" dy="30">北京·三里屯SOHO</tspan>
-    <tspan id="line5" x="100" dy="30">2024.01.15 星期一</tspan>
+  <text x="100" y="45" font-family="Arial, sans-serif" font-weight="bold" font-size="18" fill="#FFFFFF" text-anchor="middle" >
+    <tspan id="line1" x="100" dy=""> 上班打卡 09:00</tspan>
+    <tspan id="line2" x="100" dy="30">📍 北京·三里屯SOHO</tspan>
+    <tspan id="line5" x="100" dy="30">📅 2024.01.15 星期一</tspan>
   </text>
 </svg>
