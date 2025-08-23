@@ -45,7 +45,9 @@
     "exifInfo": "EXIF Info",
     "shootingDate": "Shooting Date",
     "first": "Please upload images first",
-    "supportDrag": "Support drag and drop upload or click to select files"
+    "supportDrag": "Support drag and drop upload or click to select files",
+    "latitude": "Latitude",
+    "longitude": "Longitude"
   },
   "settings": {
     "settings": "Watermark Settings",
@@ -70,13 +72,7 @@
   },
   "style": {
     "position": "Position",
-    "fontSize": "Font Size",
-    "font": "Font",
-    "textColor": "Text Color",
-    "backgroundColor": "Background Color",
-    "backgroundOpacity": "Background Opacity",
-    "borderRadius": "Border Radius",
-    "padding": "Padding"
+    "fontSize": "Font Size"
   },
   "position": {
     "topLeft": "Top Left",

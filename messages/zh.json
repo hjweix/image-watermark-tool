@@ -74,13 +74,7 @@
   },
   "style": {
     "position": "位置",
-    "fontSize": "字体大小",
-    "font": "字体",
-    "textColor": "文字颜色",
-    "backgroundColor": "背景颜色",
-    "backgroundOpacity": "背景透明度",
-    "borderRadius": "圆角大小",
-    "padding": "内边距"
+    "fontSize": "字体大小"
   },
   "position": {
     "topLeft": "左上角",

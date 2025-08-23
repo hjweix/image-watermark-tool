@@ -59,7 +59,7 @@ export default function ImageWatermarkTool() {
     ...templateConfigs.modern.defaultStyle,
     content: {},
   })
-  const [useSvg, setUseSvg] = useState(true)
+
   const [isProcessing, setIsProcessing] = useState(false)
   const [processingProgress, setProcessingProgress] = useState(0)
 
@@ -164,14 +164,13 @@ export default function ImageWatermarkTool() {
           const scaledConfig: TemplateConfig = {
             ...templateConfig,
             fontSize: templateConfig.fontSize * scale,
-            padding: templateConfig.padding * scale,
-            borderRadius: templateConfig.borderRadius * scale,
             // 对于custom位置，保持原始的offsetX和offsetY，因为generateWatermark会使用相对比例计算
             // 对于其他位置，需要按比例缩放
             offsetX: templateConfig.position === 'custom' ? templateConfig.offsetX : templateConfig.offsetX * scale,
             offsetY: templateConfig.position === 'custom' ? templateConfig.offsetY : templateConfig.offsetY * scale,
-            width: templateConfig.width ? templateConfig.width * scale : undefined,
-            height: templateConfig.height ? templateConfig.height * scale : undefined,
+            // 不再手动缩放width和height，让generateWatermark函数根据预览尺寸自动缩放
+            width: templateConfig.width,
+            height: templateConfig.height,
             _previewWidth: pWidth,
             _previewHeight: pHeight,
             // 传递相对位置比例信息
@@ -212,16 +211,14 @@ export default function ImageWatermarkTool() {
       const scaledConfig: TemplateConfig = {
         ...templateConfig,
         fontSize: templateConfig.fontSize * scale,
-        padding: templateConfig.padding * scale,
-        borderRadius: templateConfig.borderRadius * scale,
         // 对于custom位置，保持原始的offsetX和offsetY，因为generateWatermark会使用相对比例计算
         // 对于其他位置，需要按比例缩放
         offsetX: templateConfig.position === 'custom' ? templateConfig.offsetX : templateConfig.offsetX * scale,
         offsetY: templateConfig.position === 'custom' ? templateConfig.offsetY : templateConfig.offsetY * scale,
-        // Scale width and height as well to ensure wrapping consistency
-        width: templateConfig.width ? templateConfig.width * scale : undefined,
-        height: templateConfig.height ? templateConfig.height * scale : undefined,
-        // 保存预览图片的尺寸信息，用于计算水印的相对位置
+        // 不再手动缩放width和height，让generateWatermark函数根据预览尺寸自动缩放
+        width: templateConfig.width,
+        height: templateConfig.height,
+        // 保存预览图片的尺寸信息，用于计算水印的相对位置和缩放
         _previewWidth: pWidth,
         _previewHeight: pHeight,
         // 传递相对位置比例信息
@@ -285,11 +282,7 @@ export default function ImageWatermarkTool() {
     const template = templateConfigs[templateKey as keyof typeof templateConfigs]
     if (template) {
       setSelectedTemplate(templateKey)
-      // 检查模板是否有useSvg属性，并相应更新状态
-      const hasUseSvg = 'useSvg' in template.defaultStyle
-      if (hasUseSvg) {
-        setUseSvg(!!template.defaultStyle.useSvg)
-      }
+
       setTemplateConfig({
         ...template.defaultStyle,
         content: {},
@@ -310,14 +303,9 @@ export default function ImageWatermarkTool() {
 
   // Update template style
   const updateTemplateStyle = (key: string, value: any) => {
-    if (key === "useSvg") {
-      setUseSvg(value)
-    }
     setTemplateConfig((prev) => ({
       ...prev,
       [key]: value,
-      // 确保useSvg状态同步到templateConfig中
-      ...(key === "useSvg" ? { useSvg: value } : {}),
     }))
   }
 
@@ -375,8 +363,6 @@ export default function ImageWatermarkTool() {
               applyTemplate={applyTemplate}
               updateTemplateContent={updateTemplateContent}
               setTemplateConfig={setTemplateConfig}
-              useSvg={useSvg}
-              onUseSvgChange={setUseSvg}
             />
           </div>
 

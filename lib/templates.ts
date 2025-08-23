@@ -3,21 +3,11 @@ export type TemplateConfig = {
   // Common style properties
   position: string | "custom"
   fontSize: number
-  fontFamily: string
-  fontWeight: "normal" | "bold"
-  fontStyle: "normal" | "italic"
-  textColor: string
-  backgroundColor: string
-  backgroundOpacity: number
-  borderRadius: number
-  padding: number
   offsetX: number
   offsetY: number
-  textOpacity: number
   width?: number
   height?: number
-  useSvg?: boolean
-  svgTemplate?: string
+  svgTemplate: string
   _forceUpdate?: number // 用于强制更新的时间戳
   _previewWidth?: number // 预览图片宽度，用于计算水印相对位置
   _previewHeight?: number // 预览图片高度，用于计算水印相对位置
@@ -58,12 +48,6 @@ export const templateConfigs: {
     styleFields: [
       "position",
       "fontSize",
-      "fontFamily",
-      "textColor",
-      "backgroundColor",
-      "backgroundOpacity",
-      "borderRadius",
-      "useSvg",
     ],
     contentFields: [
       { key: "showDate", type: "checkbox", label: "showDate", default: true },
@@ -87,20 +71,10 @@ export const templateConfigs: {
     defaultStyle: {
       position: "bottom-left",
       fontSize: 24,
-      fontFamily: "Arial",
-      fontWeight: "normal" as const,
-      fontStyle: "normal" as const,
-      textColor: "#ffffff",
-      backgroundColor: "#000000",
-      backgroundOpacity: 0.2,
-      borderRadius: 5,
-      padding: 10,
       offsetX: 20,
       offsetY: 20,
-      textOpacity: 1,
       width: undefined,
       height: undefined,
-      useSvg: true,
       svgTemplate: "/templates/preview/modern.svg",
     },
   },
@@ -108,7 +82,7 @@ export const templateConfigs: {
   professional: {
     name: "专业标记",
     preview: "经度: 116.305315\n纬度: 39.930812\n海拔: 50m\n精度: 5m\n时间: 2024-01-15 11:30:45",
-    styleFields: ["position", "fontSize", "fontFamily", "textColor", "backgroundColor", "backgroundOpacity", "useSvg"],
+    styleFields: ["position", "fontSize"],
     contentFields: [
       {
         key: "longitude",
@@ -128,20 +102,10 @@ export const templateConfigs: {
     defaultStyle: {
       position: "bottom-left",
       fontSize: 16,
-      fontFamily: "monospace",
-      fontWeight: "normal" as const,
-      fontStyle: "normal" as const,
-      textColor: "#FFFFFF",
-      backgroundColor: "#2C3E50",
-      backgroundOpacity: 0.8,
-      borderRadius: 3,
-      padding: 8,
       offsetX: 20,
       offsetY: 20,
-      textOpacity: 1,
       width: undefined,
       height: undefined,
-      useSvg: true,
       svgTemplate: "/templates/preview/professional.svg",
     },
   },
@@ -152,12 +116,6 @@ export const templateConfigs: {
     styleFields: [
       "position",
       "fontSize",
-      "fontFamily",
-      "textColor",
-      "backgroundColor",
-      "backgroundOpacity",
-      "borderRadius",
-      "useSvg",
     ],
     contentFields: [
       { key: "babyName", type: "input", label: "babyName", placeholder: "enterBabyName", required: true },
@@ -171,20 +129,10 @@ export const templateConfigs: {
     defaultStyle: {
       position: "bottom-left",
       fontSize: 22,
-      fontFamily: "Arial",
-      fontWeight: "bold" as const,
-      fontStyle: "normal" as const,
-      textColor: "#FFFFFF",
-      backgroundColor: "#FFB6C1",
-      backgroundOpacity: 0.9,
-      borderRadius: 15,
-      padding: 12,
       offsetX: 20,
       offsetY: 20,
-      textOpacity: 1,
       width: undefined,
       height: undefined,
-      useSvg: true,
       svgTemplate: "/templates/preview/baby.svg",
     },
   },
@@ -192,7 +140,7 @@ export const templateConfigs: {
   engineering: {
     name: "工程记录",
     preview: "⚡ 北京地铁15号线\n📍 望京东站施工区域\n🔧 隧道开挖作业\n⏰ 09:30\n📅 2024-01-15 11:30",
-    styleFields: ["position", "fontSize", "fontFamily", "textColor", "backgroundColor", "backgroundOpacity", "useSvg"],
+    styleFields: ["position", "fontSize"],
     contentFields: [
       { key: "projectName", type: "input", label: "projectName", placeholder: "enterProjectName", required: true },
       { key: "constructionArea", type: "input", label: "constructionArea", placeholder: "enterConstructionArea", required: true },
@@ -210,20 +158,10 @@ export const templateConfigs: {
     defaultStyle: {
       position: "bottom-left",
       fontSize: 18,
-      fontFamily: "Arial",
-      fontWeight: "bold" as const,
-      fontStyle: "normal" as const,
-      textColor: "#000000",
-      backgroundColor: "#FFD700",
-      backgroundOpacity: 0.9,
-      borderRadius: 3,
-      padding: 10,
       offsetX: 20,
       offsetY: 20,
-      textOpacity: 1,
       width: undefined,
       height: undefined,
-      useSvg: true,
       svgTemplate: "/templates/preview/engineering.svg",
     },
   },
@@ -234,12 +172,6 @@ export const templateConfigs: {
     styleFields: [
       "position",
       "fontSize",
-      "fontFamily",
-      "textColor",
-      "backgroundColor",
-      "backgroundOpacity",
-      "borderRadius",
-      "useSvg",
     ],
     contentFields: [
       {
@@ -264,20 +196,10 @@ export const templateConfigs: {
     defaultStyle: {
       position: "bottom-left",
       fontSize: 20,
-      fontFamily: "Arial",
-      fontWeight: "bold" as const,
-      fontStyle: "normal" as const,
-      textColor: "#FFFFFF",
-      backgroundColor: "#FF6B35",
-      backgroundOpacity: 0.9,
-      borderRadius: 8,
-      padding: 12,
       offsetX: 20,
       offsetY: 20,
-      textOpacity: 1,
       width: undefined,
       height: undefined,
-      useSvg: true,
       svgTemplate: "/templates/preview/punch.svg",
     },
   },
@@ -288,12 +210,6 @@ export const templateConfigs: {
     styleFields: [
       "position",
       "fontSize",
-      "fontFamily",
-      "textColor",
-      "backgroundColor",
-      "backgroundOpacity",
-      "borderRadius",
-      "useSvg",
     ],
     contentFields: [
       { key: "destination", type: "input", label: "destination", placeholder: "enterDestination", required: true },
@@ -330,20 +246,10 @@ export const templateConfigs: {
     defaultStyle: {
       position: "bottom-left",
       fontSize: 20,
-      fontFamily: "Arial",
-      fontWeight: "normal" as const,
-      fontStyle: "normal" as const,
-      textColor: "#FFFFFF",
-      backgroundColor: "#008000",
-      backgroundOpacity: 0.8,
-      borderRadius: 12,
-      padding: 10,
       offsetX: 20,
       offsetY: 20,
-      textOpacity: 1,
       width: undefined,
       height: undefined,
-      useSvg: true,
       svgTemplate: "/templates/preview/travel.svg",
     },
   },

@@ -206,391 +206,122 @@ export const generateWatermark = async (
       // Draw original image
       ctx.drawImage(img, 0, 0)
 
-      // Check if using SVG template
-      if (config.useSvg && config.svgTemplate) {
-        // Fetch variable template SVG content
-        const variableTemplatePath = config.svgTemplate.replace('/preview/', '/variables/')
-        fetch(variableTemplatePath)
-          .then(response => response.text())
-          .then(svgContent => {
-            // 处理变量模板替换
-            const processedSvgContent = processVariableTemplate(svgContent, selectedTemplate, config.content)
+      // Fetch variable template SVG content
+      const variableTemplatePath = config.svgTemplate.replace('/preview/', '/variables/')
+      fetch(variableTemplatePath)
+        .then(response => response.text())
+        .then(svgContent => {
+          // 处理变量模板替换
+          const processedSvgContent = processVariableTemplate(svgContent, selectedTemplate, config.content)
+          
+          // Create SVG blob and object URL
+          const svgBlob = new Blob([processedSvgContent], { type: 'image/svg+xml' })
+          const svgUrl = URL.createObjectURL(svgBlob)
+          
+          // Create image from SVG
+          const svgImg = new Image()
+          svgImg.onload = () => {
+            // Calculate position and size
+            let x, y
             
-            // Create SVG blob and object URL
-            const svgBlob = new Blob([processedSvgContent], { type: 'image/svg+xml' })
-            const svgUrl = URL.createObjectURL(svgBlob)
-            
-            // Create image from SVG
-            const svgImg = new Image()
-            svgImg.onload = () => {
-              // Calculate position and size
-              let x, y
-              // 使用配置中的尺寸，如果没有配置则使用SVG原始尺寸
-              const svgWidth = config.width || svgImg.width || 300
-              const svgHeight = config.height || svgImg.height || 150
+            // 计算水印尺寸的缩放比例
+            // 如果有预览尺寸信息，则根据实际图片与预览图片的比例来缩放水印
+            let svgWidth, svgHeight
+            if (config._previewWidth && config._previewHeight) {
+              // 计算图片的缩放比例
+              const scaleX = canvas.width / config._previewWidth
+              const scaleY = canvas.height / config._previewHeight
+              // 使用较小的缩放比例以保持水印的宽高比
+              const scale = Math.min(scaleX, scaleY)
               
-              if (config.position === "custom") {
-                // 优先使用保存的相对位置比例
-                if (config._relativeX !== undefined && config._relativeY !== undefined) {
-                  x = config._relativeX * canvas.width
-                  y = config._relativeY * canvas.height
-                } else {
-                  // 兼容旧版本：使用相对位置计算，确保在不同尺寸的图片上保持相同的相对位置
-                  const previewWidth = config._previewWidth || canvas.width
-                  const previewHeight = config._previewHeight || canvas.height
-                  
-                  // 计算预览中水印位置相对于预览图片的比例
-                  const relativeX = config.offsetX / previewWidth
-                  const relativeY = config.offsetY / previewHeight
-                  
-                  // 根据实际图片尺寸计算水印位置
-                  x = relativeX * canvas.width
-                  y = relativeY * canvas.height
-                }
-              } else {
-                switch (config.position) {
-                  case "top-left":
-                    x = config.offsetX
-                    y = config.offsetY
-                    break
-                  case "top-center":
-                    x = (canvas.width - svgWidth) / 2 + config.offsetX
-                    y = config.offsetY
-                    break
-                  case "top-right":
-                    x = canvas.width - svgWidth - config.offsetX
-                    y = config.offsetY
-                    break
-                  case "center-left":
-                    x = config.offsetX
-                    y = (canvas.height - svgHeight) / 2 + config.offsetY
-                    break
-                  case "center":
-                    x = (canvas.width - svgWidth) / 2 + config.offsetX
-                    y = (canvas.height - svgHeight) / 2 + config.offsetY
-                    break
-                  case "center-right":
-                    x = canvas.width - svgWidth - config.offsetX
-                    y = (canvas.height - svgHeight) / 2 + config.offsetY
-                    break
-                  case "bottom-left":
-                    x = config.offsetX
-                    y = canvas.height - svgHeight - config.offsetY
-                    break
-                  case "bottom-center":
-                    x = (canvas.width - svgWidth) / 2 + config.offsetX
-                    y = canvas.height - svgHeight - config.offsetY
-                    break
-                  case "bottom-right":
-                  default:
-                    x = canvas.width - svgWidth - config.offsetX
-                    y = canvas.height - svgHeight - config.offsetY
-                    break
-                }
-              }
-              
-              // Draw SVG watermark with specified dimensions
-              ctx.drawImage(svgImg, x, y, svgWidth, svgHeight)
-              ctx.globalAlpha = 1
-              
-              // Clean up object URL
-              URL.revokeObjectURL(svgUrl)
-              
-              resolve(canvas.toDataURL())
+              svgWidth = (config.width || 200) * scale
+              svgHeight = (config.height || 100) * scale
+            } else {
+              // 兼容旧版本：使用配置中的尺寸，如果没有配置则使用SVG原始尺寸
+              svgWidth = config.width || svgImg.width || 300
+              svgHeight = config.height || svgImg.height || 150
             }
             
-            // Load SVG image
-            svgImg.src = svgUrl
-          })
-          .catch(error => {
-            console.error("Error loading SVG template:", error)
-            // Fallback to original image if SVG loading fails
+            if (config.position === "custom") {
+              // 优先使用保存的相对位置比例
+              if (config._relativeX !== undefined && config._relativeY !== undefined) {
+                x = config._relativeX * canvas.width
+                y = config._relativeY * canvas.height
+              } else {
+                // 兼容旧版本：使用相对位置计算，确保在不同尺寸的图片上保持相同的相对位置
+                const previewWidth = config._previewWidth || canvas.width
+                const previewHeight = config._previewHeight || canvas.height
+                
+                // 计算预览中水印位置相对于预览图片的比例
+                const relativeX = config.offsetX / previewWidth
+                const relativeY = config.offsetY / previewHeight
+                
+                // 根据实际图片尺寸计算水印位置
+                x = relativeX * canvas.width
+                y = relativeY * canvas.height
+              }
+            } else {
+              switch (config.position) {
+                case "top-left":
+                  x = config.offsetX
+                  y = config.offsetY
+                  break
+                case "top-center":
+                  x = (canvas.width - svgWidth) / 2 + config.offsetX
+                  y = config.offsetY
+                  break
+                case "top-right":
+                  x = canvas.width - svgWidth - config.offsetX
+                  y = config.offsetY
+                  break
+                case "center-left":
+                  x = config.offsetX
+                  y = (canvas.height - svgHeight) / 2 + config.offsetY
+                  break
+                case "center":
+                  x = (canvas.width - svgWidth) / 2 + config.offsetX
+                  y = (canvas.height - svgHeight) / 2 + config.offsetY
+                  break
+                case "center-right":
+                  x = canvas.width - svgWidth - config.offsetX
+                  y = (canvas.height - svgHeight) / 2 + config.offsetY
+                  break
+                case "bottom-left":
+                  x = config.offsetX
+                  y = canvas.height - svgHeight - config.offsetY
+                  break
+                case "bottom-center":
+                  x = (canvas.width - svgWidth) / 2 + config.offsetX
+                  y = canvas.height - svgHeight - config.offsetY
+                  break
+                case "bottom-right":
+                default:
+                  x = canvas.width - svgWidth - config.offsetX
+                  y = canvas.height - svgHeight - config.offsetY
+                  break
+              }
+            }
+            
+            // Draw SVG watermark with specified dimensions
+            ctx.drawImage(svgImg, x, y, svgWidth, svgHeight)
+            ctx.globalAlpha = 1
+            
+            // Clean up object URL
+            URL.revokeObjectURL(svgUrl)
+            
             resolve(canvas.toDataURL())
-          })
-        return
-      }
-
-      // Generate template-specific watermark text (fallback for non-SVG templates)
-      const initialLines = generateTemplateText(selectedTemplate, config.content, imageFile.exifData)
-
-      if (initialLines.length === 0) return resolve(canvas.toDataURL())
-
-      // Set font
-      ctx.font = `${config.fontStyle} ${config.fontWeight} ${config.fontSize}px ${config.fontFamily}`
-
-      // Wrap text if width is defined
-      const maxTextWidth = config.width ? config.width - config.padding * 2 : undefined
-      const lines = maxTextWidth
-        ? initialLines.flatMap((line) => wrapText(ctx, line, maxTextWidth))
-        : initialLines
-
-      // Calculate text dimensions
-      const lineHeight = config.fontSize * 1.2
-      const maxWidth = Math.max(...lines.map((line) => ctx.measureText(line).width))
-      const textHeight = lines.length * lineHeight
-
-      // Calculate position
-      const bgWidth = config.width ?? maxWidth + config.padding * 2
-      const bgHeight = config.height ?? textHeight + config.padding * 2
-
-      let x, y
-      if (config.position === "custom") {
-        // 优先使用保存的相对位置比例
-        if (config._relativeX !== undefined && config._relativeY !== undefined) {
-          x = config._relativeX * canvas.width
-          y = config._relativeY * canvas.height
-        } else {
-          // 兼容旧版本：使用相对位置计算，确保在不同尺寸的图片上保持相同的相对位置
-          const previewWidth = config._previewWidth || canvas.width
-          const previewHeight = config._previewHeight || canvas.height
+          }
           
-          // 计算预览中水印位置相对于预览图片的比例
-          const relativeX = config.offsetX / previewWidth
-          const relativeY = config.offsetY / previewHeight
-          
-          // 根据实际图片尺寸计算水印位置
-          x = relativeX * canvas.width
-          y = relativeY * canvas.height
-        }
-      } else {
-        switch (config.position) {
-          case "top-left":
-            x = config.offsetX
-            y = config.offsetY
-            break
-          case "top-center":
-            x = (canvas.width - bgWidth) / 2 + config.offsetX
-            y = config.offsetY
-            break
-          case "top-right":
-            x = canvas.width - bgWidth - config.offsetX
-            y = config.offsetY
-            break
-          case "center-left":
-            x = config.offsetX
-            y = (canvas.height - bgHeight) / 2 + config.offsetY
-            break
-          case "center":
-            x = (canvas.width - bgWidth) / 2 + config.offsetX
-            y = (canvas.height - bgHeight) / 2 + config.offsetY
-            break
-          case "center-right":
-            x = canvas.width - bgWidth - config.offsetX
-            y = (canvas.height - bgHeight) / 2 + config.offsetY
-            break
-          case "bottom-left":
-            x = config.offsetX
-            y = canvas.height - bgHeight - config.offsetY
-            break
-          case "bottom-center":
-            x = (canvas.width - bgWidth) / 2 + config.offsetX
-            y = canvas.height - bgHeight - config.offsetY
-            break
-          case "bottom-right":
-          default:
-            x = canvas.width - bgWidth - config.offsetX
-            y = canvas.height - bgHeight - config.offsetY
-            break
-        }
-      }
-
-      // Draw background
-      ctx.globalAlpha = config.backgroundOpacity
-      ctx.fillStyle = config.backgroundColor
-      if (config.borderRadius > 0) {
-        ctx.beginPath()
-        ctx.roundRect(x, y, bgWidth, bgHeight, config.borderRadius)
-        ctx.fill()
-      } else {
-        ctx.fillRect(x, y, bgWidth, bgHeight)
-      }
-
-      // Draw text
-      ctx.globalAlpha = config.textOpacity
-      ctx.fillStyle = config.textColor
-      ctx.textBaseline = "top"
-
-      lines.forEach((line, index) => {
-        const textY = y + config.padding + index * lineHeight
-        ctx.fillText(line, x + config.padding, textY)
-      })
-
-      ctx.globalAlpha = 1
-      resolve(canvas.toDataURL())
+          // Load SVG image
+          svgImg.src = svgUrl
+        })
+        .catch(error => {
+          console.error("Error loading SVG template:", error)
+          // Fallback to original image if SVG loading fails
+          resolve(canvas.toDataURL())
+        })
     }
 
     img.src = imageFile.url
   })
-}
-
-const wrapText = (context: CanvasRenderingContext2D, text: string, maxWidth: number): string[] => {
-  const words = text.split(" ")
-  const lines: string[] = []
-  let currentLine = words[0]
-
-  for (let i = 1; i < words.length; i++) {
-    const word = words[i]
-    const width = context.measureText(currentLine + " " + word).width
-    if (width < maxWidth) {
-      currentLine += " " + word
-    } else {
-      lines.push(currentLine)
-      currentLine = word
-    }
-  }
-  lines.push(currentLine)
-  return lines
-}
-
-export const generateTemplateText = (template: string, content: Record<string, any>, exifData: any): string[] => {
-  const lines: string[] = []
-  const now = new Date()
-
-  switch (template) {
-    case "modern":
-      let displayDate = now
-      if (content.customDateTime) {
-        displayDate = new Date(content.customDateTime)
-      }
-      
-      if (content.showTime !== false) {
-        lines.push(`🕐 ${displayDate.toTimeString().slice(0, 8)}`)
-      }
-      if (content.showDate !== false) {
-        const dateFormat = content.dateFormat || "YYYY-MM-DD"
-        const year = displayDate.getFullYear()
-        const month = String(displayDate.getMonth() + 1).padStart(2, "0")
-        const day = String(displayDate.getDate()).padStart(2, "0")
-        const formattedDate = dateFormat.replace("YYYY", year.toString()).replace("MM", month).replace("DD", day)
-        lines.push(`📅 ${formattedDate}`)
-      }
-      if (content.showLocation !== false && content.customLocation) {
-        lines.push(`📍 ${content.customLocation}`)
-      }
-      break
-
-    case "professional":
-      if (content.longitude) lines.push(`经度: ${content.longitude}`)
-      if (content.latitude) lines.push(`纬度: ${content.latitude}`)
-      if (content.altitude) lines.push(`海拔: ${content.altitude}m`)
-      if (content.accuracy) lines.push(`精度: ${content.accuracy}m`)
-      if (content.showTime !== false) {
-        let currentDate, currentTime
-        
-        if (content.customDateTime) {
-        // 解析自定义时间（datetime-local格式："2025-08-05T23:40:43"）
-        const customDateTime = new Date(content.customDateTime)
-        currentDate = customDateTime.toISOString().slice(0, 10)
-        currentTime = customDateTime.toTimeString().slice(0, 8)
-      } else {
-        // 使用当前时间
-        currentDate = now.toISOString().slice(0, 10)
-        currentTime = now.toTimeString().slice(0, 8)
-      }
-        
-        lines.push(`时间: ${currentDate} ${currentTime}`)
-      }
-      break
-
-    case "baby":
-      const babyName = content.babyName || "宝宝"
-      let babyText = `👶 ${babyName}`
-      
-      let currentDisplayDate = now
-      if (content.customDateTime) {
-        currentDisplayDate = new Date(content.customDateTime)
-      }
-      
-      if (content.showDaysSince !== false && content.birthDate) {
-        const birthDate = new Date(content.birthDate)
-        const daysSince = Math.floor((currentDisplayDate.getTime() - birthDate.getTime()) / (1000 * 60 * 60 * 24))
-        babyText += `·出生第${daysSince}天`
-      }
-      lines.push(babyText)
-      if (content.milestone) lines.push(`🎉 ${content.milestone}`)
-      if (content.showCurrentDate !== false) {
-        lines.push(`📅 ${currentDisplayDate.toISOString().slice(0, 10)}`)
-      }
-      break
-
-    case "engineering":
-      if (content.projectName) lines.push(`⚡ ${content.projectName}`)
-      if (content.constructionArea) lines.push(`📍 ${content.constructionArea}`)
-      if (content.constructionContent) lines.push(`🔧 ${content.constructionContent}`)
-      
-      if (content.showDateTime !== false) {
-        let engineeringDisplayDate = now
-        if (content.customDateTime) {
-          engineeringDisplayDate = new Date(content.customDateTime)
-        }
-        const currentDate = engineeringDisplayDate.toISOString().slice(0, 10)
-        const currentTime = engineeringDisplayDate.toTimeString().slice(0, 5)
-        lines.push(`📅 ${currentDate} ${currentTime}`)
-      }
-      break
-
-    case "punch":
-      let punchDisplayDate = now
-      if (content.customDateTime) {
-        punchDisplayDate = new Date(content.customDateTime)
-      }
-      
-      if (content.punchType) {
-        const punchTypeLabels = {
-          clockIn: "上班打卡",
-          clockOut: "下班打卡",
-          breakStart: "休息开始",
-          breakEnd: "休息结束",
-          overtime: "加班打卡",
-        }
-        const punchType = punchTypeLabels[content.punchType as keyof typeof punchTypeLabels] || "打卡"
-        const punchTime = punchDisplayDate.toTimeString().slice(0, 5)
-        lines.push(`📍 ${punchType} ${punchTime}`)
-      }
-      if (content.workLocation) lines.push(content.workLocation)
-      const currentDate = punchDisplayDate.toISOString().slice(0, 10)
-      let dateText = currentDate
-      if (content.showWeekday !== false) {
-        const weekdays = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"]
-        dateText += ` ${weekdays[punchDisplayDate.getDay()]}`
-      }
-      lines.push(dateText)
-      break
-
-    case "travel":
-      lines.push("✈️ 旅行日记")
-      if (content.destination) lines.push(`📍 ${content.destination}`)
-      if (content.weather && content.temperature) {
-        lines.push(`${content.weather} ${content.temperature}°C`)
-      } else if (content.weather) {
-        lines.push(content.weather)
-      }
-      if (content.companion) lines.push(`👥 ${content.companion}`)
-      if (content.mood) lines.push(content.mood)
-      // 添加日期显示
-      lines.push(`📅 ${now.toISOString().slice(0, 10)}`)
-      break
-
-    default:
-      lines.push("水印文本")
-      break
-  }
-
-  // 如果没有任何内容，添加默认水印文本
-  if (lines.length === 0) {
-    lines.push("水印文本")
-  }
-
-  return lines
-}
-
-const formatDate = (dateStr: string, format: string): string => {
-  const date = new Date(dateStr)
-  if (isNaN(date.getTime())) return dateStr
-
-  const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, "0")
-  const day = String(date.getDate()).padStart(2, "0")
-
-  return format.replace("YYYY", year.toString()).replace("MM", month).replace("DD", day)
 }

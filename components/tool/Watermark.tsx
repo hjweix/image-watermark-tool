@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { generateTemplateText, processVariableTemplate } from "@/lib/watermark";
+import { processVariableTemplate } from "@/lib/watermark";
 import type { TemplateConfig } from "@/lib/templates"
 
 type WatermarkProps = {
@@ -13,11 +13,10 @@ type WatermarkProps = {
 export default function Watermark({ config, selectedTemplate, exifData }: WatermarkProps) {
   const [svgContent, setSvgContent] = useState<string>("");
   const [svgUrl, setSvgUrl] = useState<string>("");
-  const lines = generateTemplateText(selectedTemplate, config.content, exifData)
 
   useEffect(() => {
-    // 如果启用了SVG模板并且有SVG模板路径，则加载SVG内容
-    if (config.useSvg && config.svgTemplate) {
+    // 加载SVG内容
+    if (config.svgTemplate) {
       // 清除之前的SVG URL
       if (svgUrl) {
         URL.revokeObjectURL(svgUrl);
@@ -52,78 +51,36 @@ export default function Watermark({ config, selectedTemplate, exifData }: Waterm
       }
     };
   // 依赖项包含config.content，确保内容变化时重新渲染
-  }, [config.useSvg, config.svgTemplate, selectedTemplate, exifData, config.content, config._forceUpdate]);
+  }, [config.svgTemplate, selectedTemplate, exifData, config.content, config._forceUpdate]);
 
-  if (lines.length === 0) {
+  if (!svgUrl) {
     return null
   }
 
-  // 如果启用了SVG模板并且已加载SVG URL
-  if (config.useSvg && svgUrl) {
-    return (
-      <div 
+  return (
+    <div 
+      style={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        justifyContent: "center",
+        pointerEvents: "none",
+        userSelect: "none",
+        overflow: "hidden"
+      }}
+    >
+      <img 
+        src={svgUrl} 
+        alt="SVG Watermark" 
+        draggable={false}
         style={{
           width: "100%",
           height: "100%",
-          display: "flex",
-          justifyContent: "center",
+          objectFit: "contain",
           pointerEvents: "none",
-          userSelect: "none",
-          overflow: "hidden"
+          userSelect: "none"
         }}
-      >
-        <img 
-          src={svgUrl} 
-          alt="SVG Watermark" 
-          draggable={false}
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "contain",
-            pointerEvents: "none",
-            userSelect: "none"
-          }}
-        />
-      </div>
-    );
-  }
-
-  // 默认文本水印样式
-  const containerStyle: React.CSSProperties = {
-    backgroundColor: config.backgroundColor,
-    opacity: config.backgroundOpacity,
-    padding: `${config.padding}px`,
-    borderRadius: `${config.borderRadius}px`,
-    width: "100%",
-    height: "100%",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    pointerEvents: "none",
-    userSelect: "none",
-    overflow: "hidden"
-  }
-
-  const textStyle: React.CSSProperties = {
-    fontFamily: config.fontFamily,
-    fontSize: `${config.fontSize}px`,
-    fontWeight: config.fontWeight,
-    fontStyle: config.fontStyle,
-    color: config.textColor,
-    opacity: config.textOpacity,
-    whiteSpace: "pre",
-    lineHeight: 1.2,
-    pointerEvents: "none",
-    userSelect: "none"
-  }
-
-  return (
-    <div style={containerStyle}>
-      {lines.map((line: string, index: number) => (
-        <div key={index} style={textStyle}>
-          {line}
-        </div>
-      ))}
+      />
     </div>
-  )
+  );
 }

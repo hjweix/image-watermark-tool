@@ -13,7 +13,7 @@ import { Separator } from "@/components/ui/separator"
 import { Textarea } from "@/components/ui/textarea"
 import { useTranslations } from 'next-intl'
 import { templateConfigs, TemplateConfig } from "@/lib/templates"
-import { SvgTemplateSelector } from "./SvgTemplateSelector"
+
 
 type SettingsSectionProps = {
   selectedTemplate: string
@@ -22,8 +22,6 @@ type SettingsSectionProps = {
 
   updateTemplateContent: (key: string, value: any) => void
   setTemplateConfig: (config: TemplateConfig) => void
-  useSvg?: boolean
-  onUseSvgChange?: (value: boolean) => void
 }
 
 export default function SettingsSection({
@@ -33,8 +31,6 @@ export default function SettingsSection({
 
   updateTemplateContent,
   setTemplateConfig,
-  useSvg = false,
-  onUseSvgChange,
 }: SettingsSectionProps) {
   const t = useTranslations("settings");
   const tFields = useTranslations("fields");
