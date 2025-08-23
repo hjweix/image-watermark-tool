@@ -3,6 +3,7 @@ import { Switch } from "../ui/switch";
 import { Label } from "../ui/label";
 import Image from 'next/image';
 import { templateConfigs } from '@/lib/templates';
+import { useTranslations } from 'next-intl';
 
 interface SvgTemplateSelectorProps {
   selectedTemplate: string;
@@ -15,6 +16,8 @@ export function SvgTemplateSelector({
   useSvg, 
   onUseSvgChange 
 }: SvgTemplateSelectorProps) {
+  const t = useTranslations('settings');
+  const tTemplates = useTranslations('templates');
   const template = templateConfigs[selectedTemplate];
   
   if (!template || !template.svgPath) {
@@ -24,7 +27,7 @@ export function SvgTemplateSelector({
   return (
     <div className="flex flex-col space-y-4 p-4 border rounded-lg bg-background/50">
       <div className="flex items-center justify-between">
-        <Label htmlFor="use-svg" className="text-base font-medium">使用SVG模板</Label>
+        <Label htmlFor="use-svg" className="text-base font-medium">{t('useSvgTemplate')}</Label>
         <Switch 
           id="use-svg" 
           checked={useSvg} 
@@ -38,13 +41,13 @@ export function SvgTemplateSelector({
             <div className="absolute inset-0 flex items-center justify-center">
               <img 
                 src={template.svgPath} 
-                alt={`${template.name} SVG模板预览`}
+                alt={`${tTemplates(selectedTemplate) || template.name} ${t('svgTemplatePreview')}`}
                 className="max-w-full max-h-full object-contain"
               />
             </div>
           </div>
           <p className="text-xs text-muted-foreground mt-2">
-            SVG模板提供更丰富的样式和图标，可以让您的水印更加个性化。
+            {t('svgTemplateDescription')}
           </p>
         </div>
       )}

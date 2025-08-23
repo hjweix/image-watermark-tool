@@ -6,7 +6,7 @@ import { Rnd } from "react-rnd"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { useLanguage } from "@/contexts/language-context"
+import { useTranslations } from 'next-intl'
 import ExifDataSection from "./ExifDataSection"
 import Watermark from "./Watermark"
 import { generateTemplateText } from "@/lib/watermark"
@@ -36,7 +36,7 @@ export default function PreviewSection({
   updateTemplateStyle,
   templateConfig,
 }: PreviewSectionProps) {
-  const { t } = useLanguage()
+  const t = useTranslations('preview')
   const selectedImageFile = images.find((img) => img.id === selectedImage)
   const imageRef = useRef<HTMLImageElement>(null)
 
@@ -69,7 +69,7 @@ export default function PreviewSection({
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Eye className="w-5 h-5" />
-            {t.preview}
+            {t('preview')}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -302,31 +302,31 @@ export default function PreviewSection({
                 <div className="bg-gray-50 rounded-lg p-4">
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                     <div>
-                      <span className="text-gray-500">{t.fileName}:</span>
+                      <span className="text-gray-500">{t('fileName')}:</span>
                       <p className="font-medium truncate">{selectedImageFile.file.name}</p>
                     </div>
                     <div>
-                      <span className="text-gray-500">{t.fileSize}:</span>
+                      <span className="text-gray-500">{t('fileSize')}:</span>
                       <p className="font-medium">
                         {(selectedImageFile.file.size / 1024 / 1024).toFixed(1)} MB
                       </p>
                     </div>
                     <div>
-                      <span className="text-gray-500">{t.status}:</span>
+                      <span className="text-gray-500">{t('status')}:</span>
                       <div className="font-medium">
                         {selectedImageFile.watermarkedUrl ? (
                           <Badge variant="secondary" className="text-xs">
-                            {t.processed}
+                            {t('processed')}
                           </Badge>
                         ) : (
                           <Badge variant="outline" className="text-xs">
-                            {t.pending}
+                            {t('pending')}
                           </Badge>
                         )}
                       </div>
                     </div>
                     <div>
-                      <span className="text-gray-500">{t.watermark}:</span>
+                      <span className="text-gray-500">{t('watermark')}:</span>
                       <p className="font-medium capitalize">{currentTemplateConfig?.name}</p>
                     </div>
                   </div>
@@ -339,8 +339,8 @@ export default function PreviewSection({
           ) : (
             <div className="w-full aspect-video bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg flex flex-col items-center justify-center min-h-[400px]">
               <ImageIcon className="w-16 h-16 text-gray-400 mb-4" />
-              <p className="text-lg text-gray-500 mb-2">{t.uploadFirst}</p>
-              <p className="text-sm text-gray-400">{t.supportDrag}</p>
+              <p className="text-lg text-gray-500 mb-2">{t('first')}</p>
+              <p className="text-sm text-gray-400">{t('supportDrag')}</p>
             </div>
           )}
         </CardContent>
