@@ -6,7 +6,7 @@
     </filter>
   </defs>
   <rect x="10" y="10" width="280" height="120" rx="20" ry="20" fill="#000000" fill-opacity="0.4" />
-  <text x="30" y="50" font-family="Comic Sans MS, cursive" font-size="20" fill="#FFFFFF" filter="url(#soft-glow)">
+  <text x="30" y="50" font-family="Comic Sans MS, cursive" font-size="20" fill="#FFFFFF" >
     <tspan id="line1" x="30" dy="0">👶 小宝贝·出生第101天</tspan>
     <tspan id="line2" x="30" dy="35">🎉 第一次笑</tspan>
     <tspan id="line3" x="30" dy="35">📅 2024.01.15</tspan>

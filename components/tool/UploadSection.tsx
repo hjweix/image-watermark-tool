@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { useLanguage } from "@/contexts/language-context"
+import { useTranslations } from 'next-intl'
 
 type ImageFile = {
   id: string
@@ -48,7 +48,8 @@ export default function UploadSection({
   downloadAllAsZip,
   removeImage,
 }: UploadSectionProps) {
-  const { t } = useLanguage()
+  const tUpload = useTranslations('upload')
+  const tActions = useTranslations('actions')
 
   return (
     <div className="xl:col-span-1 space-y-6">
@@ -57,7 +58,7 @@ export default function UploadSection({
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Upload className="w-5 h-5" />
-            {t.uploadTitle}
+            {tUpload('title')}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -68,8 +69,8 @@ export default function UploadSection({
             onClick={() => fileInputRef.current?.click()}
           >
             <ImageIcon className="w-8 h-8 text-gray-400 mx-auto mb-3" />
-            <p className="text-sm text-gray-600 mb-1">{t.uploadDrag}</p>
-            <p className="text-xs text-gray-400">{t.uploadClick}</p>
+            <p className="text-sm text-gray-600 mb-1">{tUpload('drag')}</p>
+            <p className="text-xs text-gray-400">{tUpload('click')}</p>
           </div>
           <input
             ref={fileInputRef}
@@ -88,7 +89,7 @@ export default function UploadSection({
           <CardHeader>
             <CardTitle className="flex items-center justify-between text-sm">
               <span>
-                {t.uploaded} ({images.length})
+                {tUpload('uploaded')} ({images.length})
               </span>
               <Button
                 variant="outline"
@@ -151,12 +152,12 @@ export default function UploadSection({
               className="w-full"
               size="sm"
             >
-              {isProcessing ? t.processing : t.applyAll}
+              {isProcessing ? tActions('processing') : tActions('applyAll')}
             </Button>
             {images.some((img) => img.watermarkedUrl) && (
               <Button onClick={downloadAllAsZip} variant="outline" className="w-full bg-transparent" size="sm">
                 <Download className="w-3 h-3 mr-2" />
-                {t.downloadAll}
+                {tActions('downloadAll')}
               </Button>
             )}
           </div>
@@ -164,7 +165,7 @@ export default function UploadSection({
             <div className="space-y-2 mt-4">
               <Progress value={processingProgress} />
               <p className="text-xs text-center text-gray-600">
-                {t.processingProgress}: {Math.round(processingProgress)}%
+                {tActions('processingProgress')}: {Math.round(processingProgress)}%
               </p>
             </div>
           )}

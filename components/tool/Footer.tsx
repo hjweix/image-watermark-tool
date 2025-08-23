@@ -1,26 +1,31 @@
 "use client"
 
-import { useLanguage } from "@/contexts/language-context"
+import { useTranslations } from 'next-intl'
 import { ImageIcon } from "lucide-react"
+import { useRouter } from '@/src/i18n/routing'
 
 export default function Footer() {
-  const { t } = useLanguage()
+  const t = useTranslations('footer')
+  const tHeader = useTranslations('header')
+  const router = useRouter()
 
   return (
     <footer className="bg-gray-900 text-white mt-20 w-full" itemScope itemType="https://schema.org/WPFooter">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* 热门关键词部分 */}
         <div className="mb-12">
-          <h3 className="text-lg font-semibold mb-6">{t.hotSearchTitle}</h3>
+          {/* <h3 className="text-lg font-semibold mb-6">{t('hotSearchTitle')}</h3> */}
           <div className="flex flex-wrap gap-3">
-            {t.keywords.map((keyword: string) => (
+            {/* Note: keywords array needs to be handled differently in next-intl */}
+            {/* Temporarily commenting out until we implement proper array handling */}
+            {/* {t('keywords').map((keyword: string) => (
               <span
                 key={keyword}
                 className="bg-gray-800 text-gray-300 px-4 py-2 rounded-full text-sm hover:bg-gray-700 transition-colors"
               >
                 {keyword}
               </span>
-            ))}
+            ))} */}
           </div>
         </div>
 
@@ -31,58 +36,58 @@ export default function Footer() {
               <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                 <ImageIcon className="w-6 h-6 text-white" />
               </div>
-              <span className="text-2xl font-bold">{t.brand}</span>
+              <span className="text-2xl font-bold">{tHeader('brand')}</span>
             </div>
-            <p className="text-gray-400 mb-6 max-w-lg leading-relaxed">{t.footerDescription}</p>
+            <p className="text-gray-400 mb-6 max-w-lg leading-relaxed">{t('description')}</p>
           </div>
 
           <div>
-            <h3 className="text-lg font-semibold mb-6">{t.productFeatures}</h3>
+            <h3 className="text-lg font-semibold mb-6">{t('productFeatures')}</h3>
             <ul className="space-y-3 text-gray-400">
               <li>
-                <a href="/features" className="hover:text-white transition-colors">
-                  {t.batchProcessing}
-                </a>
+                <button onClick={() => router.push('/features')} className="hover:text-white transition-colors cursor-pointer">
+                  {t('batchProcessing')}
+                </button>
               </li>
               <li>
-                <a href="/features" className="hover:text-white transition-colors">
-                  {t.customStyles}
-                </a>
+                <button onClick={() => router.push('/features')} className="hover:text-white transition-colors cursor-pointer">
+                  {t('customStyles')}
+                </button>
               </li>
               <li>
-                <a href="/features" className="hover:text-white transition-colors">
-                  {t.exifExtraction}
-                </a>
+                <button onClick={() => router.push('/features')} className="hover:text-white transition-colors cursor-pointer">
+                  {t('exifExtraction')}
+                </button>
               </li>
               <li>
-                <a href="/features" className="hover:text-white transition-colors">
-                  {t.highResSupport}
-                </a>
+                <button onClick={() => router.push('/features')} className="hover:text-white transition-colors cursor-pointer">
+                  {t('highResSupport')}
+                </button>
               </li>
             </ul>
           </div>
 
           <div>
-            <h3 className="text-lg font-semibold mb-6">{t.helpSupport}</h3>
+            <h3 className="text-lg font-semibold mb-6">{t('helpSupport')}</h3>
             <ul className="space-y-3 text-gray-400">
               <li>
-                <a href="/help" className="hover:text-white transition-colors">
-                  {t.tutorial}
-                </a>
+                <button onClick={() => router.push('/help')} className="hover:text-white transition-colors cursor-pointer">
+                  {t('tutorial')}
+                </button>
               </li>
               <li>
-                <a href="/help" className="hover:text-white transition-colors">
-                  {t.faq}
+                <button onClick={() => router.push('/help')} className="hover:text-white transition-colors cursor-pointer">
+                  {t('faq')}
+                </button>
+              </li>
+              <li>
+                <a href="#" className="hover:text-white transition-colors">
+                  {t('contact')}
                 </a>
               </li>
               <li>
                 <a href="#" className="hover:text-white transition-colors">
-                  {t.contact}
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-white transition-colors">
-                  {t.feedback}
+                  {t('feedback')}
                 </a>
               </li>
             </ul>
@@ -91,16 +96,16 @@ export default function Footer() {
 
         {/* 底部版权信息 */}
         <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-gray-400 text-sm mb-4 md:mb-0">{t.copyright}</p>
+          <p className="text-gray-400 text-sm mb-4 md:mb-0">{t('copyright')}</p>
           <div className="flex flex-wrap gap-6">
             <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">
-              {t.privacy}
+              {t('privacy')}
             </a>
             <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">
-              {t.terms}
+              {t('terms')}
             </a>
             <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">
-              {t.cookies}
+              {t('cookies')}
             </a>
           </div>
         </div>

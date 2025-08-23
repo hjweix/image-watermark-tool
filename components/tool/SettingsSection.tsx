@@ -11,9 +11,9 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
 import { Textarea } from "@/components/ui/textarea"
-import { useLanguage } from "@/contexts/language-context"
+import { useTranslations } from 'next-intl'
 import { templateConfigs, TemplateConfig } from "@/lib/templates"
-import { SvgTemplateSelector } from "./SvgTemplateSelector"
+
 
 type SettingsSectionProps = {
   selectedTemplate: string
@@ -22,8 +22,6 @@ type SettingsSectionProps = {
 
   updateTemplateContent: (key: string, value: any) => void
   setTemplateConfig: (config: TemplateConfig) => void
-  useSvg?: boolean
-  onUseSvgChange?: (value: boolean) => void
 }
 
 export default function SettingsSection({
@@ -33,11 +31,18 @@ export default function SettingsSection({
 
   updateTemplateContent,
   setTemplateConfig,
-  useSvg = false,
-  onUseSvgChange,
 }: SettingsSectionProps) {
-  const { t } = useLanguage()
+  const t = useTranslations("settings");
+  const tFields = useTranslations("fields");
+  const tActions = useTranslations("actions");
+  const tPlaceholders = useTranslations('placeholders');
+  const tPunchTypes = useTranslations('punchTypes');
+  const tWeather = useTranslations('weather');
+  const tMood = useTranslations('mood');
+  const tTemplates = useTranslations('templates');
   const currentTemplateConfig = templateConfigs[selectedTemplate as keyof typeof templateConfigs]
+
+
 
   // Render template-specific content fields
   const renderContentFields = () => {
@@ -46,7 +51,7 @@ export default function SettingsSection({
     return currentTemplateConfig.contentFields.map((field) => {
       const value = templateConfig.content[field.key] ?? field.default
       // 检查是否是i18n key，如果是则使用翻译，否则使用原始标签
-      const displayLabel = (t as any)[field.label] || field.label
+      const displayLabel = tFields(field.label) || field.label
 
       switch (field.type) {
         case "input":
@@ -58,7 +63,7 @@ export default function SettingsSection({
               <Input
                 type={field.inputType || "text"}
                 step={field.step}
-                placeholder={field.placeholder}
+                placeholder={field.placeholder ? (tPlaceholders as any)[field.placeholder] || field.placeholder : field.placeholder}
                 value={value || ""}
                 onChange={(e) => updateTemplateContent(field.key, e.target.value)}
                 className="h-8"
@@ -75,7 +80,7 @@ export default function SettingsSection({
                 {displayLabel} {field.required && <span className="text-red-500">*</span>}
               </Label>
               <Textarea
-                placeholder={field.placeholder}
+                placeholder={field.placeholder ? (tPlaceholders as any)[field.placeholder] || field.placeholder : field.placeholder}
                 value={value || ""}
                 onChange={(e) => updateTemplateContent(field.key, e.target.value)}
                 className="min-h-[60px] text-xs"
@@ -97,7 +102,13 @@ export default function SettingsSection({
                 <SelectContent>
                   {field.options?.map((option) => (
                     <SelectItem key={option.value} value={option.value}>
-                      {option.label}
+                      {field.type === 'select' && field.label === 'punchType' 
+                         ? (tPunchTypes as any)[option.label] || option.label
+                         : field.type === 'select' && field.label === 'weather'
+                         ? (tWeather as any)[option.label] || option.label
+                         : field.type === 'select' && field.label === 'mood'
+                         ? (tMood as any)[option.label] || option.label
+                         : option.label}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -179,17 +190,17 @@ export default function SettingsSection({
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Settings className="w-5 h-5" />
-            {t.settings}
+            {t('settings')}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="templates" className="space-y-4">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="templates" className="text-xs">
-                {t.templates}
+                {t('templates')}
               </TabsTrigger>
               <TabsTrigger value="content" className="text-xs">
-                {t.content}
+                {t('content')}
               </TabsTrigger>
             </TabsList>
 
@@ -208,7 +219,7 @@ export default function SettingsSection({
                     {/* Template Preview */}
                     <div className="p-4">
                       <div className="flex items-center justify-between mb-3">
-                        <span className="text-sm font-medium text-gray-700">{template.name}</span>
+                        <span className="text-sm font-medium text-gray-700">{tTemplates(key) || template.name}</span>
                         {selectedTemplate === key && <div className="w-2 h-2 bg-blue-500 rounded-full"></div>}
                       </div>
 
@@ -255,7 +266,7 @@ export default function SettingsSection({
                   size="sm"
                   className="w-full mb-2"
                 >
-                  {t.applySettings}
+                  {tActions('applyAll')}
                 </Button>
                 <Button
                   onClick={() => {
@@ -272,7 +283,7 @@ export default function SettingsSection({
                   className="w-full"
                 >
                   <RotateCcw className="w-3 h-3 mr-2" />
-                  {t.reset}
+                  {tActions('reset')}
                 </Button>
               </div>
             </TabsContent>
