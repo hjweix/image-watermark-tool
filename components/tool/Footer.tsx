@@ -1,13 +1,16 @@
 "use client"
 
-import { useTranslations } from 'next-intl'
+import { useTranslations, useLocale } from 'next-intl'
 import { ImageIcon } from "lucide-react"
 import { useRouter } from '@/src/i18n/routing'
+import { useParams } from 'next/navigation'
 
 export default function Footer() {
   const t = useTranslations('footer')
   const tHeader = useTranslations('header')
   const router = useRouter()
+  const params = useParams()
+  const locale = (typeof params.locale === 'string' ? params.locale : useLocale()) as string
 
   return (
     <footer className="bg-gray-900 text-white mt-20 w-full" itemScope itemType="https://schema.org/WPFooter">
@@ -45,22 +48,22 @@ export default function Footer() {
             <h3 className="text-lg font-semibold mb-6">{t('productFeatures')}</h3>
             <ul className="space-y-3 text-gray-400">
               <li>
-                <button onClick={() => router.push('/features')} className="hover:text-white transition-colors cursor-pointer">
+                <button onClick={() => router.push('/features', { locale })} className="hover:text-white transition-colors cursor-pointer">
                   {t('batchProcessing')}
                 </button>
               </li>
               <li>
-                <button onClick={() => router.push('/features')} className="hover:text-white transition-colors cursor-pointer">
+                <button onClick={() => router.push('/features', { locale })} className="hover:text-white transition-colors cursor-pointer">
                   {t('customStyles')}
                 </button>
               </li>
               <li>
-                <button onClick={() => router.push('/features')} className="hover:text-white transition-colors cursor-pointer">
+                <button onClick={() => router.push('/features', { locale })} className="hover:text-white transition-colors cursor-pointer">
                   {t('exifExtraction')}
                 </button>
               </li>
               <li>
-                <button onClick={() => router.push('/features')} className="hover:text-white transition-colors cursor-pointer">
+                <button onClick={() => router.push('/features', { locale })} className="hover:text-white transition-colors cursor-pointer">
                   {t('highResSupport')}
                 </button>
               </li>
@@ -71,12 +74,12 @@ export default function Footer() {
             <h3 className="text-lg font-semibold mb-6">{t('helpSupport')}</h3>
             <ul className="space-y-3 text-gray-400">
               <li>
-                <button onClick={() => router.push('/help')} className="hover:text-white transition-colors cursor-pointer">
+                <button onClick={() => router.push('/help', { locale })} className="hover:text-white transition-colors cursor-pointer">
                   {t('tutorial')}
                 </button>
               </li>
               <li>
-                <button onClick={() => router.push('/help')} className="hover:text-white transition-colors cursor-pointer">
+                <button onClick={() => router.push('/help', { locale })} className="hover:text-white transition-colors cursor-pointer">
                   {t('faq')}
                 </button>
               </li>
@@ -98,15 +101,24 @@ export default function Footer() {
         <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-400 text-sm mb-4 md:mb-0">{t('copyright')}</p>
           <div className="flex flex-wrap gap-6">
-            <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">
+            <button 
+              onClick={() => router.push('/privacy', { locale })} 
+              className="text-gray-400 hover:text-white text-sm transition-colors cursor-pointer"
+            >
               {t('privacy')}
-            </a>
-            <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">
+            </button>
+            <button 
+              onClick={() => router.push('/terms', { locale })} 
+              className="text-gray-400 hover:text-white text-sm transition-colors cursor-pointer"
+            >
               {t('terms')}
-            </a>
-            <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">
+            </button>
+            <button 
+              onClick={() => router.push('/cookies', { locale })} 
+              className="text-gray-400 hover:text-white text-sm transition-colors cursor-pointer"
+            >
               {t('cookies')}
-            </a>
+            </button>
           </div>
         </div>
       </div>

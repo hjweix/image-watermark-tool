@@ -11,73 +11,95 @@ import { routing } from '../../src/i18n/routing';
 
 const inter = Inter({ subsets: ["latin"] })
 
-export const metadata: Metadata = {
-  title: "专业图片水印工具 - 免费在线时间地点水印制作 | PhotoStamper",
-  description:
-    "专业的在线图片水印工具，支持批量添加时间、日期、地点水印。适用于工程记录、打卡签到、旅行日志、宝贝成长等场景。完全免费，无需下载安装，保护隐私安全。",
-  keywords: "图片水印,时间水印,地点水印,批量水印,工程水印,打卡水印,在线水印工具,免费水印,图片处理",
-  authors: [{ name: "PhotoStamper Team" }],
-  creator: "PhotoStamper",
-  publisher: "PhotoStamper",
-  formatDetection: {
-    email: false,
-    address: false,
-    telephone: false,
-  },
-  metadataBase: new URL("https://watermarker.yuelabs.com"),
-  icons: {
-    icon: "/icon.svg",
-    shortcut: "/icon.svg",
-    apple: "/icon.svg",
-  },
-  alternates: {
-    canonical: "/",
-    languages: {
-      "zh-CN": "/zh",
-      "en-US": "/en",
+export async function generateMetadata({
+  params
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  
+  const isZh = locale === 'zh';
+  
+  return {
+    title: isZh 
+      ? "专业图片水印工具 - 免费在线时间地点水印制作 | PhotoStamper"
+      : "Professional Image Watermark Tool - Free Online Time & Location Watermarking | PhotoStamper",
+    description: isZh
+      ? "专业的在线图片水印工具，支持批量添加时间、日期、地点水印。适用于工程记录、打卡签到、旅行日志、宝贝成长等场景。完全免费，无需下载安装，保护隐私安全。"
+      : "Professional online image watermarking tool supporting batch addition of time, date, and location watermarks. Perfect for project documentation, check-ins, travel logs, and more. Completely free, no download required, privacy protected.",
+    keywords: isZh
+      ? "图片水印,时间水印,地点水印,批量水印,工程水印,打卡水印,在线水印工具,免费水印,图片处理"
+      : "image watermark,time watermark,location watermark,batch watermark,project watermark,check-in watermark,online watermark tool,free watermark,image processing",
+    authors: [{ name: "PhotoStamper Team" }],
+    creator: "PhotoStamper",
+    publisher: "PhotoStamper",
+    formatDetection: {
+      email: false,
+      address: false,
+      telephone: false,
     },
-  },
-  openGraph: {
-    type: "website",
-    locale: "zh_CN",
-    url: "https://watermarker.yuelabs.com",
-    title: "专业图片水印工具 - 免费在线时间地点水印制作",
-    description:
-      "专业的在线图片水印工具，支持批量添加时间、日期、地点水印。适用于工程记录、打卡签到、旅行日志等多种场景。",
-    siteName: "PhotoStamper",
-    images: [
-      {
-        url: "/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "PhotoStamper - 专业图片水印工具",
+    metadataBase: new URL("https://watermarker.yuelabs.com"),
+    icons: {
+      icon: "/icon.svg",
+      shortcut: "/icon.svg",
+      apple: "/icon.svg",
+    },
+    alternates: {
+      canonical: "/",
+      languages: {
+        "zh-CN": "/zh",
+        "en-US": "/en",
       },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "专业图片水印工具 - 免费在线时间地点水印制作",
-    description: "专业的在线图片水印工具，支持批量添加时间、日期、地点水印。完全免费，无需下载安装。",
-    images: ["/twitter-image.jpg"],
-    creator: "@PhotoStamper",
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
+    },
+    openGraph: {
+      type: "website",
+      locale: isZh ? "zh_CN" : "en_US",
+      url: "https://watermarker.yuelabs.com",
+      title: isZh
+        ? "专业图片水印工具 - 免费在线时间地点水印制作"
+        : "Professional Image Watermark Tool - Free Online Time & Location Watermarking",
+      description: isZh
+        ? "专业的在线图片水印工具，支持批量添加时间、日期、地点水印。适用于工程记录、打卡签到、旅行日志等多种场景。"
+        : "Professional online image watermarking tool supporting batch addition of time, date, and location watermarks. Perfect for project documentation and more.",
+      siteName: "PhotoStamper",
+      images: [
+        {
+          url: "/og-image.jpg",
+          width: 1200,
+          height: 630,
+          alt: isZh ? "PhotoStamper - 专业图片水印工具" : "PhotoStamper - Professional Image Watermark Tool",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: isZh
+        ? "专业图片水印工具 - 免费在线时间地点水印制作"
+        : "Professional Image Watermark Tool - Free Online Time & Location Watermarking",
+      description: isZh
+        ? "专业的在线图片水印工具，支持批量添加时间、日期、地点水印。完全免费，无需下载安装。"
+        : "Professional online image watermarking tool supporting batch addition of time, date, and location watermarks. Completely free, no download required.",
+      images: ["/twitter-image.jpg"],
+      creator: "@PhotoStamper",
+    },
+    robots: {
       index: true,
       follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
     },
-  },
-  verification: {
-    google: "your-google-verification-code",
-    yandex: "your-yandex-verification-code",
-    yahoo: "your-yahoo-verification-code",
-  },
+    verification: {
+      google: "your-google-verification-code",
+      yandex: "your-yandex-verification-code",
+      yahoo: "your-yahoo-verification-code",
+    },
     generator: 'HJWEI'
+  };
 }
 
 export default async function LocaleLayout({
@@ -101,6 +123,18 @@ export default async function LocaleLayout({
   return (
     <html lang={locale}>
       <head>
+        {/* Google Analytics */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-GCPQ4VK871" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-GCPQ4VK871');
+            `,
+          }}
+        />
         {/* 结构化数据 */}
         <script
           type="application/ld+json"
@@ -144,7 +178,6 @@ export default async function LocaleLayout({
         {/* Preconnect to external domains */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-
         <link rel="manifest" href="/manifest.json" />
       </head>
       <body className={inter.className}>
@@ -155,19 +188,6 @@ export default async function LocaleLayout({
         <StagewiseToolbar config={{
           plugins: [ReactPlugin]
         }} />
-
-        {/* Google Analytics */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-GCPQ4VK871" />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'G-GCPQ4VK871');
-            `,
-          }}
-        />
       </body>
     </html>
   )

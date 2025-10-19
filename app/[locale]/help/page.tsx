@@ -128,9 +128,11 @@ export default function HelpPage() {
               <h3 className="text-2xl font-bold text-gray-900 mb-4">{helpT('moreHelpTitle')}</h3>
               <p className="text-gray-600 mb-6">{helpT('moreHelpDesc')}</p>
               <div className="flex justify-center space-x-4">
-                <Badge variant="outline" className="px-4 py-2">
-                  📧 hwacer63@gmail.com
-                </Badge>
+                <a href="https://x.com/hjwwei" target="_blank" rel="noopener noreferrer">
+                  <Badge variant="outline" className="px-4 py-2 hover:bg-blue-50 transition-colors cursor-pointer">
+                    🐦 Twitter
+                  </Badge>
+                </a>
                 {/* <Badge variant="outline" className="px-4 py-2">
                   💬 {t.onlineService}
                 </Badge> */}
