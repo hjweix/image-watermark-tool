@@ -1,11 +1,10 @@
 "use client"
 
 import type React from "react"
-import { Settings, RotateCcw } from "lucide-react"
+import { Settings, RotateCcw, ChevronRight, Palette, Type } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -13,13 +12,13 @@ import { Separator } from "@/components/ui/separator"
 import { Textarea } from "@/components/ui/textarea"
 import { useTranslations } from 'next-intl'
 import { templateConfigs, TemplateConfig } from "@/lib/templates"
-
+import { motion, AnimatePresence } from "framer-motion"
+import { useState } from "react"
 
 type SettingsSectionProps = {
   selectedTemplate: string
   templateConfig: TemplateConfig
   applyTemplate: (templateKey: string) => void
-
   updateTemplateContent: (key: string, value: any) => void
   setTemplateConfig: (config: TemplateConfig) => void
 }
@@ -28,7 +27,6 @@ export default function SettingsSection({
   selectedTemplate,
   templateConfig,
   applyTemplate,
-
   updateTemplateContent,
   setTemplateConfig,
 }: SettingsSectionProps) {
@@ -41,8 +39,7 @@ export default function SettingsSection({
   const tMood = useTranslations('mood');
   const tTemplates = useTranslations('templates');
   const currentTemplateConfig = templateConfigs[selectedTemplate as keyof typeof templateConfigs]
-
-
+  const [activeTab, setActiveTab] = useState("templates")
 
   // Render template-specific content fields
   const renderContentFields = () => {
@@ -50,15 +47,20 @@ export default function SettingsSection({
 
     return currentTemplateConfig.contentFields.map((field) => {
       const value = templateConfig.content[field.key] ?? field.default
-      // 检查是否是i18n key，如果是则使用翻译，否则使用原始标签
       const displayLabel = tFields(field.label) || field.label
 
       switch (field.type) {
         case "input":
           return (
-            <div key={field.key}>
-              <Label className="text-xs">
-                {displayLabel} {field.required && <span className="text-red-500">*</span>}
+            <motion.div
+              key={field.key}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="space-y-2"
+            >
+              <Label className="text-sm font-medium text-charcoal flex items-center gap-1">
+                {displayLabel}
+                {field.required && <span className="text-warm-dark">*</span>}
               </Label>
               <Input
                 type={field.inputType || "text"}
@@ -66,43 +68,55 @@ export default function SettingsSection({
                 placeholder={field.placeholder ? (tPlaceholders as any)[field.placeholder] || field.placeholder : field.placeholder}
                 value={value || ""}
                 onChange={(e) => updateTemplateContent(field.key, e.target.value)}
-                className="h-8"
+                className="h-10 bg-warm-50/50 border-warm-200 focus:border-warm focus:ring-warm/20 rounded-lg transition-all"
                 required={field.required}
               />
-              {field.suffix && <span className="text-xs text-gray-500 ml-1">{field.suffix}</span>}
-            </div>
+              {field.suffix && <span className="text-xs text-charcoal-muted">{field.suffix}</span>}
+            </motion.div>
           )
 
         case "textarea":
           return (
-            <div key={field.key}>
-              <Label className="text-xs">
-                {displayLabel} {field.required && <span className="text-red-500">*</span>}
+            <motion.div
+              key={field.key}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="space-y-2"
+            >
+              <Label className="text-sm font-medium text-charcoal flex items-center gap-1">
+                {displayLabel}
+                {field.required && <span className="text-warm-dark">*</span>}
               </Label>
               <Textarea
                 placeholder={field.placeholder ? (tPlaceholders as any)[field.placeholder] || field.placeholder : field.placeholder}
                 value={value || ""}
                 onChange={(e) => updateTemplateContent(field.key, e.target.value)}
-                className="min-h-[60px] text-xs"
+                className="min-h-[80px] text-sm bg-warm-50/50 border-warm-200 focus:border-warm focus:ring-warm/20 rounded-lg transition-all resize-none"
                 required={field.required}
               />
-            </div>
+            </motion.div>
           )
 
         case "select":
           return (
-            <div key={field.key}>
-              <Label className="text-xs">
-                {displayLabel} {field.required && <span className="text-red-500">*</span>}
+            <motion.div
+              key={field.key}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="space-y-2"
+            >
+              <Label className="text-sm font-medium text-charcoal flex items-center gap-1">
+                {displayLabel}
+                {field.required && <span className="text-warm-dark">*</span>}
               </Label>
               <Select value={value || field.default} onValueChange={(val) => updateTemplateContent(field.key, val)}>
-                <SelectTrigger className="h-8">
+                <SelectTrigger className="h-10 bg-warm-50/50 border-warm-200 focus:border-warm focus:ring-warm/20 rounded-lg">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="rounded-lg">
                   {field.options?.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {field.type === 'select' && field.label === 'punchType' 
+                    <SelectItem key={option.value} value={option.value} className="rounded-md">
+                      {field.type === 'select' && field.label === 'punchType'
                          ? (tPunchTypes as any)[option.label] || option.label
                          : field.type === 'select' && field.label === 'weather'
                          ? (tWeather as any)[option.label] || option.label
@@ -113,67 +127,88 @@ export default function SettingsSection({
                   ))}
                 </SelectContent>
               </Select>
-            </div>
+            </motion.div>
           )
 
         case "checkbox":
           return (
-            <div key={field.key} className="flex items-center space-x-2">
+            <motion.div
+              key={field.key}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex items-center space-x-3 p-3 bg-warm-50/50 rounded-lg border border-warm-200/50"
+            >
               <input
                 type="checkbox"
                 id={field.key}
                 checked={value ?? field.default}
                 onChange={(e) => updateTemplateContent(field.key, e.target.checked)}
-                className="w-4 h-4"
+                className="w-5 h-5 rounded border-warm-300 text-warm focus:ring-warm"
               />
-              <Label htmlFor={field.key} className="text-xs">
+              <Label htmlFor={field.key} className="text-sm text-charcoal cursor-pointer">
                 {displayLabel}
               </Label>
-            </div>
+            </motion.div>
           )
 
         case "date":
           return (
-            <div key={field.key}>
-              <Label className="text-xs">
-                {displayLabel} {field.required && <span className="text-red-500">*</span>}
+            <motion.div
+              key={field.key}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="space-y-2"
+            >
+              <Label className="text-sm font-medium text-charcoal flex items-center gap-1">
+                {displayLabel}
+                {field.required && <span className="text-warm-dark">*</span>}
               </Label>
               <Input
                 type="date"
                 value={value || ""}
                 onChange={(e) => updateTemplateContent(field.key, e.target.value)}
-                className="h-8"
+                className="h-10 bg-warm-50/50 border-warm-200 focus:border-warm focus:ring-warm/20 rounded-lg"
                 required={field.required}
               />
-            </div>
+            </motion.div>
           )
 
         case "time":
           return (
-            <div key={field.key}>
-              <Label className="text-xs">{displayLabel}</Label>
+            <motion.div
+              key={field.key}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="space-y-2"
+            >
+              <Label className="text-sm font-medium text-charcoal">{displayLabel}</Label>
               <Input
                 type="time"
                 step="1"
                 value={value || ""}
                 onChange={(e) => updateTemplateContent(field.key, e.target.value)}
-                className="h-8"
+                className="h-10 bg-warm-50/50 border-warm-200 focus:border-warm focus:ring-warm/20 rounded-lg"
               />
-            </div>
+            </motion.div>
           )
 
         case "datetime-local":
           return (
-            <div key={field.key}>
-              <Label className="text-xs">{displayLabel}</Label>
+            <motion.div
+              key={field.key}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="space-y-2"
+            >
+              <Label className="text-sm font-medium text-charcoal">{displayLabel}</Label>
               <Input
                 type="datetime-local"
                 step="1"
                 value={value || ""}
                 onChange={(e) => updateTemplateContent(field.key, e.target.value)}
-                className="h-8"
+                className="h-10 bg-warm-50/50 border-warm-200 focus:border-warm focus:ring-warm/20 rounded-lg"
               />
-            </div>
+            </motion.div>
           )
 
         default:
@@ -182,52 +217,79 @@ export default function SettingsSection({
     })
   }
 
-
-
   return (
     <div className="xl:col-span-1">
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Settings className="w-5 h-5" />
+      <Card className="border-warm-200/50 shadow-sm overflow-hidden">
+        <CardHeader className="pb-4 border-b border-warm-100">
+          <CardTitle className="flex items-center gap-2 text-base font-semibold text-charcoal">
+            <div className="w-8 h-8 bg-warm-100 rounded-lg flex items-center justify-center">
+              <Settings className="w-4 h-4 text-warm-dark" />
+            </div>
             {t('settings')}
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <Tabs defaultValue="templates" className="space-y-4">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="templates" className="text-xs">
-                {t('templates')}
+        <CardContent className="p-0">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="grid w-full grid-cols-2 bg-warm-50/50 p-0 rounded-none border-b border-warm-100">
+              <TabsTrigger
+                value="templates"
+                className="rounded-none data-[state=active]:bg-white data-[state=active]:border-b-2 data-[state=active]:border-warm data-[state=active]:shadow-none py-3 text-sm font-medium transition-all"
+              >
+                <div className="flex items-center gap-2">
+                  <Palette className="w-4 h-4" />
+                  {t('templates')}
+                </div>
               </TabsTrigger>
-              <TabsTrigger value="content" className="text-xs">
-                {t('content')}
+              <TabsTrigger
+                value="content"
+                className="rounded-none data-[state=active]:bg-white data-[state=active]:border-b-2 data-[state=active]:border-warm data-[state=active]:shadow-none py-3 text-sm font-medium transition-all"
+              >
+                <div className="flex items-center gap-2">
+                  <Type className="w-4 h-4" />
+                  {t('content')}
+                </div>
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="templates" className="space-y-4">
-              <div className="grid grid-cols-1 gap-4">
-                {Object.entries(templateConfigs).map(([key, template]) => (
-                  <div
+            <TabsContent value="templates" className="p-4 space-y-3 mt-0">
+              <div className="grid grid-cols-1 gap-3">
+                {Object.entries(templateConfigs).map(([key, template], index) => (
+                  <motion.div
                     key={key}
-                    className={`relative cursor-pointer rounded-lg border-2 transition-all duration-200 ${
-                      selectedTemplate === key
-                        ? "border-blue-500 bg-blue-50"
-                        : "border-gray-200 hover:border-gray-300 bg-white"
-                    }`}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.05 }}
                     onClick={() => applyTemplate(key)}
+                    whileHover={{ scale: 1.01, y: -2 }}
+                    whileTap={{ scale: 0.99 }}
+                    className={`
+                      relative cursor-pointer rounded-xl border-2 transition-all duration-300 overflow-hidden
+                      ${selectedTemplate === key
+                        ? "border-warm bg-warm-50 shadow-warm"
+                        : "border-warm-200 hover:border-warm hover:shadow-sm bg-white"
+                      }
+                    `}
                   >
                     {/* Template Preview */}
-                    <div className="p-4">
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="text-sm font-medium text-gray-700">{tTemplates(key) || template.name}</span>
-                        {selectedTemplate === key && <div className="w-2 h-2 bg-blue-500 rounded-full"></div>}
+                    <div className="p-3">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm font-medium text-charcoal">{tTemplates(key) || template.name}</span>
+                        {selectedTemplate === key && (
+                          <motion.div
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            className="w-5 h-5 bg-warm rounded-full flex items-center justify-center"
+                          >
+                            <ChevronRight className="w-3 h-3 text-white" />
+                          </motion.div>
+                        )}
                       </div>
 
                       {/* SVG template preview */}
                       <div
-                        className="relative bg-gray-100 rounded-md p-2 min-h-[60px] flex items-center justify-center"
+                        className="relative bg-warm-100 rounded-lg p-2 min-h-[70px] flex items-center justify-center overflow-hidden"
                         style={{
-                          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                          background: "linear-gradient(135deg, #FAFAF8 0%, #F5F4F2 100%)",
                         }}
                       >
                         <div className="w-full h-full flex items-center justify-center">
@@ -236,35 +298,42 @@ export default function SettingsSection({
                             alt={`${template.name} preview`}
                             className="max-w-full max-h-full object-contain"
                             style={{
-                              width: "220px",
-                              height: "110px",
+                              width: "200px",
+                              height: "100px",
                             }}
                           />
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </TabsContent>
 
-            <TabsContent value="content" className="space-y-4">
-              <div className="space-y-4">{renderContentFields()}</div>
-              
-              <Separator className="my-4" />
-              
-              <div className="space-y-2">
+            <TabsContent value="content" className="p-4 space-y-4 mt-0">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={selectedTemplate}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  className="space-y-4"
+                >
+                  {renderContentFields()}
+                </motion.div>
+              </AnimatePresence>
+
+              <Separator className="bg-warm-200/50" />
+
+              <div className="space-y-2.5">
                 <Button
                   onClick={() => {
-                    // 强制更新模板配置，触发水印重新渲染
                     setTemplateConfig({
                       ...templateConfig,
-                      _forceUpdate: Date.now(), // 添加一个时间戳强制更新
+                      _forceUpdate: Date.now(),
                     })
                   }}
-                  variant="default"
-                  size="sm"
-                  className="w-full mb-2"
+                  className="w-full bg-warm hover:bg-warm-dark text-white shadow-warm hover:shadow-warm-lg transition-all duration-300 h-10"
                 >
                   {tActions('applyAll')}
                 </Button>
@@ -279,16 +348,14 @@ export default function SettingsSection({
                     }
                   }}
                   variant="outline"
-                  size="sm"
-                  className="w-full"
+                  className="w-full border-warm-200 hover:border-warm hover:bg-warm-50 text-charcoal transition-all duration-300 h-10"
                 >
-                  <RotateCcw className="w-3 h-3 mr-2" />
+                  <RotateCcw className="w-4 h-4 mr-2" />
                   {tActions('reset')}
                 </Button>
               </div>
             </TabsContent>
           </Tabs>
-
         </CardContent>
       </Card>
     </div>

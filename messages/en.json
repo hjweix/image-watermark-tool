@@ -10,7 +10,8 @@
     "description": "Designed for work scenarios, automatically extract image shooting time and geographic location information, batch add professional time date location watermarks, improve the standardization and credibility of work documents",
     "mainTitle": "Professional Image Watermark Tool - Free Online Time Location Watermark Creation",
     "mainSubtitle": "Smart EXIF extraction, batch processing, improve work efficiency",
-    "mainDescription": "Designed for engineering records, check-in, travel logs, baby growth and other scenarios, automatically extract image shooting time and geographic location information, batch add professional time date location watermarks, improve the standardization and credibility of work documents. Completely free, no download required, privacy protection."
+    "mainDescription": "Designed for engineering records, check-in, travel logs, baby growth and other scenarios, automatically extract image shooting time and geographic location information, batch add professional time date location watermarks, improve the standardization and credibility of work documents. Completely free, no download required, privacy protection.",
+    "badge": "Free Professional Tool"
   },
   "tool": {
     "badge": "Online Tool - No Download Required",
@@ -214,7 +215,8 @@
     "copyright": "© 2025 PhotoStamper. All rights reserved.",
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
-    "cookies": "Cookie Policy"
+    "cookies": "Cookie Policy",
+    "legal": "Legal"
   },
   "help": {
     "title": "Help",

@@ -1,9 +1,10 @@
 "use client"
 
 import { useTranslations, useLocale } from 'next-intl'
-import { ImageIcon } from "lucide-react"
+import { ImageIcon, Heart, Github, Twitter, Mail } from "lucide-react"
 import { useRouter } from '@/src/i18n/routing'
 import { useParams } from 'next/navigation'
+import { motion } from "framer-motion"
 
 export default function Footer() {
   const t = useTranslations('footer')
@@ -12,116 +13,180 @@ export default function Footer() {
   const params = useParams()
   const locale = (typeof params.locale === 'string' ? params.locale : useLocale()) as string
 
+  const footerLinks = {
+    product: [
+      { label: t('batchProcessing'), href: '/features' },
+      { label: t('customStyles'), href: '/features' },
+      { label: t('exifExtraction'), href: '/features' },
+      { label: t('highResSupport'), href: '/features' },
+    ],
+    support: [
+      { label: t('tutorial'), href: '/help' },
+      { label: t('faq'), href: '/help' },
+      { label: t('contact'), href: '#' },
+      { label: t('feedback'), href: '#' },
+    ],
+    legal: [
+      { label: t('privacy'), href: '/privacy' },
+      { label: t('terms'), href: '/terms' },
+      { label: t('cookies'), href: '/cookies' },
+    ],
+  }
+
   return (
-    <footer className="bg-gray-900 text-white mt-20 w-full" itemScope itemType="https://schema.org/WPFooter">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* 热门关键词部分 */}
-        <div className="mb-12">
-          {/* <h3 className="text-lg font-semibold mb-6">{t('hotSearchTitle')}</h3> */}
-          <div className="flex flex-wrap gap-3">
-            {/* Note: keywords array needs to be handled differently in next-intl */}
-            {/* Temporarily commenting out until we implement proper array handling */}
-            {/* {t('keywords').map((keyword: string) => (
-              <span
-                key={keyword}
-                className="bg-gray-800 text-gray-300 px-4 py-2 rounded-full text-sm hover:bg-gray-700 transition-colors"
-              >
-                {keyword}
-              </span>
-            ))} */}
-          </div>
-        </div>
+    <footer className="bg-charcoal text-white mt-24 w-full" itemScope itemType="https://schema.org/WPFooter">
+      {/* 顶部装饰线 */}
+      <div className="h-1 bg-gradient-to-r from-warm via-terracotta to-sage" />
 
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {/* 主要内容区域 */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
-          <div className="col-span-1 md:col-span-2">
-            <div className="flex items-center space-x-3 mb-6">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                <ImageIcon className="w-6 h-6 text-white" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-12">
+          {/* 品牌介绍 */}
+          <div className="lg:col-span-2">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="flex items-center space-x-3 mb-6"
+            >
+              <div className="w-10 h-10 bg-gradient-to-br from-warm to-warm-dark rounded-xl flex items-center justify-center shadow-lg">
+                <ImageIcon className="w-5 h-5 text-white" />
               </div>
-              <span className="text-2xl font-bold">{tHeader('brand')}</span>
-            </div>
-            <p className="text-gray-400 mb-6 max-w-lg leading-relaxed">{t('description')}</p>
+              <span className="text-2xl font-display font-semibold">{tHeader('brand')}</span>
+            </motion.div>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="text-charcoal-muted mb-6 max-w-md leading-relaxed"
+            >
+              {t('description')}
+            </motion.p>
+
+            {/* 社交媒体图标 */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="flex items-center space-x-4"
+            >
+              <SocialIcon href="#" icon={Github} />
+              <SocialIcon href="#" icon={Twitter} />
+              <SocialIcon href="#" icon={Mail} />
+            </motion.div>
           </div>
 
-          <div>
-            <h3 className="text-lg font-semibold mb-6">{t('productFeatures')}</h3>
-            <ul className="space-y-3 text-gray-400">
-              <li>
-                <button onClick={() => router.push('/features', { locale })} className="hover:text-white transition-colors cursor-pointer">
-                  {t('batchProcessing')}
-                </button>
-              </li>
-              <li>
-                <button onClick={() => router.push('/features', { locale })} className="hover:text-white transition-colors cursor-pointer">
-                  {t('customStyles')}
-                </button>
-              </li>
-              <li>
-                <button onClick={() => router.push('/features', { locale })} className="hover:text-white transition-colors cursor-pointer">
-                  {t('exifExtraction')}
-                </button>
-              </li>
-              <li>
-                <button onClick={() => router.push('/features', { locale })} className="hover:text-white transition-colors cursor-pointer">
-                  {t('highResSupport')}
-                </button>
-              </li>
+          {/* 产品功能 */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+          >
+            <h3 className="text-sm font-semibold mb-5 text-warm-light uppercase tracking-wider">{t('productFeatures')}</h3>
+            <ul className="space-y-3">
+              {footerLinks.product.map((link) => (
+                <li key={link.label}>
+                  <button
+                    onClick={() => router.push(link.href as any, { locale })}
+                    className="text-charcoal-muted hover:text-white transition-colors text-sm"
+                  >
+                    {link.label}
+                  </button>
+                </li>
+              ))}
             </ul>
-          </div>
+          </motion.div>
 
-          <div>
-            <h3 className="text-lg font-semibold mb-6">{t('helpSupport')}</h3>
-            <ul className="space-y-3 text-gray-400">
-              <li>
-                <button onClick={() => router.push('/help', { locale })} className="hover:text-white transition-colors cursor-pointer">
-                  {t('tutorial')}
-                </button>
-              </li>
-              <li>
-                <button onClick={() => router.push('/help', { locale })} className="hover:text-white transition-colors cursor-pointer">
-                  {t('faq')}
-                </button>
-              </li>
-              <li>
-                <a href="#" className="hover:text-white transition-colors">
-                  {t('contact')}
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-white transition-colors">
-                  {t('feedback')}
-                </a>
-              </li>
+          {/* 帮助支持 */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+          >
+            <h3 className="text-sm font-semibold mb-5 text-warm-light uppercase tracking-wider">{t('helpSupport')}</h3>
+            <ul className="space-y-3">
+              {footerLinks.support.map((link) => (
+                <li key={link.label}>
+                  <button
+                    onClick={() => router.push(link.href as any, { locale })}
+                    className="text-charcoal-muted hover:text-white transition-colors text-sm"
+                  >
+                    {link.label}
+                  </button>
+                </li>
+              ))}
             </ul>
-          </div>
+          </motion.div>
+
+          {/* 法律信息 */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 }}
+          >
+            <h3 className="text-sm font-semibold mb-5 text-warm-light uppercase tracking-wider">{t('legal') || 'Legal'}</h3>
+            <ul className="space-y-3">
+              {footerLinks.legal.map((link) => (
+                <li key={link.label}>
+                  <button
+                    onClick={() => router.push(link.href as any, { locale })}
+                    className="text-charcoal-muted hover:text-white transition-colors text-sm"
+                  >
+                    {link.label}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
         </div>
 
-        {/* 底部版权信息 */}
-        <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-gray-400 text-sm mb-4 md:mb-0">{t('copyright')}</p>
-          <div className="flex flex-wrap gap-6">
-            <button 
-              onClick={() => router.push('/privacy', { locale })} 
-              className="text-gray-400 hover:text-white text-sm transition-colors cursor-pointer"
+        {/* 分隔线 */}
+        <div className="border-t border-charcoal-light/20 pt-8">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <motion.p
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              className="text-charcoal-muted text-sm flex items-center gap-1"
             >
-              {t('privacy')}
-            </button>
-            <button 
-              onClick={() => router.push('/terms', { locale })} 
-              className="text-gray-400 hover:text-white text-sm transition-colors cursor-pointer"
+              {t('copyright').replace('2024', new Date().getFullYear().toString())}
+              <span className="inline-flex items-center">
+                <Heart className="w-3.5 h-3.5 text-warm mx-1 fill-warm" />
+              </span>
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              className="flex items-center gap-6"
             >
-              {t('terms')}
-            </button>
-            <button 
-              onClick={() => router.push('/cookies', { locale })} 
-              className="text-gray-400 hover:text-white text-sm transition-colors cursor-pointer"
-            >
-              {t('cookies')}
-            </button>
+              <span className="text-xs text-charcoal-muted">
+                Made with care for photographers
+              </span>
+            </motion.div>
           </div>
         </div>
       </div>
     </footer>
+  )
+}
+
+// 社交媒体图标组件
+function SocialIcon({ href, icon: Icon }: { href: string; icon: React.ElementType }) {
+  return (
+    <motion.a
+      href={href}
+      whileHover={{ scale: 1.1, y: -2 }}
+      whileTap={{ scale: 0.95 }}
+      className="w-10 h-10 bg-charcoal-light/30 rounded-xl flex items-center justify-center text-charcoal-muted hover:text-white hover:bg-warm/20 transition-colors"
+    >
+      <Icon className="w-5 h-5" />
+    </motion.a>
   )
 }

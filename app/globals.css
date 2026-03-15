@@ -2,6 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 基础样式重置 */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 /* 水印拖动容器样式 */
 .watermark-container {
   touch-action: none;
@@ -9,27 +24,31 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .watermark-container:hover {
-  border-color: #2563eb !important;
-  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.2);
+  border-color: #C4A484 !important;
+  box-shadow: 0 0 0 1px rgba(196, 164, 132, 0.2);
 }
 
 .watermark-container:active {
-  border-color: #1d4ed8 !important;
-  box-shadow: 0 0 0 2px rgba(29, 78, 216, 0.3);
+  border-color: #B89470 !important;
+  box-shadow: 0 0 0 2px rgba(196, 164, 132, 0.3);
 }
 
 /* 确保调整大小手柄可见且可交互 */
 .react-resizable-handle {
   z-index: 11 !important;
   opacity: 0.8;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 .react-resizable-handle:hover {
   opacity: 1;
+  transform: scale(1.2);
 }
 
 /* 防止图片被选中或拖动 */
@@ -41,85 +60,164 @@ img {
   user-drag: none;
 }
 
-body {
-  font-family: Arial, Helvetica, sans-serif;
+/* 字体类 */
+.font-display {
+  font-family: 'Playfair Display', 'LXGW WenKai', serif;
+}
+
+.font-wenkai {
+  font-family: 'LXGW WenKai', 'PingFang SC', 'Microsoft YaHei', serif;
+}
+
+.font-body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+}
+
+.font-mono {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+
+  /* 自定义滚动条 */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: #D4D4D2 transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: #D4D4D2;
+    border-radius: 3px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: #B8B8B6;
+  }
 }
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
-    --destructive: 0 84.2% 60.2%;
+    /* 背景色 - 暖白色系 */
+    --background: 40 20% 98%;
+    --foreground: 20 6% 10%;
+    --card: 40 15% 99%;
+    --card-foreground: 20 6% 10%;
+    --popover: 40 20% 98%;
+    --popover-foreground: 20 6% 10%;
+
+    /* 强调色 - 温暖赭石/陶土色 */
+    --primary: 30 35% 65%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 40 12% 95%;
+    --secondary-foreground: 20 6% 10%;
+    --muted: 40 10% 94%;
+    --muted-foreground: 20 3% 46%;
+    --accent: 30 35% 65%;
+    --accent-foreground: 0 0% 100%;
+
+    /* 功能色 */
+    --destructive: 0 30% 60%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 0 0% 3.9%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
+    --success: 130 15% 55%;
+    --success-foreground: 0 0% 100%;
+    --warning: 30 40% 65%;
+    --warning-foreground: 0 0% 100%;
+
+    /* 边框和输入 */
+    --border: 40 10% 90%;
+    --input: 40 10% 92%;
+    --ring: 30 35% 65%;
+
+    /* 圆角 */
     --radius: 0.5rem;
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
+
+    /* 图表颜色 */
+    --chart-1: 30 35% 65%;
+    --chart-2: 100 15% 55%;
+    --chart-3: 200 20% 50%;
+    --chart-4: 30 40% 70%;
+    --chart-5: 0 25% 65%;
+
+    /* 侧边栏 */
+    --sidebar-background: 40 20% 98%;
+    --sidebar-foreground: 20 6% 29%;
+    --sidebar-primary: 30 35% 65%;
     --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-accent: 40 12% 95%;
+    --sidebar-accent-foreground: 20 6% 10%;
+    --sidebar-border: 40 10% 90%;
+    --sidebar-ring: 30 35% 65%;
+
+    /* 自定义颜色变量 */
+    --bg-primary: #FAFAF8;
+    --bg-secondary: #F5F4F2;
+    --bg-tertiary: #EDECEA;
+    --text-primary: #1A1A1A;
+    --text-secondary: #4A4A48;
+    --text-tertiary: #8A8A88;
+    --accent-warm: #C4A484;
+    --accent-sage: #8B9D83;
+    --accent-terracotta: #D4A574;
+
+    /* 阴影系统 */
+    --shadow-sm: 0 1px 2px rgba(26, 26, 26, 0.04);
+    --shadow-md: 0 4px 12px rgba(26, 26, 26, 0.08);
+    --shadow-lg: 0 8px 24px rgba(26, 26, 26, 0.12);
+    --shadow-hover: 0 12px 32px rgba(26, 26, 26, 0.16);
   }
+
   .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
+    --background: 20 6% 10%;
+    --foreground: 40 20% 98%;
+    --card: 20 6% 14%;
+    --card-foreground: 40 20% 98%;
+    --popover: 20 6% 10%;
+    --popover-foreground: 40 20% 98%;
+    --primary: 30 35% 65%;
+    --primary-foreground: 20 6% 10%;
+    --secondary: 20 6% 18%;
+    --secondary-foreground: 40 20% 98%;
+    --muted: 20 6% 18%;
+    --muted-foreground: 40 10% 60%;
+    --accent: 30 35% 65%;
+    --accent-foreground: 20 6% 10%;
+    --destructive: 0 30% 50%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --border: 20 6% 20%;
+    --input: 20 6% 20%;
+    --ring: 30 35% 65%;
+    --chart-1: 30 35% 65%;
+    --chart-2: 100 15% 55%;
+    --chart-3: 200 20% 50%;
+    --chart-4: 30 40% 70%;
+    --chart-5: 0 25% 65%;
+    --sidebar-background: 20 6% 10%;
+    --sidebar-foreground: 40 20% 98%;
+    --sidebar-primary: 30 35% 65%;
+    --sidebar-primary-foreground: 20 6% 10%;
+    --sidebar-accent: 20 6% 18%;
+    --sidebar-accent-foreground: 40 20% 98%;
+    --sidebar-border: 20 6% 20%;
+    --sidebar-ring: 30 35% 65%;
+
+    --bg-primary: #1A1A1A;
+    --bg-secondary: #242424;
+    --bg-tertiary: #2E2E2E;
+    --text-primary: #FAFAF8;
+    --text-secondary: #C4C4C2;
+    --text-tertiary: #8A8A88;
   }
 }
 
@@ -131,3 +229,67 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+/* 动画关键帧 */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse-soft {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.4s ease-out forwards;
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 2s ease-in-out infinite;
+}
+
+/* 延迟动画类 */
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }

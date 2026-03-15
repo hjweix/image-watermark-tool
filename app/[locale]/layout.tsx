@@ -1,15 +1,33 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
+import { DM_Sans, Playfair_Display, JetBrains_Mono } from "next/font/google"
 import "../globals.css"
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
-import { StagewiseToolbar } from "@stagewise/toolbar-next"
-import ReactPlugin from "@stagewise-plugins/react"
 import { notFound } from 'next/navigation';
 import { routing } from '../../src/i18n/routing';
 
-const inter = Inter({ subsets: ["latin"] })
+// 加载优雅字体
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-dm-sans",
+  display: "swap",
+})
+
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-playfair",
+  display: "swap",
+})
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-jetbrains",
+  display: "swap",
+})
 
 export async function generateMetadata({
   params
@@ -17,11 +35,11 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  
+
   const isZh = locale === 'zh';
-  
+
   return {
-    title: isZh 
+    title: isZh
       ? "专业图片水印工具 - 免费在线时间地点水印制作 | PhotoStamper"
       : "Professional Image Watermark Tool - Free Online Time & Location Watermarking | PhotoStamper",
     description: isZh
@@ -110,7 +128,7 @@ export default async function LocaleLayout({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  
+
   // Ensure that the incoming `locale` is valid
   if (!routing.locales.includes(locale as any)) {
     notFound();
@@ -121,7 +139,7 @@ export default async function LocaleLayout({
   const messages = await getMessages({ locale });
 
   return (
-    <html lang={locale}>
+    <html lang={locale} className="scroll-smooth">
       <head>
         {/* Google Analytics */}
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-GCPQ4VK871" />
@@ -170,7 +188,7 @@ export default async function LocaleLayout({
 
         {/* 额外的SEO标签 */}
         <link rel="canonical" href="https://watermarker.yuelabs.com" />
-        <meta name="theme-color" content="#3B82F6" />
+        <meta name="theme-color" content="#C4A484" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="PhotoStamper" />
@@ -180,14 +198,10 @@ export default async function LocaleLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="manifest" href="/manifest.json" />
       </head>
-      <body className={inter.className}>
+      <body className={`${dmSans.variable} ${playfair.variable} ${jetbrainsMono.variable} font-sans antialiased bg-cream text-charcoal`}>
         <NextIntlClientProvider messages={messages}>
           {children}
         </NextIntlClientProvider>
-        
-        <StagewiseToolbar config={{
-          plugins: [ReactPlugin]
-        }} />
       </body>
     </html>
   )
