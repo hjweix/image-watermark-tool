@@ -1,0 +1,5 @@
+[     186ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3002/manifest.json:0
+[     194ms] [ERROR] Manifest fetch from http://localhost:3002/manifest.json failed, code 404 @ http://localhost:3002/zh:0
+[     528ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3002/manifest.json:0
+[     538ms] [ERROR] Manifest fetch from http://localhost:3002/manifest.json failed, code 404 @ http://localhost:3002/zh:0
+[     543ms] [WARNING] <meta name="apple-mobile-web-app-capable" content="yes"> is deprecated. Please include <meta name="mobile-web-app-capable" content="yes"> @ http://localhost:3002/zh:0

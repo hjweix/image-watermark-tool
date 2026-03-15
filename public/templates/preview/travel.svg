@@ -1,20 +1,84 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="320" height="180" viewBox="0 0 320 180">
+<svg xmlns="http://www.w3.org/2000/svg" width="280" height="160" viewBox="0 0 280 160">
   <defs>
-    <linearGradient id="travel-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#008000;stop-opacity:0.9" />
-      <stop offset="100%" style="stop-color:#006400;stop-opacity:0.9" />
-    </linearGradient>
-    <filter id="paper-texture" x="0" y="0" width="100%" height="100%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="5" result="noise" />
-      <feDisplacementMap in="SourceGraphic" in2="noise" scale="5" xChannelSelector="R" yChannelSelector="G" />
+    <!-- 柔和阴影 -->
+    <filter id="soft-shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="4" stdDeviation="10" flood-color="#1A1A1A" flood-opacity="0.1"/>
     </filter>
+    <!-- 纸张纹理效果 -->
+    <filter id="paper-texture" x="0%" y="0%" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="noise"/>
+      <feDiffuseLighting in="noise" lighting-color="#FAFAF8" surfaceScale="1" result="light">
+        <feDistantLight azimuth="45" elevation="60"/>
+      </feDiffuseLighting>
+      <feComposite in="light" in2="SourceGraphic" operator="in" result="textured"/>
+      <feBlend in="textured" in2="SourceGraphic" mode="multiply"/>
+    </filter>
+    <!-- 邮票边框图案 -->
+    <pattern id="stamp-edge" width="10" height="10" patternUnits="userSpaceOnUse">
+      <circle cx="5" cy="5" r="2" fill="#D4A574" fill-opacity="0.3"/>
+    </pattern>
   </defs>
-  <rect x="10" y="10" width="300" height="180" rx="12" ry="12" fill="#000000" fill-opacity="0.4" />
-  <text x="30" y="45" font-family="Brush Script MT, cursive" font-size="20" fill="#FFFFFF">
-    <tspan id="line1" x="30" dy="0">✈️ 旅行日记</tspan>
-    <tspan id="line2" x="30" dy="30">📍 上海·迪士尼乐园</tspan>
-    <tspan id="line3" x="30" dy="30">☀️ 晴天 22°C</tspan>
-    <tspan id="line4" x="30" dy="30">👥 家人</tspan>
-    <tspan id="line5" x="30" dy="30">😊 愉快</tspan>
-  </text>
+
+  <!-- 主容器 - 明信片风格 -->
+  <rect x="5" y="5" width="270" height="150" rx="4" ry="4"
+        fill="#FAF8F5"
+        stroke="#D4A574"
+        stroke-width="1.5"
+        stroke-opacity="0.3"
+        stroke-dasharray="8,4"
+        filter="url(#soft-shadow)"/>
+
+  <!-- 内部实线边框 -->
+  <rect x="12" y="12" width="256" height="136" rx="2" ry="2"
+        fill="none"
+        stroke="#D4A574"
+        stroke-width="1"
+        stroke-opacity="0.2"/>
+
+  <!-- 左上角邮票区域 -->
+  <g transform="translate(25, 25)">
+    <rect x="0" y="0" width="45" height="55" rx="2" fill="#F5F0E8" stroke="#D4A574" stroke-width="1" stroke-opacity="0.4"/>
+    <text x="22" y="32" font-family="'Apple Color Emoji', 'Segoe UI Emoji', sans-serif" font-size="20" text-anchor="middle">✈️</text>
+    <text x="22" y="48" font-family="'SF Pro Display', sans-serif" font-size="8" fill="#8A8A88" text-anchor="middle">TRAVEL</text>
+    <!-- 邮戳效果 -->
+    <circle cx="35" cy="10" r="8" fill="none" stroke="#D4A574" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="2,1"/>
+  </g>
+
+  <!-- 右侧内容区域 -->
+  <g transform="translate(85, 28)">
+    <!-- 目的地 -->
+    <text x="0" y="18" font-family="'SF Pro Display', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="16" font-weight="600" fill="#1A1A1A">
+      <tspan id="destination">上海·迪士尼乐园</tspan>
+    </text>
+
+    <!-- 分隔线 -->
+    <line x1="0" y1="28" x2="170" y2="28" stroke="#D4A574" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="4,2"/>
+
+    <!-- 天气和温度 -->
+    <text x="0" y="48" font-family="'SF Pro Display', -apple-system, sans-serif" font-size="13" fill="#4A4A48">
+      <tspan id="weather-temp">☀️ 晴天 22°C</tspan>
+    </text>
+
+    <!-- 同行人 -->
+    <text x="0" y="72" font-family="'SF Pro Display', -apple-system, sans-serif" font-size="12" fill="#6B6B68">
+      <tspan id="companion">👥 与家人同行</tspan>
+    </text>
+
+    <!-- 心情 -->
+    <text x="0" y="95" font-family="'SF Pro Display', -apple-system, sans-serif" font-size="12" fill="#8A8A88">
+      <tspan id="mood">😊 心情愉快</tspan>
+    </text>
+  </g>
+
+  <!-- 右下角日期 -->
+  <g transform="translate(210, 125)">
+    <text x="0" y="0" font-family="'SF Pro Display', -apple-system, sans-serif" font-size="10" fill="#A0A0A0" text-anchor="end">
+      <tspan>2024.01.15</tspan>
+    </text>
+  </g>
+
+  <!-- 装饰角标 -->
+  <g transform="translate(245, 15)">
+    <path d="M0,0 L15,0 L15,15 Z" fill="#D4A574" fill-opacity="0.15"/>
+  </g>
 </svg>

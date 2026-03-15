@@ -108,15 +108,13 @@ function NavButton({ children, onClick }: { children: React.ReactNode; onClick: 
   return (
     <motion.button
       onClick={onClick}
-      className="relative px-4 py-2 text-sm text-charcoal-light hover:text-charcoal transition-colors rounded-full hover:bg-warm-100/50"
+      className="relative px-4 py-2 text-sm text-charcoal-light hover:text-charcoal transition-colors duration-200 rounded-full hover:bg-warm-100/50 group"
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
     >
       {children}
-      <motion.span
-        className="absolute bottom-1 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-warm rounded-full"
-        whileHover={{ width: '60%' }}
-        transition={{ duration: 0.2 }}
+      <span
+        className="absolute bottom-1 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-warm rounded-full group-hover:w-[60%] transition-all duration-300 ease-out"
       />
     </motion.button>
   )

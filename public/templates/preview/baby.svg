@@ -1,14 +1,62 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="300" height="140" viewBox="0 0 300 140">
+<svg xmlns="http://www.w3.org/2000/svg" width="280" height="140" viewBox="0 0 280 140">
   <defs>
-    <filter id="soft-glow" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="5" result="blur" />
-      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    <!-- 柔和阴影 -->
+    <filter id="soft-shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#D4A574" flood-opacity="0.15"/>
     </filter>
+    <!-- 柔和渐变背景 -->
+    <linearGradient id="baby-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFF9F0;stop-opacity:0.96"/>
+      <stop offset="50%" style="stop-color:#FFF5E8;stop-opacity:0.94"/>
+      <stop offset="100%" style="stop-color:#FFEFE0;stop-opacity:0.92"/>
+    </linearGradient>
+    <!-- 装饰圆点图案 -->
+    <pattern id="dot-pattern" width="30" height="30" patternUnits="userSpaceOnUse">
+      <circle cx="3" cy="3" r="1.5" fill="#D4A574" fill-opacity="0.1"/>
+      <circle cx="18" cy="18" r="1" fill="#D4A574" fill-opacity="0.08"/>
+    </pattern>
   </defs>
-  <rect x="10" y="10" width="280" height="120" rx="20" ry="20" fill="#000000" fill-opacity="0.4" />
-  <text x="30" y="50" font-family="Comic Sans MS, cursive" font-size="20" fill="#FFFFFF" >
-    <tspan id="line1" x="30" dy="0">👶 小宝贝·出生第101天</tspan>
-    <tspan id="line2" x="30" dy="35">🎉 第一次笑</tspan>
-    <tspan id="line3" x="30" dy="35">📅 2024.01.15</tspan>
-  </text>
+
+  <!-- 主容器 -->
+  <rect x="5" y="5" width="270" height="130" rx="24" ry="24"
+        fill="url(#baby-gradient)"
+        stroke="#D4A574"
+        stroke-width="1.5"
+        stroke-opacity="0.25"
+        filter="url(#soft-shadow)"/>
+
+  <!-- 装饰圆点背景 -->
+  <rect x="5" y="5" width="270" height="130" rx="24" ry="24"
+        fill="url(#dot-pattern)"/>
+
+  <!-- 左上角装饰 -->
+  <g transform="translate(20, 20)">
+    <circle cx="15" cy="15" r="12" fill="#D4A574" fill-opacity="0.15"/>
+    <text x="15" y="21" font-family="'Apple Color Emoji', 'Segoe UI Emoji', sans-serif" font-size="16" text-anchor="middle">👶</text>
+  </g>
+
+  <!-- 内容区域 -->
+  <g transform="translate(55, 35)">
+    <!-- 宝贝名称和天数 -->
+    <text x="0" y="22" font-family="'SF Pro Display', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="20" font-weight="600" fill="#6B4423">
+      <tspan id="baby-name">👶 小宝贝 · 第101天</tspan>
+    </text>
+
+    <!-- 里程碑 -->
+    <text x="0" y="52" font-family="'SF Pro Display', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="14" fill="#8B7355">
+      <tspan id="milestone" fill="#D4A574">✦</tspan>
+      <tspan x="20" id="milestone-content">第一次翻身</tspan>
+    </text>
+
+    <!-- 日期 -->
+    <text x="0" y="78" font-family="'SF Pro Display', -apple-system, sans-serif" font-size="13" fill="#A09080">
+      <tspan id="date-content">📅 2024-01-15</tspan>
+    </text>
+  </g>
+
+  <!-- 右下角装饰 -->
+  <g transform="translate(235, 95)">
+    <circle cx="10" cy="10" r="8" fill="#D4A574" fill-opacity="0.12"/>
+    <circle cx="25" cy="25" r="5" fill="#D4A574" fill-opacity="0.08"/>
+  </g>
 </svg>

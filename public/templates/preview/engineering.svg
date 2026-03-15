@@ -1,14 +1,60 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="320" height="180" viewBox="0 0 320 180">
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="160" viewBox="0 0 300 160">
   <defs>
-    <pattern id="diagonalHatch" patternUnits="userSpaceOnUse" width="10" height="10">
-      <path d="M-2,2 l4,-4 M0,10 l10,-10 M8,12 l4,-4" stroke="#000000" stroke-width="1" stroke-opacity="0.2"/>
+    <!-- 柔和阴影 -->
+    <filter id="soft-shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="4" stdDeviation="10" flood-color="#1A1A1A" flood-opacity="0.25"/>
+    </filter>
+    <!-- 警示条纹图案 -->
+    <pattern id="hazard-stripes" width="20" height="20" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="10" height="20" fill="#F5A623" fill-opacity="0.6"/>
+      <rect x="10" width="10" height="20" fill="#2D2D2D" fill-opacity="0.8"/>
     </pattern>
+    <!-- 渐变背景 -->
+    <linearGradient id="eng-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#2D2D2D;stop-opacity:0.9"/>
+      <stop offset="100%" style="stop-color:#1A1A1A;stop-opacity:0.95"/>
+    </linearGradient>
   </defs>
-  <rect x="10" y="10" width="300" height="160" rx="3" ry="3" fill="#000000" fill-opacity="0.4" />
-  <text x="25" y="40" font-family="Arial, sans-serif" font-weight="bold" font-size="16" fill="#FFFFFF">
-    <tspan id="line1" x="25" dy="0">⚡ 北京地铁15号线</tspan>
-    <tspan id="line2" x="25" dy="30">📍 望京东站施工区域</tspan>
-    <tspan id="line3" x="25" dy="30">🔧 隧道开挖作业</tspan>
-    <tspan id="line6" x="25" dy="30">📅 2024-01-15 11:30</tspan>
-  </text>
+
+  <!-- 主容器 -->
+  <rect x="5" y="5" width="290" height="150" rx="8" ry="8"
+        fill="url(#eng-gradient)"
+        filter="url(#soft-shadow)"/>
+
+  <!-- 顶部警示条 -->
+  <rect x="5" y="5" width="290" height="8" rx="4" fill="url(#hazard-stripes)"/>
+
+  <!-- 标题栏 -->
+  <g transform="translate(18, 28)">
+    <rect x="0" y="0" width="4" height="20" rx="2" fill="#F5A623"/>
+    <text x="12" y="15" font-family="'SF Pro Display', 'PingFang SC', sans-serif" font-size="15" font-weight="600" fill="#FFFFFF" letter-spacing="0.5">
+      工程记录
+    </text>
+    <!-- 进度指示器 -->
+    <g transform="translate(220, 5)">
+      <rect x="0" y="0" width="50" height="8" rx="4" fill="#FFFFFF" fill-opacity="0.1"/>
+      <rect x="0" y="0" width="35" height="8" rx="4" fill="#F5A623" fill-opacity="0.7"/>
+    </g>
+  </g>
+
+  <!-- 分隔线 -->
+  <line x1="18" y1="55" x2="282" y2="55" stroke="#FFFFFF" stroke-width="1" stroke-opacity="0.1"/>
+
+  <!-- 内容区域 -->
+  <g transform="translate(18, 70)">
+    <!-- 项目名称 -->
+    <text x="0" y="16" font-family="'SF Pro Display', 'PingFang SC', sans-serif" font-size="13" fill="#F5A623" font-weight="500">
+      <tspan id="project-content">⚡ 北京地铁15号线</tspan>
+    </text>
+
+    <!-- 施工区域 -->
+    <text x="0" y="42" font-family="'SF Pro Display', 'PingFang SC', sans-serif" font-size="13" fill="#FFFFFF" fill-opacity="0.9">
+      <tspan id="area-content">📍 望京东站施工区</tspan>
+    </text>
+
+    <!-- 施工内容 -->
+    <text x="0" y="68" font-family="'SF Pro Display', 'PingFang SC', sans-serif" font-size="12" fill="#C4C4C2">
+      <tspan id="content-line">隧道开挖作业</tspan>
+    </text>
+  </g>
 </svg>

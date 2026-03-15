@@ -1,16 +1,61 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="320" height="150" viewBox="0 0 320 150">
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="160" viewBox="0 0 300 160">
   <defs>
-    <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#2C3E50;stop-opacity:0.9" />
-      <stop offset="100%" style="stop-color:#1A252F;stop-opacity:0.9" />
-    </linearGradient>
+    <!-- 柔和阴影 -->
+    <filter id="soft-shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="4" stdDeviation="10" flood-color="#1A1A1A" flood-opacity="0.2"/>
+    </filter>
+    <!-- 网格图案 -->
+    <pattern id="grid-pattern" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#FFFFFF" stroke-width="0.5" stroke-opacity="0.08"/>
+    </pattern>
   </defs>
-  <rect x="10" y="10" width="300" height="155" rx="5" ry="5" fill="#000000" fill-opacity="0.4" />
-  <text x="25" y="40" font-family="Consolas, monospace" font-size="14" fill="#ECF0F1">
-    <tspan id="line1" x="25" dy="0">经度: 116.305315</tspan>
-    <tspan id="line2" x="25" dy="25">纬度: 39.930812</tspan>
-    <tspan id="line3" x="25" dy="25">海拔: 50m</tspan>
-    <tspan id="line4" x="25" dy="25">精度: 5m</tspan>
-    <tspan id="line5" x="25" dy="25">时间: 2024-01-15 11:30:45</tspan>
-  </text>
+
+  <!-- 主容器 - 深色半透明背景 -->
+  <rect x="5" y="5" width="290" height="150" rx="12" ry="12"
+        fill="#1A1A1A"
+        fill-opacity="0.75"
+        filter="url(#soft-shadow)"/>
+
+  <!-- 网格装饰 -->
+  <rect x="5" y="5" width="290" height="150" rx="12" ry="12"
+        fill="url(#grid-pattern)"/>
+
+  <!-- 顶部装饰条 -->
+  <rect x="5" y="5" width="290" height="3" rx="1.5" fill="#8B9D83" fill-opacity="0.8"/>
+
+  <!-- 标题栏 -->
+  <g transform="translate(20, 22)">
+    <circle cx="6" cy="6" r="4" fill="#8B9D83" fill-opacity="0.6"/>
+    <text x="16" y="10" font-family="'SF Pro Display', -apple-system, sans-serif" font-size="13" font-weight="600" fill="#8B9D83" letter-spacing="0.5">
+      坐标记录
+    </text>
+    <line x1="90" y1="5" x2="270" y2="5" stroke="#FFFFFF" stroke-width="1" stroke-opacity="0.15"/>
+  </g>
+
+  <!-- 数据区域 - 使用等宽字体 -->
+  <g transform="translate(20, 55)">
+    <!-- 经度 -->
+    <text x="0" y="16" font-family="'SF Mono', 'JetBrains Mono', 'Fira Code', monospace" font-size="14" fill="#C4C4C2">
+      <tspan fill="#8A8A88" font-size="11">经度</tspan>
+      <tspan x="50" fill="#FFFFFF" font-weight="500">116.4074°</tspan>
+    </text>
+
+    <!-- 纬度 -->
+    <text x="0" y="42" font-family="'SF Mono', 'JetBrains Mono', 'Fira Code', monospace" font-size="14" fill="#C4C4C2">
+      <tspan fill="#8A8A88" font-size="11">纬度</tspan>
+      <tspan x="50" fill="#FFFFFF" font-weight="500">39.9042°</tspan>
+    </text>
+
+    <!-- 海拔 -->
+    <text x="0" y="68" font-family="'SF Mono', 'JetBrains Mono', 'Fira Code', monospace" font-size="14" fill="#C4C4C2">
+      <tspan fill="#8A8A88" font-size="11">海拔</tspan>
+      <tspan x="50" fill="#8B9D83" font-weight="500">43m</tspan>
+    </text>
+
+    <!-- 精度 -->
+    <text x="0" y="94" font-family="'SF Mono', 'JetBrains Mono', 'Fira Code', monospace" font-size="14" fill="#C4C4C2">
+      <tspan fill="#8A8A88" font-size="11">精度</tspan>
+      <tspan x="50" fill="#D4A574" font-weight="500">5m</tspan>
+    </text>
+  </g>
 </svg>

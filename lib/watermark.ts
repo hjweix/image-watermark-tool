@@ -39,29 +39,10 @@ const TEMPLATE_VARIABLES = {
     }
   },
   professional: {
-    LONGITUDE_CONTENT: (config: any) => config.longitude ? `经度: ${config.longitude}` : `经度: 116.4074`,
-    LATITUDE_CONTENT: (config: any) => config.latitude ? `纬度: ${config.latitude}` : `纬度: 39.9042`,
-    ALTITUDE_CONTENT: (config: any) => config.altitude ? `海拔: ${config.altitude}m` : `海拔: 43m`,
-    ACCURACY_CONTENT: (config: any) => config.accuracy ? `精度: ${config.accuracy}m` : `精度: 5m`,
-    TIME_CONTENT: (config: any) => {
-      if (config.showTime === false) return null
-      
-      let currentDate, currentTime
-      
-      if (config.customDateTime) {
-        // 解析自定义时间（datetime-local格式："2025-08-05T23:40:43"）
-        const customDateTime = new Date(config.customDateTime)
-        currentDate = customDateTime.toISOString().slice(0, 10)
-        currentTime = customDateTime.toTimeString().slice(0, 8)
-      } else {
-        // 使用当前时间
-        const now = new Date()
-        currentDate = now.toISOString().slice(0, 10)
-        currentTime = now.toTimeString().slice(0, 8)
-      }
-      
-      return `时间: ${currentDate} ${currentTime}`
-    }
+    LONGITUDE_CONTENT: (config: any) => config.longitude ? `${config.longitude}°` : `116.4074°`,
+    LATITUDE_CONTENT: (config: any) => config.latitude ? `${config.latitude}°` : `39.9042°`,
+    ALTITUDE_CONTENT: (config: any) => config.altitude ? `${config.altitude}m` : `43m`,
+    ACCURACY_CONTENT: (config: any) => config.accuracy ? `${config.accuracy}m` : `5m`,
   },
   baby: {
     BABY_NAME_CONTENT: (config: any) => {
@@ -74,11 +55,11 @@ const TEMPLATE_VARIABLES = {
           currentDisplayDate = new Date(config.customDateTime)
         }
         const daysSince = Math.floor((currentDisplayDate.getTime() - birthDate.getTime()) / (1000 * 60 * 60 * 24))
-        text += `·出生第${daysSince}天`
+        text += ` · 出生第 ${daysSince} 天`
       }
       return text
     },
-    MILESTONE_CONTENT: (config: any) => config.milestone ? `🎉 ${config.milestone}` : null,
+    MILESTONE_CONTENT: (config: any) => config.milestone ? `${config.milestone}` : null,
     DATE_CONTENT: (config: any) => {
       if (config.showCurrentDate === false) return null
       let currentDisplayDate = new Date()
@@ -91,43 +72,20 @@ const TEMPLATE_VARIABLES = {
   engineering: {
     PROJECT_NAME_CONTENT: (config: any) => config.projectName ? `⚡ ${config.projectName}` : `⚡ 工程项目`,
     CONSTRUCTION_AREA_CONTENT: (config: any) => config.constructionArea ? `📍 ${config.constructionArea}` : `📍 施工区域`,
-    CONSTRUCTION_CONTENT: (config: any) => config.constructionContent ? `🔧 ${config.constructionContent}` : `🔧 施工内容`,
-    DATETIME_CONTENT: (config: any) => {
-      if (config.showDateTime === false) return null
-      if (config.customDateTime) {
-        const customDateTime = new Date(config.customDateTime)
-        const currentDate = customDateTime.toISOString().slice(0, 10)
-        const currentTime = customDateTime.toTimeString().slice(0, 5)
-        return `📅 ${currentDate} ${currentTime}`
-      } else {
-        const now = new Date()
-        const currentDate = now.toISOString().slice(0, 10)
-        const currentTime = now.toTimeString().slice(0, 5)
-        return `📅 ${currentDate} ${currentTime}`
-      }
-    }
+    CONSTRUCTION_CONTENT: (config: any) => config.constructionContent ? `${config.constructionContent}` : `隧道开挖作业`,
   },
   punch: {
     PUNCH_TYPE_CONTENT: (config: any) => {
-      const punchTypeLabels = {
+      const punchTypeLabels: Record<string, string> = {
         clockIn: "上班打卡",
         clockOut: "下班打卡",
         breakStart: "休息开始",
         breakEnd: "休息结束",
         overtime: "加班打卡",
       }
-      const punchType = punchTypeLabels[config.punchType as keyof typeof punchTypeLabels] || "上班打卡"
-      let displayTime
-      if (config.customDateTime) {
-        const customDateTime = new Date(config.customDateTime)
-        displayTime = customDateTime.toTimeString().slice(0, 5)
-      } else {
-        const now = new Date()
-        displayTime = now.toTimeString().slice(0, 5)
-      }
-      return `📍 ${punchType} ${displayTime}`
+      return punchTypeLabels[config.punchType as string] || "上班打卡"
     },
-    WORK_LOCATION_CONTENT: (config: any) => config.workLocation ? `📍 ${config.workLocation}` : `📍 办公地点`,
+    WORK_LOCATION_CONTENT: (config: any) => config.workLocation ? `${config.workLocation}` : `北京·三里屯SOHO`,
     DATE_WEEKDAY_CONTENT: (config: any) => {
       let displayDate
       if (config.customDateTime) {
@@ -135,18 +93,17 @@ const TEMPLATE_VARIABLES = {
       } else {
         displayDate = new Date()
       }
-      const currentDate = displayDate.toISOString().slice(0, 10)
+      const currentDate = displayDate.toISOString().slice(0, 10).replace(/-/g, ".")
       let dateText = currentDate
       if (config.showWeekday !== false) {
         const weekdays = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"]
-        dateText += `📅 ${weekdays[displayDate.getDay()]}`
+        dateText += ` ${weekdays[displayDate.getDay()]}`
       }
       return dateText
     }
   },
   travel: {
-    TRAVEL_TITLE_CONTENT: () => "✈️ 旅行日记",
-    DESTINATION_CONTENT: (config: any) => config.destination ? `📍 ${config.destination}` : `📍 目的地`,
+    DESTINATION_CONTENT: (config: any) => config.destination ? `${config.destination}` : `上海·迪士尼乐园`,
     WEATHER_TEMPERATURE_CONTENT: (config: any) => {
       if (config.weather && config.temperature) {
         return `${config.weather} ${config.temperature}°C`
@@ -156,7 +113,7 @@ const TEMPLATE_VARIABLES = {
       return `☀️ 晴天 22°C`
     },
     COMPANION_CONTENT: (config: any) => config.companion ? `👥 ${config.companion}` : `👥  同行伙伴`,
-    MOOD_CONTENT: (config: any) => config.mood || `😊 心情愉快`
+    MOOD_CONTENT: (config: any) => config.mood ? `${config.mood}` : `😊 心情愉快`
   }
 }
 
