@@ -1,6 +1,7 @@
 import type React from "react"
 import type { Metadata } from "next"
 import { DM_Sans, Playfair_Display, JetBrains_Mono } from "next/font/google"
+import "@chinese-fonts/lxgwwenkai/dist/LXGWWenKai-Regular/result.css"
 import "../globals.css"
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';

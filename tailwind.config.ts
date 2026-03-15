@@ -95,7 +95,7 @@ const config: Config = {
         charcoal: {
           DEFAULT: '#1A1A1A',
           light: '#4A4A48',
-          muted: '#8A8A88',
+          muted: '#B8B8B6',
         },
         cream: {
           DEFAULT: '#FAFAF8',
@@ -106,7 +106,7 @@ const config: Config = {
       fontFamily: {
         display: ['Playfair Display', 'LXGW WenKai', 'serif'],
         wenkai: ['LXGW WenKai', 'PingFang SC', 'Microsoft YaHei', 'serif'],
-        sans: ['DM Sans', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['DM Sans', 'LXGW WenKai', 'system-ui', '-apple-system', 'sans-serif'],
         mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
       },
       borderRadius: {

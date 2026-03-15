@@ -69,7 +69,11 @@
     "baby": "Baby Growth",
     "professional": "Professional Mark",
     "punch": "Check-in Record",
-    "frame": "Frame Style"
+    "frame": "Frame Style",
+    "food": "Food Record",
+    "fitness": "Fitness",
+    "pet": "Pet Profile",
+    "camera": "Camera Settings"
   },
   "style": {
     "position": "Position",

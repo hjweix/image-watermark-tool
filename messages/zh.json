@@ -71,7 +71,11 @@
     "baby": "宝贝成长",
     "professional": "专业标记",
     "punch": "打卡记录",
-    "frame": "相框风格"
+    "frame": "相框风格",
+    "food": "美食记录",
+    "fitness": "运动健身",
+    "pet": "宠物档案",
+    "camera": "摄影参数"
   },
   "style": {
     "position": "位置",
