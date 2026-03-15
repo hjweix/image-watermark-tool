@@ -114,6 +114,102 @@ const TEMPLATE_VARIABLES = {
     },
     COMPANION_CONTENT: (config: any) => config.companion ? `👥 ${config.companion}` : `👥  同行伙伴`,
     MOOD_CONTENT: (config: any) => config.mood ? `${config.mood}` : `😊 心情愉快`
+  },
+  food: {
+    FOOD_ICON: () => "🍜",
+    RESTAURANT_NAME: (config: any) => config.restaurantName ? config.restaurantName : "老北京炸酱面馆",
+    DISH_NAME: (config: any) => config.dishName ? config.dishName : "招牌炸酱面 + 凉拌黄瓜",
+    RATING_PRICE: (config: any) => {
+      const rating = config.rating || "4.8"
+      const price = config.price || "45"
+      return `⭐ ${rating}  ·  ¥${price}/人`
+    },
+    MEAL_DATETIME: (config: any) => {
+      let displayDate = new Date()
+      if (config.customDateTime) {
+        displayDate = new Date(config.customDateTime)
+      }
+      const dateStr = displayDate.toISOString().slice(0, 10)
+      const mealType = config.mealType || "晚餐"
+      return `📅 ${dateStr} ${mealType}`
+    },
+    UTENSIL_ICON: () => "🥢"
+  },
+  fitness: {
+    SPORT_ICON: (config: any) => {
+      const iconMap: Record<string, string> = {
+        "户外跑步": "🏃",
+        "室内跑步": "🏃",
+        "户外骑行": "🚴",
+        "游泳": "🏊",
+        "健身": "💪",
+        "瑜伽": "🧘",
+        "徒步": "🥾",
+      }
+      return iconMap[config.sportType as string] || "🏃"
+    },
+    SPORT_TYPE: (config: any) => config.sportType || "户外跑步",
+    DISTANCE: (config: any) => config.distance || "5.20",
+    DISTANCE_UNIT: () => "公里",
+    DURATION_CALORIES: (config: any) => {
+      const duration = config.duration || "32:15"
+      const calories = config.calories || "320"
+      return `⏱️ ${duration}  ·  🔥 ${calories}千卡`
+    },
+    PACE_STEPS: (config: any) => {
+      const pace = config.pace || "6'12\""
+      const steps = config.steps || "6,842"
+      return `配速 ${pace}  ·  步数 ${steps}`
+    },
+    PROGRESS_WIDTH: (config: any) => {
+      const percent = config.progressPercent || 78
+      return String(Math.round((percent / 100) * 200))
+    },
+    PROGRESS_PERCENT: (config: any) => `${config.progressPercent || 78}%`
+  },
+  pet: {
+    PET_ICON: (config: any) => {
+      const iconMap: Record<string, string> = {
+        "🐱 猫咪": "🐱",
+        "🐶 狗狗": "🐶",
+        "🐰 兔子": "🐰",
+        "🐹 仓鼠": "🐹",
+        "🐦 鸟类": "🐦",
+        "🐢 爬宠": "🐢",
+        "🐟 鱼类": "🐟",
+      }
+      return iconMap[config.petType as string] || "🐱"
+    },
+    PET_NAME_AGE: (config: any) => {
+      const name = config.petName || "咪咪"
+      const age = config.petAge || "2岁3个月"
+      return `${name} · ${age}`
+    },
+    PET_BREED_WEIGHT: (config: any) => {
+      const breed = config.breed || "英短蓝猫"
+      const weight = config.weight || "4.2"
+      return `🐾 ${breed}  ·  ${weight}kg`
+    },
+    PET_MOOD: (config: any) => {
+      const mood = config.mood || "今天心情很好~"
+      return `😸 ${mood}`
+    }
+  },
+  camera: {
+    CAMERA_MODEL: (config: any) => config.cameraModel || "Sony A7M4",
+    LENS_MODEL: (config: any) => config.lensModel || "35mm f/1.4 GM",
+    APERTURE: (config: any) => config.aperture || "f/1.4",
+    SHUTTER: (config: any) => config.shutter || "1/500",
+    ISO: (config: any) => config.iso || "ISO 100",
+    SHOT_DATETIME: (config: any) => {
+      let displayDate = new Date()
+      if (config.customDateTime) {
+        displayDate = new Date(config.customDateTime)
+      }
+      const dateStr = displayDate.toISOString().slice(0, 10).replace(/-/g, ".")
+      const timeStr = displayDate.toTimeString().slice(0, 5)
+      return `${dateStr} ${timeStr}`
+    }
   }
 }
 

@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="120" viewBox="0 0 300 120">
+  <defs>
+    <!-- 柔和阴影 -->
+    <filter id="soft-shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="4" stdDeviation="10" flood-color="#1A1A1A" flood-opacity="0.2"/>
+    </filter>
+    <!-- 深色渐变背景 -->
+    <linearGradient id="camera-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2C3E50;stop-opacity:0.92"/>
+      <stop offset="100%" style="stop-color:#1A252F;stop-opacity:0.95"/>
+    </linearGradient>
+  </defs>
+
+  <!-- 主容器 -->
+  <rect x="5" y="5" width="290" height="110" rx="12" ry="12"
+        fill="url(#camera-gradient)"
+        filter="url(#soft-shadow)"/>
+
+  <!-- 左侧相机图标 -->
+  <g transform="translate(20, 25)">
+    <rect x="0" y="8" width="36" height="24" rx="4" fill="#34495E" stroke="#5D6D7E" stroke-width="1"/>
+    <circle cx="18" cy="20" r="8" fill="#1A252F" stroke="#5D6D7E" stroke-width="1.5"/>
+    <circle cx="18" cy="20" r="4" fill="#34495E"/>
+    <rect x="12" y="4" width="12" height="4" rx="1" fill="#5D6D7E"/>
+  </g>
+
+  <!-- 相机参数区域 -->
+  <g transform="translate(70, 22)">
+    <!-- 第一行：相机型号和镜头 -->
+    <text x="0" y="14" font-family="'SF Pro Display', sans-serif" font-size="13" font-weight="600" fill="#ECF0F1">
+      {{CAMERA_MODEL}}
+    </text>
+    <text x="85" y="14" font-family="'SF Pro Display', sans-serif" font-size="12" fill="#BDC3C7">
+      {{LENS_MODEL}}
+    </text>
+
+    <!-- 分隔线 -->
+    <line x1="0" y1="24" x2="200" y2="24" stroke="#5D6D7E" stroke-width="1" stroke-opacity="0.3"/>
+
+    <!-- 第二行：曝光参数 -->
+    <g transform="translate(0, 38)">
+      <!-- 光圈 -->
+      <text x="0" y="0" font-family="'SF Mono', monospace" font-size="14" font-weight="500" fill="#3498DB">
+        {{APERTURE}}
+      </text>
+      <text x="0" y="16" font-family="'SF Pro Display', sans-serif" font-size="9" fill="#7F8C8D">
+        光圈
+      </text>
+
+      <!-- 快门 -->
+      <text x="60" y="0" font-family="'SF Mono', monospace" font-size="14" font-weight="500" fill="#E74C3C">
+        {{SHUTTER}}
+      </text>
+      <text x="60" y="16" font-family="'SF Pro Display', sans-serif" font-size="9" fill="#7F8C8D">
+        快门
+      </text>
+
+      <!-- ISO -->
+      <text x="130" y="0" font-family="'SF Mono', monospace" font-size="14" font-weight="500" fill="#F39C12">
+        {{ISO}}
+      </text>
+      <text x="130" y="16" font-family="'SF Pro Display', sans-serif" font-size="9" fill="#7F8C8D">
+        感光度
+      </text>
+    </g>
+  </g>
+
+  <!-- 右侧日期 -->
+  <text x="270" y="95" font-family="'SF Pro Display', sans-serif" font-size="10" fill="#7F8C8D" text-anchor="end">
+    {{SHOT_DATETIME}}
+  </text>
+</svg>
