@@ -16,7 +16,10 @@
   "tool": {
     "badge": "在线工具 - 无需下载安装",
     "title": "开始制作您的专属水印",
-    "description": "上传图片，自定义水印样式，一键批量处理 - 简单三步完成专业水印制作"
+    "description": "上传图片，自定义水印样式，一键批量处理 - 简单三步完成专业水印制作",
+    "templateTitle": "选择水印模板",
+    "templateDescription": "横向滑动查看更多模板",
+    "swipeToSeeMore": "← 左右滑动查看更多模板 →"
   },
   "upload": {
     "title": "图片上传",
@@ -56,7 +59,7 @@
     "settings": "水印设置",
     "templates": "模板选择",
     "style": "样式调整",
-    "content": "内容设置",
+    "content": "内容编辑",
     "useSvgTemplate": "使用SVG模板",
     "svgTemplatePreview": "SVG模板预览",
     "svgTemplateDescription": "SVG模板提供更丰富的样式和图标，可以让您的水印更加个性化。"
@@ -126,7 +129,32 @@
     "dateFormat": "日期格式",
     "showCurrentDate": "显示当前日期",
     "showDateTime": "显示拍摄时间",
-    "showWeekday": "显示星期"
+    "showWeekday": "显示星期",
+    "sportType": "运动类型",
+    "distance": "距离",
+    "duration": "运动时长",
+    "calories": "消耗卡路里",
+    "pace": "配速",
+    "steps": "步数",
+    "showProgress": "显示完成进度",
+    "progressPercent": "完成百分比",
+    "restaurantName": "餐厅名称",
+    "dishName": "菜品名称",
+    "rating": "评分",
+    "price": "人均消费",
+    "mealType": "用餐时段",
+    "petName": "宠物名字",
+    "petType": "宠物类型",
+    "breed": "品种",
+    "petAge": "年龄",
+    "weight": "体重",
+    "petMood": "心情/状态",
+    "cameraModel": "相机型号",
+    "lensModel": "镜头型号",
+    "aperture": "光圈",
+    "shutterSpeed": "快门速度",
+    "iso": "ISO",
+    "focalLength": "焦距"
   },
   "placeholders": {
     "enterProjectName": "请输入工程名称",
@@ -139,7 +167,18 @@
     "enterConstructionContent": "请输入施工内容描述",
     "enterWorkLocation": "请输入工作地点",
     "enterDestination": "请输入旅行目的地",
-    "enterCompanion": "请输入同行人"
+    "enterCompanion": "请输入同行人",
+    "enterRestaurantName": "请输入餐厅名称",
+    "enterDishName": "请输入菜品名称",
+    "enterPetName": "请输入宠物名字",
+    "enterBreed": "请输入品种",
+    "happyToday": "今天心情很好~",
+    "enterCameraModel": "Sony A7M4",
+    "enterLensModel": "35mm f/1.4 GM",
+    "enterAperture": "f/1.4",
+    "enterShutterSpeed": "1/500",
+    "enterISO": "ISO 100",
+    "enterFocalLength": "35mm"
   },
   "punchTypes": {
     "clockIn": "上班打卡",
@@ -154,6 +193,31 @@
     "rainy": "🌧️ 雨天",
     "snowy": "❄️ 雪天",
     "foggy": "🌫️ 雾天"
+  },
+  "sportTypes": {
+    "outdoorRunning": "户外跑步",
+    "indoorRunning": "室内跑步",
+    "outdoorCycling": "户外骑行",
+    "swimming": "游泳",
+    "workout": "健身",
+    "yoga": "瑜伽",
+    "hiking": "徒步"
+  },
+  "mealTypes": {
+    "breakfast": "早餐",
+    "lunch": "午餐",
+    "dinner": "晚餐",
+    "afternoonTea": "下午茶",
+    "lateNight": "夜宵"
+  },
+  "petTypes": {
+    "cat": "猫咪",
+    "dog": "狗狗",
+    "rabbit": "兔子",
+    "hamster": "仓鼠",
+    "bird": "鸟类",
+    "reptile": "爬宠",
+    "fish": "鱼类"
   },
   "mood": {
     "happy": "😊 愉快",

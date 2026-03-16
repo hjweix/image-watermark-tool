@@ -92,7 +92,7 @@ export default function PreviewSection({
                     ref={imageRef}
                     src={selectedImageFile.url}
                     alt="Preview"
-                    className="w-full h-auto max-h-[70vh] object-contain rounded-2xl"
+                    className="w-full h-auto max-h-[75vh] object-contain rounded-2xl"
                     onLoad={handleImageLoad}
                   />
 

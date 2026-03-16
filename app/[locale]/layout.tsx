@@ -190,7 +190,7 @@ export default async function LocaleLayout({
         {/* 额外的SEO标签 */}
         <link rel="canonical" href="https://watermarker.yuelabs.com" />
         <meta name="theme-color" content="#C4A484" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="PhotoStamper" />
 

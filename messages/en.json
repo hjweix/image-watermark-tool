@@ -16,7 +16,10 @@
   "tool": {
     "badge": "Online Tool - No Download Required",
     "title": "Start Creating Your Custom Watermark",
-    "description": "Upload images, customize watermark styles, one-click batch processing - complete professional watermark creation in three simple steps"
+    "description": "Upload images, customize watermark styles, one-click batch processing - complete professional watermark creation in three simple steps",
+    "templateTitle": "Choose Watermark Template",
+    "templateDescription": "Swipe horizontally to see more templates",
+    "swipeToSeeMore": "← Swipe left or right to see more →"
   },
   "upload": {
     "title": "Image Upload",
@@ -54,7 +57,7 @@
     "settings": "Watermark Settings",
     "templates": "Template Selection",
     "style": "Style Adjustment",
-    "content": "Content Settings",
+    "content": "Content Editor",
     "useSvgTemplate": "Use SVG Template",
     "svgTemplatePreview": "SVG Template Preview",
     "svgTemplateDescription": "SVG templates provide richer styles and icons to make your watermarks more personalized."
@@ -124,7 +127,32 @@
     "dateFormat": "Date Format",
     "showCurrentDate": "Show Current Date",
     "showDateTime": "Show Shooting Time",
-    "showWeekday": "Show Weekday"
+    "showWeekday": "Show Weekday",
+    "sportType": "Sport Type",
+    "distance": "Distance",
+    "duration": "Duration",
+    "calories": "Calories Burned",
+    "pace": "Pace",
+    "steps": "Steps",
+    "showProgress": "Show Completion Progress",
+    "progressPercent": "Completion Percentage",
+    "restaurantName": "Restaurant Name",
+    "dishName": "Dish Name",
+    "rating": "Rating",
+    "price": "Price Per Person",
+    "mealType": "Meal Type",
+    "petName": "Pet Name",
+    "petType": "Pet Type",
+    "breed": "Breed",
+    "petAge": "Age",
+    "weight": "Weight",
+    "petMood": "Mood/Status",
+    "cameraModel": "Camera Model",
+    "lensModel": "Lens Model",
+    "aperture": "Aperture",
+    "shutterSpeed": "Shutter Speed",
+    "iso": "ISO",
+    "focalLength": "Focal Length"
   },
   "placeholders": {
     "enterProjectName": "Enter project name",
@@ -137,7 +165,18 @@
     "enterConstructionContent": "Enter construction content description",
     "enterWorkLocation": "Enter work location",
     "enterDestination": "Enter travel destination",
-    "enterCompanion": "Enter travel companion"
+    "enterCompanion": "Enter travel companion",
+    "enterRestaurantName": "Enter restaurant name",
+    "enterDishName": "Enter dish name",
+    "enterPetName": "Enter pet name",
+    "enterBreed": "Enter breed",
+    "happyToday": "Feeling happy today~",
+    "enterCameraModel": "Sony A7M4",
+    "enterLensModel": "35mm f/1.4 GM",
+    "enterAperture": "f/1.4",
+    "enterShutterSpeed": "1/500",
+    "enterISO": "ISO 100",
+    "enterFocalLength": "35mm"
   },
   "punchTypes": {
     "clockIn": "Clock In",
@@ -152,6 +191,31 @@
     "rainy": "🌧️ Rainy",
     "snowy": "❄️ Snowy",
     "foggy": "🌫️ Foggy"
+  },
+  "sportTypes": {
+    "outdoorRunning": "Outdoor Running",
+    "indoorRunning": "Indoor Running",
+    "outdoorCycling": "Outdoor Cycling",
+    "swimming": "Swimming",
+    "workout": "Workout",
+    "yoga": "Yoga",
+    "hiking": "Hiking"
+  },
+  "mealTypes": {
+    "breakfast": "Breakfast",
+    "lunch": "Lunch",
+    "dinner": "Dinner",
+    "afternoonTea": "Afternoon Tea",
+    "lateNight": "Late Night"
+  },
+  "petTypes": {
+    "cat": "Cat",
+    "dog": "Dog",
+    "rabbit": "Rabbit",
+    "hamster": "Hamster",
+    "bird": "Bird",
+    "reptile": "Reptile",
+    "fish": "Fish"
   },
   "mood": {
     "happy": "😊 Happy",

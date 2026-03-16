@@ -73,7 +73,7 @@
   <!-- 右下角日期 -->
   <g transform="translate(210, 125)">
     <text x="0" y="0" font-family="'SF Pro Display', -apple-system, sans-serif" font-size="10" fill="#A0A0A0" text-anchor="end">
-      <tspan>2024.01.15</tspan>
+      <tspan>{{DATE_CONTENT}}</tspan>
     </text>
   </g>
 

@@ -12,6 +12,7 @@ import Footer from "@/components/tool/Footer"
 import UploadSection from "@/components/tool/UploadSection"
 import PreviewSection from "@/components/tool/PreviewSection"
 import SettingsSection from "@/components/tool/SettingsSection"
+import TemplateSelector from "@/components/tool/TemplateSelector"
 import { motion } from "framer-motion"
 
 type ImageFile = {
@@ -307,40 +308,56 @@ export default function ImageWatermarkTool() {
             </p>
           </motion.div>
 
-          {/* 三栏布局 */}
-          <div className="grid grid-cols-1 xl:grid-cols-4 gap-6 lg:gap-8">
-            <UploadSection
-              images={images}
-              selectedImage={selectedImage}
-              isProcessing={isProcessing}
-              processingProgress={processingProgress}
-              fileInputRef={fileInputRef}
-              handleDrop={handleDrop}
-              handleDragOver={handleDragOver}
-              handleFileUpload={handleFileUpload}
-              setSelectedImage={setSelectedImage}
-              setImages={setImages}
-              applyWatermarkToAll={applyWatermarkToAll}
-              downloadAllAsZip={downloadAllAsZip}
-              removeImage={removeImage}
-            />
+          {/* 新布局：左侧上传 | 右侧预览+下方设置 */}
+          <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 lg:gap-8">
+            {/* 左侧：上传区 - 占3列 */}
+            <div className="xl:col-span-3">
+              <UploadSection
+                images={images}
+                selectedImage={selectedImage}
+                isProcessing={isProcessing}
+                processingProgress={processingProgress}
+                fileInputRef={fileInputRef}
+                handleDrop={handleDrop}
+                handleDragOver={handleDragOver}
+                handleFileUpload={handleFileUpload}
+                setSelectedImage={setSelectedImage}
+                setImages={setImages}
+                applyWatermarkToAll={applyWatermarkToAll}
+                downloadAllAsZip={downloadAllAsZip}
+                removeImage={removeImage}
+              />
+            </div>
 
-            <PreviewSection
-              images={images}
-              selectedImage={selectedImage}
-              currentTemplateConfig={currentTemplateConfig}
-              selectedTemplate={selectedTemplate}
-              updateTemplateStyle={updateTemplateStyle}
-              templateConfig={templateConfig}
-            />
+            {/* 右侧：预览区+设置 - 占9列 */}
+            <div className="xl:col-span-9 flex flex-col gap-6">
+              {/* 预览区 - 大面积 */}
+              <PreviewSection
+                images={images}
+                selectedImage={selectedImage}
+                currentTemplateConfig={currentTemplateConfig}
+                selectedTemplate={selectedTemplate}
+                updateTemplateStyle={updateTemplateStyle}
+                templateConfig={templateConfig}
+              />
 
-            <SettingsSection
-              selectedTemplate={selectedTemplate}
-              templateConfig={templateConfig}
-              applyTemplate={applyTemplate}
-              updateTemplateContent={updateTemplateContent}
-              setTemplateConfig={setTemplateConfig}
-            />
+              {/* 下方：模板选择 + 内容编辑 */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* 横向模板选择器 */}
+                <TemplateSelector
+                  selectedTemplate={selectedTemplate}
+                  onSelectTemplate={applyTemplate}
+                />
+
+                {/* 内容编辑 */}
+                <SettingsSection
+                  selectedTemplate={selectedTemplate}
+                  templateConfig={templateConfig}
+                  updateTemplateContent={updateTemplateContent}
+                  setTemplateConfig={setTemplateConfig}
+                />
+              </div>
+            </div>
           </div>
 
           {/* Hidden canvas for image processing */}

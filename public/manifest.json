@@ -1,0 +1,23 @@
+{
+  "name": "PhotoStamper - 专业图片水印工具",
+  "short_name": "PhotoStamper",
+  "description": "专业的在线图片水印工具，支持批量添加时间、日期、地点水印",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FAFAF8",
+  "theme_color": "#C4A484",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["productivity", "photo", "utilities"],
+  "lang": "zh-CN"
+}

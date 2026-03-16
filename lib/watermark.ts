@@ -113,7 +113,20 @@ const TEMPLATE_VARIABLES = {
       return `☀️ 晴天 22°C`
     },
     COMPANION_CONTENT: (config: any) => config.companion ? `👥 ${config.companion}` : `👥  同行伙伴`,
-    MOOD_CONTENT: (config: any) => config.mood ? `${config.mood}` : `😊 心情愉快`
+    MOOD_CONTENT: (config: any) => config.mood ? `${config.mood}` : `😊 心情愉快`,
+    DATE_CONTENT: (config: any) => {
+      if (config.showCurrentDate === false) {
+        return ""
+      }
+      let displayDate = new Date()
+      if (config.customDateTime) {
+        displayDate = new Date(config.customDateTime)
+      }
+      const year = displayDate.getFullYear()
+      const month = String(displayDate.getMonth() + 1).padStart(2, "0")
+      const day = String(displayDate.getDate()).padStart(2, "0")
+      return `${year}.${month}.${day}`
+    }
   },
   food: {
     FOOD_ICON: () => "🍜",
