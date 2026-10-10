@@ -60,3 +60,7 @@ pnpm dev
 *   **构建生产版本**: `pnpm build`
 *   **启动生产服务器**: `pnpm start`
 *   **代码检查**: `pnpm lint`
+
+## 许可证
+
+本项目原创代码与文档采用 MIT License，详见 [LICENSE](./LICENSE)。第三方依赖和资源仍分别遵循其各自的许可证。
